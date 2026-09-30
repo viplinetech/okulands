@@ -44,18 +44,18 @@ html {
     z-index: -1;
     pointer-events: none;
     background:
-        radial-gradient(circle at 12% 15%, rgba(212, 175, 55, 0.14), transparent 32%),
-        radial-gradient(circle at 88% 8%, rgba(42, 69, 147, 0.16), transparent 34%),
-        radial-gradient(circle at 20% 85%, rgba(46, 139, 87, 0.1), transparent 30%),
-        radial-gradient(circle at 92% 78%, rgba(212, 175, 55, 0.12), transparent 32%);
+        radial-gradient(circle at 12% 15%, rgba(91, 155, 240, 0.16), transparent 32%),
+        radial-gradient(circle at 88% 8%, rgba(42, 69, 147, 0.18), transparent 34%),
+        radial-gradient(circle at 20% 85%, rgba(46, 139, 87, 0.09), transparent 30%),
+        radial-gradient(circle at 92% 78%, rgba(61, 125, 224, 0.14), transparent 32%);
     animation: ambientDrift 22s ease-in-out infinite alternate;
 }
 .dark .ambient-bg::after {
     background:
-        radial-gradient(circle at 12% 15%, rgba(212, 175, 55, 0.1), transparent 32%),
-        radial-gradient(circle at 88% 8%, rgba(91, 155, 240, 0.14), transparent 34%),
+        radial-gradient(circle at 12% 15%, rgba(91, 155, 240, 0.12), transparent 32%),
+        radial-gradient(circle at 88% 8%, rgba(91, 155, 240, 0.16), transparent 34%),
         radial-gradient(circle at 20% 85%, rgba(46, 139, 87, 0.08), transparent 30%),
-        radial-gradient(circle at 92% 78%, rgba(212, 175, 55, 0.1), transparent 32%);
+        radial-gradient(circle at 92% 78%, rgba(61, 125, 224, 0.12), transparent 32%);
 }
 @keyframes ambientDrift {
     0% { transform: translate(0, 0) scale(1); }

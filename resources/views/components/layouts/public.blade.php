@@ -50,8 +50,8 @@
                 @foreach ([['/', 'Home'], ['/properties', 'Properties'], ['/about', 'About'], ['/news', 'News'], ['/contact', 'Contact']] as [$href, $label])
                     <a
                         href="{{ url($href) }}"
-                        class="relative transition-colors duration-500 after:absolute after:-bottom-1 after:left-0 after:h-0.5 after:w-0 after:bg-gold-500 after:transition-all after:duration-300 hover:after:w-full"
-                        :class="(!transparent || scrolled) ? 'text-navy-700 hover:text-gold-600 dark:text-white/80 dark:hover:text-gold-400' : 'text-white/90 hover:text-white'"
+                        class="relative transition-colors duration-500 after:absolute after:-bottom-1 after:left-0 after:h-0.5 after:w-0 after:bg-accent-500 after:transition-all after:duration-300 hover:after:w-full"
+                        :class="(!transparent || scrolled) ? 'text-navy-700 hover:text-accent-600 dark:text-white/80 dark:hover:text-accent-400' : 'text-white/90 hover:text-white'"
                     >{{ $label }}</a>
                 @endforeach
             </nav>
@@ -61,11 +61,11 @@
                 <a
                     href="{{ route('login') }}"
                     class="hidden rounded-full border px-5 py-2 text-sm font-semibold transition sm:inline-block"
-                    :class="(!transparent || scrolled) ? 'border-navy-200 text-navy-800 hover:border-gold-400 hover:text-gold-600 dark:border-white/20 dark:text-white' : 'border-white/40 text-white hover:bg-white/10'"
+                    :class="(!transparent || scrolled) ? 'border-navy-200 text-navy-800 hover:border-accent-400 hover:text-accent-600 dark:border-white/20 dark:text-white' : 'border-white/40 text-white hover:bg-white/10'"
                 >
                     Realtor Login
                 </a>
-                <a href="{{ url('/contact') }}" class="rounded-full bg-gradient-to-r from-gold-500 to-gold-600 px-5 py-2 text-sm font-bold text-navy-950 shadow-premium transition hover:shadow-premium-lg hover:-translate-y-0.5">
+                <a href="{{ url('/contact') }}" class="rounded-full bg-gradient-to-r from-accent-500 to-accent-600 px-5 py-2 text-sm font-bold text-white shadow-premium transition hover:shadow-premium-lg hover:-translate-y-0.5">
                     Book Inspection
                 </a>
             </div>
@@ -84,8 +84,8 @@
                     <p class="mt-1 text-sm text-white/60">New listings, price updates and company news, straight to your inbox.</p>
                 </div>
                 <form class="flex w-full max-w-md gap-3 sm:w-auto">
-                    <input type="email" placeholder="Your email address" class="w-full flex-1 rounded-full border-0 bg-white/10 px-5 py-3 text-sm text-white placeholder:text-white/40 focus:ring-2 focus:ring-gold-400">
-                    <button type="submit" class="shrink-0 rounded-full bg-gradient-to-r from-gold-500 to-gold-600 px-6 py-3 text-sm font-bold text-navy-950 shadow-premium transition hover:-translate-y-0.5">
+                    <input type="email" placeholder="Your email address" class="w-full flex-1 rounded-full border-0 bg-white/10 px-5 py-3 text-sm text-white placeholder:text-white/40 focus:ring-2 focus:ring-accent-400">
+                    <button type="submit" class="shrink-0 rounded-full bg-gradient-to-r from-accent-500 to-accent-600 px-6 py-3 text-sm font-bold text-white shadow-premium transition hover:-translate-y-0.5">
                         Subscribe
                     </button>
                 </form>
@@ -107,7 +107,7 @@
                 </div>
 
                 <div>
-                    <h4 class="mb-4 text-xs font-bold uppercase tracking-widest text-gold-400">Company</h4>
+                    <h4 class="mb-4 text-xs font-bold uppercase tracking-widest text-accent-400">Company</h4>
                     <ul class="space-y-2 text-sm text-white/70">
                         <li><a href="{{ url('/about') }}" class="hover:text-white">About Us</a></li>
                         <li><a href="{{ url('/properties') }}" class="hover:text-white">Properties</a></li>
@@ -117,7 +117,7 @@
                 </div>
 
                 <div>
-                    <h4 class="mb-4 text-xs font-bold uppercase tracking-widest text-gold-400">Sectors</h4>
+                    <h4 class="mb-4 text-xs font-bold uppercase tracking-widest text-accent-400">Sectors</h4>
                     <ul class="space-y-2 text-sm text-white/70">
                         <li>Real Estate</li>
                         <li>Construction</li>
@@ -126,11 +126,11 @@
                 </div>
 
                 <div>
-                    <h4 class="mb-4 text-xs font-bold uppercase tracking-widest text-gold-400">Contact</h4>
+                    <h4 class="mb-4 text-xs font-bold uppercase tracking-widest text-accent-400">Contact</h4>
                     <ul class="space-y-3 text-sm text-white/70">
                         @if ($settings->whatsapp)
                             <li>
-                                <a href="https://wa.me/{{ $settings->whatsapp }}" target="_blank" rel="noopener" class="font-bold text-white hover:text-gold-400">
+                                <a href="https://wa.me/{{ $settings->whatsapp }}" target="_blank" rel="noopener" class="font-bold text-white hover:text-accent-400">
                                     WhatsApp: {{ $settings->phone }}
                                 </a>
                             </li>
@@ -147,7 +147,7 @@
 
             <div class="mt-14 flex flex-col items-center justify-between gap-4 border-t border-white/10 pt-8 text-xs text-white/50 sm:flex-row">
                 <p>&copy; {{ now()->year }} {{ $settings->site_name }}. All rights reserved.</p>
-                <p>Crafted &amp; Developed by <a href="https://www.viplinetech.com" target="_blank" rel="noopener" class="font-semibold text-gold-400 hover:text-gold-300">Vipline Technologies Limited</a></p>
+                <p>Crafted &amp; Developed by <a href="https://www.viplinetech.com" target="_blank" rel="noopener" class="font-semibold text-accent-400 hover:text-accent-300">Vipline Technologies Limited</a></p>
             </div>
         </div>
     </footer>

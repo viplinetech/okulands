@@ -8,7 +8,7 @@
         <div x-data="{ open: {{ $index === 0 ? 'true' : 'false' }} }" class="p-6">
             <button type="button" @click="open = !open" class="flex w-full items-center justify-between gap-4 text-left">
                 <span class="font-serif text-base font-bold text-navy-900 dark:text-white sm:text-lg">{{ $item['q'] }}</span>
-                <svg class="h-5 w-5 shrink-0 text-gold-500 transition-transform duration-300" :class="open ? 'rotate-45' : ''" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" stroke-linecap="round"/></svg>
+                <svg class="h-5 w-5 shrink-0 text-accent-500 transition-transform duration-300" :class="open ? 'rotate-45' : ''" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" stroke-linecap="round"/></svg>
             </button>
             <div
                 x-show="open"

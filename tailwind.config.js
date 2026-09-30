@@ -36,17 +36,20 @@ export default {
                     900: '#0a1330',
                     950: '#060c1f',
                 },
-                gold: {
-                    50: '#fbf8ee',
-                    100: '#f5ecc9',
-                    200: '#ecd98e',
-                    300: '#e3c358',
-                    400: '#dcae3b',
-                    500: '#d4af37',
-                    600: '#b1892a',
-                    700: '#8a6822',
-                    800: '#6b501f',
-                    900: '#57421c',
+                /* Brand accent: the light sky-blue from the Oku Lands logo mark
+                   and marketing flyers (#5b9bf0), not gold, matching the
+                   established navy/blue identity. */
+                accent: {
+                    50: '#eef5ff',
+                    100: '#d9ebff',
+                    200: '#b3d4ff',
+                    300: '#85b8fb',
+                    400: '#5b9bf0',
+                    500: '#3d7de0',
+                    600: '#2a5fc4',
+                    700: '#20489a',
+                    800: '#1a3a7a',
+                    900: '#152f5f',
                 },
             },
             boxShadow: {
