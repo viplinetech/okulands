@@ -10,6 +10,10 @@ html {
     scroll-behavior: smooth;
 }
 
+[x-cloak] {
+    display: none !important;
+}
+
 body {
     transition: background-color 0.3s ease, color 0.3s ease;
 }

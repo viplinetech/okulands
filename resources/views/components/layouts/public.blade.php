@@ -77,6 +77,21 @@
     </main>
 
     <footer class="border-t border-navy-800 bg-navy-950 text-white">
+        <div class="border-b border-white/10 bg-navy-900/60">
+            <div class="mx-auto flex max-w-7xl flex-col items-center justify-between gap-6 px-5 py-10 sm:flex-row sm:px-8">
+                <div>
+                    <h3 class="font-serif text-xl font-bold text-white">Stay in the loop</h3>
+                    <p class="mt-1 text-sm text-white/60">New listings, price updates and company news, straight to your inbox.</p>
+                </div>
+                <form class="flex w-full max-w-md gap-3 sm:w-auto">
+                    <input type="email" placeholder="Your email address" class="w-full flex-1 rounded-full border-0 bg-white/10 px-5 py-3 text-sm text-white placeholder:text-white/40 focus:ring-2 focus:ring-gold-400">
+                    <button type="submit" class="shrink-0 rounded-full bg-gradient-to-r from-gold-500 to-gold-600 px-6 py-3 text-sm font-bold text-navy-950 shadow-premium transition hover:-translate-y-0.5">
+                        Subscribe
+                    </button>
+                </form>
+            </div>
+        </div>
+
         <div class="mx-auto max-w-7xl px-5 py-16 sm:px-8">
             <div class="grid grid-cols-1 gap-12 md:grid-cols-4">
                 <div>
