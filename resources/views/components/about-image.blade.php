@@ -14,7 +14,7 @@
         >
     </div>
 
-    <div class="absolute -bottom-6 -right-6 rounded-md border border-gold-400/60 bg-white px-6 py-4 shadow-premium dark:bg-navy-900">
+    <div class="absolute -bottom-6 -right-6 rounded-md border border-sky-400/60 bg-white px-6 py-4 shadow-premium dark:bg-navy-900">
         <p class="font-serif text-xl font-semibold text-navy-900 dark:text-white">{{ $label }}</p>
     </div>
 </div>

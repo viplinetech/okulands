@@ -1,8 +1,10 @@
 /**
  * Crafted & Developed by Vipline Technologies Limited - ViplineTech (www.viplinetech.com)
  *
- * "Quiet luxury, Nigerian roots": midnight navy anchor, warm ivory page
- * background, champagne gold as the single sparing accent.
+ * Brand palette matches Oku Lands' own marketing flyers: midnight navy +
+ * royal/sky blue as the primary identity, with a single sharp red accent
+ * (the location-pin color) used sparingly. Ivory page background keeps the
+ * light-mode-first, premium feel.
  */
 
 import defaultTheme from 'tailwindcss/defaultTheme';
@@ -27,17 +29,36 @@ export default {
             },
             colors: {
                 navy: {
-                    50: '#eef1f6',
-                    100: '#d7dced',
-                    200: '#aeb8d9',
-                    300: '#8390bf',
-                    400: '#57649b',
-                    500: '#374374',
-                    600: '#232c56',
-                    700: '#171e42',
-                    800: '#0f1d45',
+                    50: '#eef1f8',
+                    100: '#d6ddef',
+                    200: '#aebbdf',
+                    300: '#8299cf',
+                    400: '#4f6bb0',
+                    500: '#2a4593',
+                    600: '#1c3170',
+                    700: '#15265a',
+                    800: '#101c44',
                     900: '#0a1330',
-                    950: '#060a22',
+                    950: '#060c1f',
+                },
+                /* The light sky-blue from the logo mark and flyers (#5b9bf0). */
+                sky: {
+                    50: '#eef5ff',
+                    100: '#d9ebff',
+                    200: '#b3d4ff',
+                    300: '#85b8fb',
+                    400: '#5b9bf0',
+                    500: '#3d7de0',
+                    600: '#2a5fc4',
+                    700: '#20489a',
+                    800: '#1a3a7a',
+                    900: '#152f5f',
+                },
+                /* Rare, sharp accent: the flyer's location-pin red. Used only
+                   for pins and the smallest of highlight touches. */
+                flag: {
+                    500: '#dc2626',
+                    600: '#b91c1c',
                 },
                 ivory: {
                     DEFAULT: '#FAF8F3',

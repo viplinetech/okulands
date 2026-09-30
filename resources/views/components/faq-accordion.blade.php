@@ -8,7 +8,7 @@
         <div x-data="{ open: {{ $index === 0 ? 'true' : 'false' }} }" class="py-5">
             <button type="button" @click="open = !open" :aria-expanded="open" class="flex w-full items-center justify-between gap-4 text-left">
                 <span class="font-serif text-base font-semibold text-navy-900 dark:text-white">{{ $item['q'] }}</span>
-                <span class="flex h-6 w-6 shrink-0 items-center justify-center text-gold-600 dark:text-gold-400">
+                <span class="flex h-6 w-6 shrink-0 items-center justify-center text-sky-600 dark:text-sky-400">
                     <svg class="h-4 w-4 transition-transform duration-300" :class="open ? 'rotate-45' : ''" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" stroke-linecap="round"/></svg>
                 </span>
             </button>

@@ -39,7 +39,7 @@
                     <div class="p-5">
                         <h3 class="font-serif text-lg font-semibold text-navy-900 dark:text-white">{{ $property->title }}</h3>
                         <p class="mt-1 flex items-center gap-1 text-sm text-slate-500 dark:text-white/50">
-                            <svg class="h-3.5 w-3.5 text-gold-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0Z" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="10" r="3"/></svg>
+                            <svg class="h-3.5 w-3.5 text-flag-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0Z" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="10" r="3"/></svg>
                             {{ $property->location }}
                         </p>
                         @if ($property->size)
@@ -49,7 +49,7 @@
                     </div>
                 </a>
                 <div class="border-t border-navy-900/10 p-4 dark:border-white/10">
-                    <a href="{{ url('/contact') }}" class="block w-full rounded-md border border-navy-900/15 py-2.5 text-center text-xs font-semibold uppercase tracking-wider text-navy-800 transition hover:border-gold-400 hover:text-gold-600 dark:border-white/15 dark:text-white">
+                    <a href="{{ url('/contact') }}" class="block w-full rounded-md border border-navy-900/15 py-2.5 text-center text-xs font-semibold uppercase tracking-wider text-navy-800 transition hover:border-sky-400 hover:text-sky-600 dark:border-white/15 dark:text-white">
                         Book Inspection
                     </a>
                 </div>
@@ -58,10 +58,10 @@
     </div>
 
     <div class="mt-6 flex items-center justify-center gap-3 sm:absolute sm:-top-20 sm:right-0 sm:mt-0">
-        <button type="button" @click="scrollByCards(-1)" class="flex h-10 w-10 items-center justify-center rounded-full border border-navy-900/15 text-navy-700 transition hover:border-gold-400 hover:text-gold-600 dark:border-white/20 dark:text-white" aria-label="Previous">
+        <button type="button" @click="scrollByCards(-1)" class="flex h-10 w-10 items-center justify-center rounded-full border border-navy-900/15 text-navy-700 transition hover:border-sky-400 hover:text-sky-600 dark:border-white/20 dark:text-white" aria-label="Previous">
             <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </button>
-        <button type="button" @click="scrollByCards(1)" class="flex h-10 w-10 items-center justify-center rounded-full border border-navy-900/15 text-navy-700 transition hover:border-gold-400 hover:text-gold-600 dark:border-white/20 dark:text-white" aria-label="Next">
+        <button type="button" @click="scrollByCards(1)" class="flex h-10 w-10 items-center justify-center rounded-full border border-navy-900/15 text-navy-700 transition hover:border-sky-400 hover:text-sky-600 dark:border-white/20 dark:text-white" aria-label="Next">
             <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </button>
     </div>

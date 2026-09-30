@@ -72,7 +72,7 @@
                     <a
                         href="{{ url($href) }}"
                         class="transition-colors duration-500"
-                        :class="(!transparent || scrolled) ? 'text-navy-700 hover:text-gold-600 dark:text-white/80 dark:hover:text-gold-300' : 'text-white/90 hover:text-white'"
+                        :class="(!transparent || scrolled) ? 'text-navy-700 hover:text-sky-600 dark:text-white/80 dark:hover:text-sky-300' : 'text-white/90 hover:text-white'"
                     >{{ $label }}</a>
                 @endforeach
             </nav>
@@ -82,11 +82,11 @@
                 <a
                     href="{{ route('login') }}"
                     class="hidden text-sm font-semibold transition sm:inline-block"
-                    :class="(!transparent || scrolled) ? 'text-navy-800 hover:text-gold-600 dark:text-white' : 'text-white hover:text-white/80'"
+                    :class="(!transparent || scrolled) ? 'text-navy-800 hover:text-sky-600 dark:text-white' : 'text-white hover:text-white/80'"
                 >
                     Realtor Login
                 </a>
-                <a href="{{ url('/contact') }}" class="hidden rounded-md bg-gold-500 px-5 py-2.5 text-sm font-semibold text-navy-950 transition hover:bg-gold-400 sm:inline-block">
+                <a href="{{ url('/contact') }}" class="hidden rounded-md bg-sky-500 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-sky-400 sm:inline-block">
                     Book Inspection
                 </a>
                 <button type="button" @click="mobileOpen = true" class="flex h-9 w-9 items-center justify-center lg:hidden" :class="(!transparent || scrolled) ? 'text-navy-900 dark:text-white' : 'text-white'" aria-label="Open menu">
@@ -116,12 +116,12 @@
                 </div>
                 <nav class="mt-10 flex flex-col gap-6 text-base font-medium">
                     @foreach ([['/', 'Home'], ['/properties', 'Properties'], ['/about', 'About'], ['/about#services', 'Services'], ['/news', 'News'], ['/contact', 'Contact']] as [$href, $label])
-                        <a href="{{ url($href) }}" class="text-navy-800 hover:text-gold-600 dark:text-white/90">{{ $label }}</a>
+                        <a href="{{ url($href) }}" class="text-navy-800 hover:text-sky-600 dark:text-white/90">{{ $label }}</a>
                     @endforeach
                 </nav>
                 <div class="mt-auto flex flex-col gap-3 border-t border-navy-900/10 pt-6 dark:border-white/10">
                     <a href="{{ route('login') }}" class="text-center text-sm font-semibold text-navy-800 dark:text-white">Realtor Login</a>
-                    <a href="{{ url('/contact') }}" class="rounded-md bg-gold-500 px-5 py-3 text-center text-sm font-semibold text-navy-950 hover:bg-gold-400">Book Inspection</a>
+                    <a href="{{ url('/contact') }}" class="rounded-md bg-sky-500 px-5 py-3 text-center text-sm font-semibold text-white hover:bg-sky-400">Book Inspection</a>
                 </div>
             </div>
         </div>
@@ -138,7 +138,7 @@
                 <h2 class="font-serif text-3xl font-bold tracking-tight sm:text-4xl">Ready to secure your future?</h2>
                 <p class="mx-auto mt-3 max-w-xl text-white/60">Speak with our team today or become a realtor and start earning from every referral you make.</p>
                 <div class="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
-                    <a href="{{ url('/contact') }}" class="w-full rounded-md bg-gold-500 px-8 py-3.5 text-center text-sm font-semibold text-navy-950 transition hover:bg-gold-400 sm:w-auto">
+                    <a href="{{ url('/contact') }}" class="w-full rounded-md bg-sky-500 px-8 py-3.5 text-center text-sm font-semibold text-white transition hover:bg-sky-400 sm:w-auto">
                         Book a Free Inspection
                     </a>
                     <a href="{{ route('register') }}" class="w-full rounded-md border border-white/25 px-8 py-3.5 text-center text-sm font-semibold text-white transition hover:border-white/50 sm:w-auto">
@@ -163,7 +163,7 @@
                 </div>
 
                 <div>
-                    <h4 class="mb-4 text-xs font-semibold uppercase tracking-[0.15em] text-gold-400">Company</h4>
+                    <h4 class="mb-4 text-xs font-semibold uppercase tracking-[0.15em] text-sky-400">Company</h4>
                     <ul class="space-y-2.5 text-sm text-white/60">
                         <li><a href="{{ url('/about') }}" class="hover:text-white">About Us</a></li>
                         <li><a href="{{ url('/properties') }}" class="hover:text-white">Properties</a></li>
@@ -173,7 +173,7 @@
                 </div>
 
                 <div>
-                    <h4 class="mb-4 text-xs font-semibold uppercase tracking-[0.15em] text-gold-400">Sectors</h4>
+                    <h4 class="mb-4 text-xs font-semibold uppercase tracking-[0.15em] text-sky-400">Sectors</h4>
                     <ul class="space-y-2.5 text-sm text-white/60">
                         <li>Real Estate</li>
                         <li>Construction</li>
@@ -182,11 +182,11 @@
                 </div>
 
                 <div>
-                    <h4 class="mb-4 text-xs font-semibold uppercase tracking-[0.15em] text-gold-400">Contact</h4>
+                    <h4 class="mb-4 text-xs font-semibold uppercase tracking-[0.15em] text-sky-400">Contact</h4>
                     <ul class="space-y-3 text-sm text-white/60">
                         @if ($settings->whatsapp)
                             <li>
-                                <a href="https://wa.me/{{ $settings->whatsapp }}" target="_blank" rel="noopener" class="font-semibold text-white hover:text-gold-400">
+                                <a href="https://wa.me/{{ $settings->whatsapp }}" target="_blank" rel="noopener" class="font-semibold text-white hover:text-sky-400">
                                     WhatsApp: {{ $settings->phone }}
                                 </a>
                             </li>
@@ -203,7 +203,7 @@
 
             <div class="mt-14 flex flex-col items-center justify-between gap-4 border-t border-white/10 pt-8 text-xs text-white/40 sm:flex-row">
                 <p>&copy; {{ now()->year }} {{ $settings->site_name }}. All rights reserved.</p>
-                <p>Crafted &amp; Developed by <a href="https://www.viplinetech.com" target="_blank" rel="noopener" class="font-semibold text-gold-400 hover:text-gold-300">Vipline Technologies Limited</a></p>
+                <p>Crafted &amp; Developed by <a href="https://www.viplinetech.com" target="_blank" rel="noopener" class="font-semibold text-sky-400 hover:text-sky-300">Vipline Technologies Limited</a></p>
             </div>
         </div>
     </footer>

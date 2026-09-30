@@ -8,5 +8,5 @@
     <circle cx="60" cy="70" r="40" class="fill-navy-100 dark:fill-navy-800"/>
     <path d="M38 74 L60 54 L82 74" class="stroke-navy-800 dark:stroke-white" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
     <path d="M44 72 V94 H76 V72" class="stroke-navy-800 dark:stroke-white" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-    <rect x="55" y="78" width="10" height="16" rx="1.5" class="fill-gold-500"/>
+    <rect x="55" y="78" width="10" height="16" rx="1.5" class="fill-sky-500"/>
 </svg>
