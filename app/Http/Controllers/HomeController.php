@@ -6,6 +6,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\NewsPost;
 use App\Models\Property;
 use App\Models\SiteSetting;
 use App\Models\Testimonial;
@@ -28,6 +29,12 @@ class HomeController extends Controller
             ->take(6)
             ->get();
 
+        $latestNews = NewsPost::query()
+            ->whereNotNull('published_at')
+            ->latest('published_at')
+            ->take(3)
+            ->get();
+
         return view('home', [
             'heroImages' => $settings->heroImageUrls(),
             'featuredProperties' => $featuredProperties,
@@ -36,6 +43,8 @@ class HomeController extends Controller
             'services' => $this->services(),
             'principles' => $this->principles(),
             'faqs' => $this->faqs(),
+            'aboutChecklist' => $this->aboutChecklist(),
+            'latestNews' => $latestNews,
         ]);
     }
 
@@ -61,9 +70,12 @@ class HomeController extends Controller
     private function services(): array
     {
         return [
-            ['icon' => 'M3 10.5 12 3l9 7.5M5 9.5V21h14V9.5', 'title' => 'Property Sales', 'desc' => 'Verified residential and commercial land across prime Nigerian locations.'],
-            ['icon' => 'M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z', 'title' => 'Title Verification', 'desc' => 'Documentation support and due diligence on every land purchase.'],
-            ['icon' => 'M3 21h18M6 21V9l6-4 6 4v12M10 21v-6h4v6', 'title' => 'Construction & Build', 'desc' => 'Full-service building delivery, from foundation to finishing.'],
+            ['icon' => 'M3 10.5 12 3l9 7.5M5 9.5V21h14V9.5', 'title' => 'Real Estate Sales', 'desc' => 'Secure, high-return investment opportunities through land banking, development and property acquisition.', 'highlight' => false],
+            ['icon' => 'M3 21h18M6 21V9l6-4 6 4v12M10 21v-6h4v6', 'title' => 'Building & Construction', 'desc' => 'Professional architectural design and quality construction for residential, commercial and estate projects.', 'highlight' => false],
+            ['icon' => 'M17 20h5v-2a4 4 0 0 0-3-3.87M9 20H4v-2a4 4 0 0 1 3-3.87m5-5.13a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm6-2a4 4 0 1 1 0-8', 'title' => 'Realtor Management System', 'desc' => 'Earn commission on every referral, plus a share from your downline, tracked transparently in real time.', 'highlight' => true],
+            ['icon' => 'M12 2c3 3 4 6 4 9a4 4 0 1 1-8 0c0-3 1-6 4-9ZM12 22v-7', 'title' => 'Agriculture & Agribusiness', 'desc' => 'Sustainable farmland investment and agribusiness ventures built for long-term returns.', 'highlight' => false],
+            ['icon' => 'M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z', 'title' => 'Title Verification', 'desc' => 'Documentation support and legal due diligence on every land purchase before you commit.', 'highlight' => false],
+            ['icon' => 'M4 6h16M4 12h16M4 18h7', 'title' => 'Property Consultation', 'desc' => 'Expert guidance for individuals and organizations on acquisition, compliance and market trends.', 'highlight' => false],
         ];
     }
 
@@ -83,6 +95,11 @@ class HomeController extends Controller
                 'desc' => "Every step of the buying process is protected, with clear documentation and honest communication. You'll always know exactly what you're paying for.",
             ],
         ];
+    }
+
+    private function aboutChecklist(): array
+    {
+        return ['Integrity', 'Excellence', 'Tech-Driven', 'Due Diligence', 'Customer-Centricity', 'Sustainability'];
     }
 
     private function faqs(): array

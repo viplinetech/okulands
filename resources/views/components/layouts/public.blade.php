@@ -18,11 +18,11 @@
     <x-theme-boot-script :default="$settings->default_theme" />
 
     <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700,800|playfair-display:600,700,800,900&display=swap" rel="stylesheet" />
+    <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700,800|fraunces:500,600,700,800,900&display=swap" rel="stylesheet" />
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="min-h-screen bg-white font-sans text-navy-900 antialiased transition-colors duration-300 dark:bg-navy-950 dark:text-white">
+<body class="ambient-bg min-h-screen bg-white font-sans text-navy-900 antialiased transition-colors duration-300 dark:bg-navy-950 dark:text-white">
 
     <header
         x-data="{ scrolled: false, transparent: {{ ($transparentHero ?? false) ? 'true' : 'false' }} }"

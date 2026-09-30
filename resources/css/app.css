@@ -14,6 +14,58 @@ html {
     display: none !important;
 }
 
+/* Site-wide ambient background: fixed blueprint grid + slow-drifting
+   gold/navy glows, so the page feels alive even through plain light
+   sections, not just the hero. Sits behind all content (z-index: -1). */
+.ambient-bg {
+    position: relative;
+    isolation: isolate;
+}
+.ambient-bg::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: -2;
+    pointer-events: none;
+    background-image:
+        linear-gradient(rgba(16, 28, 68, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(16, 28, 68, 0.05) 1px, transparent 1px);
+    background-size: 56px 56px;
+}
+.dark .ambient-bg::before {
+    background-image:
+        linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+}
+.ambient-bg::after {
+    content: '';
+    position: fixed;
+    inset: -10%;
+    z-index: -1;
+    pointer-events: none;
+    background:
+        radial-gradient(circle at 12% 15%, rgba(212, 175, 55, 0.14), transparent 32%),
+        radial-gradient(circle at 88% 8%, rgba(42, 69, 147, 0.16), transparent 34%),
+        radial-gradient(circle at 20% 85%, rgba(46, 139, 87, 0.1), transparent 30%),
+        radial-gradient(circle at 92% 78%, rgba(212, 175, 55, 0.12), transparent 32%);
+    animation: ambientDrift 22s ease-in-out infinite alternate;
+}
+.dark .ambient-bg::after {
+    background:
+        radial-gradient(circle at 12% 15%, rgba(212, 175, 55, 0.1), transparent 32%),
+        radial-gradient(circle at 88% 8%, rgba(91, 155, 240, 0.14), transparent 34%),
+        radial-gradient(circle at 20% 85%, rgba(46, 139, 87, 0.08), transparent 30%),
+        radial-gradient(circle at 92% 78%, rgba(212, 175, 55, 0.1), transparent 32%);
+}
+@keyframes ambientDrift {
+    0% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(-2%, 2%) scale(1.05); }
+    100% { transform: translate(2%, -1%) scale(1); }
+}
+@media (prefers-reduced-motion: reduce) {
+    .ambient-bg::after { animation: none; }
+}
+
 body {
     transition: background-color 0.3s ease, color 0.3s ease;
 }

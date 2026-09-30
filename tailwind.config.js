@@ -20,7 +20,7 @@ export default {
         extend: {
             fontFamily: {
                 sans: ['Inter', ...defaultTheme.fontFamily.sans],
-                serif: ['"Playfair Display"', ...defaultTheme.fontFamily.serif],
+                serif: ['Fraunces', ...defaultTheme.fontFamily.serif],
             },
             colors: {
                 navy: {

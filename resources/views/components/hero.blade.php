@@ -65,8 +65,13 @@
             </p>
         </div>
 
-        {{-- Right: single framed image with floating chips --}}
+        {{-- Right: single framed image with hexagon accents + floating chips --}}
         <div data-reveal="right" class="relative">
+            {{-- Decorative hexagon outlines --}}
+            <svg class="pointer-events-none absolute -right-10 -top-14 h-40 w-40 text-gold-400/40 animate-floaty" viewBox="0 0 100 100" fill="none"><path d="M50 2 93 26v48L50 98 7 74V26Z" stroke="currentColor" stroke-width="2"/></svg>
+            <svg class="pointer-events-none absolute -left-12 bottom-16 h-24 w-24 text-navy-400/30 animate-floaty dark:text-blue-400/20" style="animation-delay:1.5s" viewBox="0 0 100 100" fill="none"><path d="M50 2 93 26v48L50 98 7 74V26Z" stroke="currentColor" stroke-width="2"/></svg>
+            <svg class="pointer-events-none absolute -bottom-10 right-10 h-16 w-16 text-gold-400/30 animate-floaty" style="animation-delay:3s" viewBox="0 0 100 100" fill="none"><path d="M50 2 93 26v48L50 98 7 74V26Z" stroke="currentColor" stroke-width="2"/></svg>
+
             <div class="relative overflow-hidden rounded-[2rem] border border-white/60 bg-navy-100 shadow-premium-lg dark:border-white/10 dark:bg-navy-900">
                 <div class="aspect-[4/5] sm:aspect-[5/4]">
                     @if (!empty($images[0] ?? null))
