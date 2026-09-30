@@ -1,8 +1,13 @@
 <?php
 
+/**
+ * Crafted & Developed by Vipline Technologies Limited - ViplineTech (www.viplinetech.com)
+ */
+
+use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 
-Route::view('/', 'welcome');
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])

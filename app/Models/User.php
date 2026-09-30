@@ -107,7 +107,7 @@ class User extends Authenticatable
     }
 
     /**
-     * Full upline chain, nearest referrer first — used to fan out
+     * Full upline chain, nearest referrer first, used to fan out
      * multi-tier commissions when a sale is approved.
      */
     public function uplineChain(int $maxTiers = 5): array
