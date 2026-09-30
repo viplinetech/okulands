@@ -24,7 +24,14 @@
 </head>
 <body class="min-h-screen bg-white font-sans text-navy-900 antialiased transition-colors duration-300 dark:bg-navy-950 dark:text-white">
 
-    <header class="sticky top-0 z-50 border-b border-navy-100/70 bg-white/85 backdrop-blur-md transition-colors duration-300 dark:border-white/10 dark:bg-navy-950/85">
+    <header
+        x-data="{ scrolled: false, transparent: {{ ($transparentHero ?? false) ? 'true' : 'false' }} }"
+        x-init="window.addEventListener('scroll', () => scrolled = window.scrollY > 60)"
+        :class="(!transparent || scrolled)
+            ? 'bg-white/90 border-navy-100/70 dark:bg-navy-950/90 dark:border-white/10 shadow-sm'
+            : 'bg-transparent border-transparent'"
+        class="fixed inset-x-0 top-0 z-50 border-b backdrop-blur-md transition-all duration-500"
+    >
         <div class="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 sm:px-8">
             <a href="{{ url('/') }}" class="flex items-center gap-3">
                 @if ($settings->logoUrl())
@@ -32,23 +39,30 @@
                     <img src="{{ $settings->logoDarkUrl() }}" alt="{{ $settings->site_name }}" class="hidden h-10 w-auto dark:block">
                 @else
                     <x-brand-mark class="h-10 w-10" />
-                    <span class="font-serif text-lg font-extrabold leading-tight">
-                        {{ $settings->site_name }}
-                    </span>
+                    <span
+                        class="font-serif text-lg font-extrabold leading-tight transition-colors duration-500"
+                        :class="(!transparent || scrolled) ? 'text-navy-900 dark:text-white' : 'text-white'"
+                    >{{ $settings->site_name }}</span>
                 @endif
             </a>
 
             <nav class="hidden items-center gap-8 text-sm font-semibold lg:flex">
-                <a href="{{ url('/') }}" class="text-navy-700 transition hover:text-gold-600 dark:text-white/80 dark:hover:text-gold-400">Home</a>
-                <a href="{{ url('/properties') }}" class="text-navy-700 transition hover:text-gold-600 dark:text-white/80 dark:hover:text-gold-400">Properties</a>
-                <a href="{{ url('/about') }}" class="text-navy-700 transition hover:text-gold-600 dark:text-white/80 dark:hover:text-gold-400">About</a>
-                <a href="{{ url('/news') }}" class="text-navy-700 transition hover:text-gold-600 dark:text-white/80 dark:hover:text-gold-400">News</a>
-                <a href="{{ url('/contact') }}" class="text-navy-700 transition hover:text-gold-600 dark:text-white/80 dark:hover:text-gold-400">Contact</a>
+                @foreach ([['/', 'Home'], ['/properties', 'Properties'], ['/about', 'About'], ['/news', 'News'], ['/contact', 'Contact']] as [$href, $label])
+                    <a
+                        href="{{ url($href) }}"
+                        class="relative transition-colors duration-500 after:absolute after:-bottom-1 after:left-0 after:h-0.5 after:w-0 after:bg-gold-500 after:transition-all after:duration-300 hover:after:w-full"
+                        :class="(!transparent || scrolled) ? 'text-navy-700 hover:text-gold-600 dark:text-white/80 dark:hover:text-gold-400' : 'text-white/90 hover:text-white'"
+                    >{{ $label }}</a>
+                @endforeach
             </nav>
 
             <div class="flex items-center gap-3">
                 <x-theme-toggle />
-                <a href="{{ route('login') }}" class="hidden rounded-full border border-navy-200 px-5 py-2 text-sm font-semibold text-navy-800 transition hover:border-gold-400 hover:text-gold-600 dark:border-white/20 dark:text-white sm:inline-block">
+                <a
+                    href="{{ route('login') }}"
+                    class="hidden rounded-full border px-5 py-2 text-sm font-semibold transition sm:inline-block"
+                    :class="(!transparent || scrolled) ? 'border-navy-200 text-navy-800 hover:border-gold-400 hover:text-gold-600 dark:border-white/20 dark:text-white' : 'border-white/40 text-white hover:bg-white/10'"
+                >
                     Realtor Login
                 </a>
                 <a href="{{ url('/contact') }}" class="rounded-full bg-gradient-to-r from-gold-500 to-gold-600 px-5 py-2 text-sm font-bold text-navy-950 shadow-premium transition hover:shadow-premium-lg hover:-translate-y-0.5">
@@ -58,7 +72,7 @@
         </div>
     </header>
 
-    <main>
+    <main class="{{ ($transparentHero ?? false) ? '' : 'pt-20' }}">
         {{ $slot }}
     </main>
 
