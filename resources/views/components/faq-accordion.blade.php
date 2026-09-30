@@ -3,12 +3,14 @@
 --}}
 @props(['items' => []])
 
-<div class="mx-auto max-w-3xl divide-y divide-navy-100 rounded-3xl border border-navy-100 bg-white shadow-premium dark:divide-white/10 dark:border-white/10 dark:bg-navy-900">
+<div class="divide-y divide-navy-900/10 border-y border-navy-900/10 dark:divide-white/10 dark:border-white/10">
     @foreach ($items as $index => $item)
-        <div x-data="{ open: {{ $index === 0 ? 'true' : 'false' }} }" class="p-6">
-            <button type="button" @click="open = !open" class="flex w-full items-center justify-between gap-4 text-left">
-                <span class="font-serif text-base font-bold text-navy-900 dark:text-white sm:text-lg">{{ $item['q'] }}</span>
-                <svg class="h-5 w-5 shrink-0 text-accent-500 transition-transform duration-300" :class="open ? 'rotate-45' : ''" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" stroke-linecap="round"/></svg>
+        <div x-data="{ open: {{ $index === 0 ? 'true' : 'false' }} }" class="py-5">
+            <button type="button" @click="open = !open" :aria-expanded="open" class="flex w-full items-center justify-between gap-4 text-left">
+                <span class="font-serif text-base font-semibold text-navy-900 dark:text-white">{{ $item['q'] }}</span>
+                <span class="flex h-6 w-6 shrink-0 items-center justify-center text-gold-600 dark:text-gold-400">
+                    <svg class="h-4 w-4 transition-transform duration-300" :class="open ? 'rotate-45' : ''" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" stroke-linecap="round"/></svg>
+                </span>
             </button>
             <div
                 x-show="open"
@@ -17,7 +19,7 @@
                 x-transition:enter-start="opacity-0 -translate-y-1"
                 x-transition:enter-end="opacity-100 translate-y-0"
             >
-                <p class="mt-4 text-sm leading-relaxed text-navy-600 dark:text-white/60">{{ $item['a'] }}</p>
+                <p class="mt-3 text-sm leading-relaxed text-slate-500 dark:text-white/60">{{ $item['a'] }}</p>
             </div>
         </div>
     @endforeach

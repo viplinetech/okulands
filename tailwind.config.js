@@ -1,5 +1,8 @@
 /**
  * Crafted & Developed by Vipline Technologies Limited - ViplineTech (www.viplinetech.com)
+ *
+ * "Quiet luxury, Nigerian roots": midnight navy anchor, warm ivory page
+ * background, champagne gold as the single sparing accent.
  */
 
 import defaultTheme from 'tailwindcss/defaultTheme';
@@ -24,37 +27,45 @@ export default {
             },
             colors: {
                 navy: {
-                    50: '#eef1f8',
-                    100: '#d6ddef',
-                    200: '#aebbdf',
-                    300: '#8299cf',
-                    400: '#4f6bb0',
-                    500: '#2a4593',
-                    600: '#1c3170',
-                    700: '#15265a',
-                    800: '#101c44',
+                    50: '#eef1f6',
+                    100: '#d7dced',
+                    200: '#aeb8d9',
+                    300: '#8390bf',
+                    400: '#57649b',
+                    500: '#374374',
+                    600: '#232c56',
+                    700: '#171e42',
+                    800: '#0f1d45',
                     900: '#0a1330',
-                    950: '#060c1f',
+                    950: '#060a22',
                 },
-                /* Brand accent: the light sky-blue from the Oku Lands logo mark
-                   and marketing flyers (#5b9bf0), not gold, matching the
-                   established navy/blue identity. */
-                accent: {
-                    50: '#eef5ff',
-                    100: '#d9ebff',
-                    200: '#b3d4ff',
-                    300: '#85b8fb',
-                    400: '#5b9bf0',
-                    500: '#3d7de0',
-                    600: '#2a5fc4',
-                    700: '#20489a',
-                    800: '#1a3a7a',
-                    900: '#152f5f',
+                ivory: {
+                    DEFAULT: '#FAF8F3',
+                    100: '#FFFFFF',
+                    200: '#F3EFE4',
+                },
+                gold: {
+                    50: '#faf6ef',
+                    100: '#f0e4cd',
+                    200: '#e3cda1',
+                    300: '#d4b483',
+                    400: '#c3a06a',
+                    500: '#b8935a',
+                    600: '#9c7846',
+                    700: '#7c5f38',
+                    800: '#5f4a2c',
+                    900: '#4a3a23',
+                },
+                slate: {
+                    ...defaultTheme.colors.slate,
                 },
             },
             boxShadow: {
-                premium: '0 20px 60px -15px rgba(10, 19, 48, 0.35)',
-                'premium-lg': '0 30px 90px -20px rgba(10, 19, 48, 0.45)',
+                premium: '0 20px 50px -15px rgba(10, 19, 48, 0.25)',
+                'premium-lg': '0 30px 80px -20px rgba(10, 19, 48, 0.35)',
+            },
+            letterSpacing: {
+                tightest: '-0.04em',
             },
         },
     },
