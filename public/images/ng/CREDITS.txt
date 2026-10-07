@@ -1,0 +1,33 @@
+Bundled default photography (Nigeria) - Oku Lands & Properties website
+=====================================================================
+
+These photos are free to use under the Pexels License (https://www.pexels.com/license/):
+free for commercial use, no attribution required. Credit is given here as a courtesy.
+They are STAND-INS: replace them with real Oku Lands photography from the admin
+(hero images, page banners, About photos, services, gallery and property photos).
+
+Guidance: do not present these as Oku Lands' own projects or as listing photos.
+Avoid using photos of identifiable people in ways that imply endorsement.
+
+Files are resized to max 1600px wide and converted to WebP for speed.
+Original page: https://www.pexels.com/photo/<id>/
+
+id        photographer          subject
+--------  --------------------  ------------------------------------------------
+36622014  Taiwo Samson          Aerial view, Lagos cityscape with coastal horizon (townhouse estate, crane)
+38277835  Taiwo Samson          Lagos skyscrapers under construction with cranes
+32847478  Nannawabadiya         Lone tree in Nigerian farmland under clear sky
+34432716  Yahaya Ahmed          Stylish tropical apartments with palm trees, Abuja
+37405043  Fawaz Onakoya         Modern Lagos skyline with watercraft in the lagoon
+38513265  Taiwo Samson          Aerial view of Lagos city under construction
+32656347  Onaopemipo Rufus      Aerial view of Lagos cityscape with ocean horizon
+34557960  Zacky Dare            Modern high-rise residential building, Lagos
+38099166  Chukwuemeka Joel      Aerial view of Enugu city with landscape and buildings
+36622005  Taiwo Samson          Modern apartment complex under construction, Lagos
+39004741  BarryTheOctopus       Aerial view of the Jos Plateau
+38511754  Taiwo Samson          Aerial view of a high-rise under construction, Lagos
+32956482  Al_amin Nuhu          Elderly farmer in a green Nigerian field
+38512126  Taiwo Samson          Aerial view of Lagos urban landscape
+27938904  Ben Iwara             Drone view, Osapa London, Lagos State
+27938900  Ben Iwara             Drone view, Osapa London, Lagos State
+32860685  Ogenyi Pictures       Young boy walking through a cabbage farm in Nigeria

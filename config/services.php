@@ -28,6 +28,15 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    // Cloudflare Turnstile (bot check on realtor sign-up). Leave empty to disable.
+    'turnstile' => [
+        'site_key' => env('TURNSTILE_SITE_KEY'),
+        'secret' => env('TURNSTILE_SECRET_KEY'),
+    ],
+
+    // Invite link to the Oku Lands Realtor WhatsApp group, shown to realtors after they confirm their email.
+    'realtor_whatsapp_group' => env('REALTOR_WHATSAPP_GROUP_URL'),
+
     'slack' => [
         'notifications' => [
             'bot_user_oauth_token' => env('SLACK_BOT_USER_OAUTH_TOKEN'),

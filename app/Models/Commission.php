@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Commission extends Model
 {
-    protected $fillable = ['sale_id', 'user_id', 'tier', 'rate', 'amount', 'status', 'paid_at'];
+    protected $fillable = ['sale_id', 'user_id', 'tier', 'rate', 'amount', 'status', 'paid_at', 'payout_reference'];
 
     protected function casts(): array
     {

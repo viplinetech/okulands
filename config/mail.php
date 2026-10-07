@@ -115,4 +115,15 @@ return [
         'name' => env('MAIL_FROM_NAME', env('APP_NAME', 'Laravel')),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Branded email theme
+    |--------------------------------------------------------------------------
+    | "oku": the uploaded logo on a navy band, matching the site (see resources/views/vendor/mail/html).
+    */
+    'markdown' => [
+        'theme' => 'oku',
+        'paths' => [resource_path('views/vendor/mail')],
+    ],
+
 ];

@@ -1,101 +1,893 @@
 /**
  * Crafted & Developed by Vipline Technologies Limited - ViplineTech (www.viplinetech.com)
- * "Quiet luxury" motion set: restrained, purposeful, nothing decorative.
+ *
+ * "Midnight Estate" design system, light-first.
+ * Principles: one navy/sky identity, generous space, a single easing curve,
+ * and motion that reveals content rather than decorating it. Theme colours
+ * are semantic tokens, so every page supports light and dark with one set of
+ * markup. Everything degrades gracefully with no JS, is lighter on phones,
+ * and honours prefers-reduced-motion.
  */
+
+/* Fonts are self-hosted (bundled by Vite): no third-party request blocks the first paint. */
+@import '@fontsource/manrope/latin-400.css';
+@import '@fontsource/manrope/latin-500.css';
+@import '@fontsource/manrope/latin-600.css';
+@import '@fontsource/manrope/latin-700.css';
+@import '@fontsource/manrope/latin-800.css';
+@import '@fontsource/instrument-serif/latin-400.css';
+@import '@fontsource/instrument-serif/latin-400-italic.css';
+@import './shell.css';
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* ---------- Theme tokens (RGB triplets so Tailwind opacity works) ---------- */
+:root {
+    --page: 245 248 252;
+    --card: 255 255 255;
+    --soft: 232 238 248;
+    --ink: 10 19 48;
+    --mute: 84 98 128;
+    --brand: 42 95 196;
+    --brand-fg: 255 255 255;
+    --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+    color-scheme: light;
+}
+.dark {
+    --page: 6 12 31;
+    --card: 12 22 52;
+    --soft: 10 19 48;
+    --ink: 255 255 255;
+    --mute: 165 178 208;
+    --brand: 91 155 240;
+    --brand-fg: 6 12 31;
+    color-scheme: dark;
+}
+
 html {
     scroll-behavior: smooth;
+    scroll-padding-top: 6.5rem;
+    -webkit-text-size-adjust: 100%;
 }
 
-body {
-    transition: background-color 0.3s ease, color 0.3s ease;
+/* Brief colour crossfade when the visitor flips the theme */
+html.theme-anim,
+html.theme-anim *,
+html.theme-anim *::before,
+html.theme-anim *::after {
+    transition: background-color 0.35s ease, border-color 0.35s ease, color 0.35s ease, fill 0.35s ease !important;
 }
 
-[x-cloak] {
-    display: none !important;
+::selection {
+    background: #5b9bf0;
+    color: #060c1f;
 }
 
-/* Scroll-reveal: fades + rises into place once in viewport (see app.js) */
-[data-reveal] {
+:focus-visible {
+    outline: 2px solid rgb(var(--brand));
+    outline-offset: 3px;
+    border-radius: 6px;
+}
+
+/* Search-match highlight (FAQ knowledge base): brand-tinted instead of the browser's yellow. */
+mark {
+    background: rgb(var(--brand) / 0.22);
+    color: inherit;
+    border-radius: 0.2em;
+    padding: 0 0.1em;
+}
+
+@layer base {
+    .site-body {
+        @apply bg-page text-ink antialiased;
+        text-rendering: optimizeLegibility;
+        -webkit-font-smoothing: antialiased;
+    }
+}
+
+@layer components {
+    /* ---------- Type ---------- */
+    .display {
+        @apply font-serif font-normal;
+        line-height: 1;
+        letter-spacing: -0.02em;
+    }
+    .eyebrow {
+        @apply inline-flex items-center gap-3 text-[0.7rem] font-semibold uppercase tracking-[0.26em];
+    }
+    .eyebrow::before {
+        content: '';
+        width: 1.75rem;
+        height: 1px;
+        background: currentColor;
+        opacity: 0.6;
+    }
+
+    /* ---------- Buttons ---------- */
+    .btn {
+        @apply relative inline-flex items-center justify-center gap-2.5 whitespace-nowrap rounded-full px-7 py-4 text-sm font-semibold tracking-wide transition duration-500;
+        transition-timing-function: var(--ease-out);
+    }
+    /* themed: brand blue on light, sky on dark */
+    .btn-primary {
+        @apply bg-brand text-brand-fg;
+        box-shadow: 0 12px 34px -12px rgb(var(--brand) / 0.65);
+    }
+    .btn-primary:hover {
+        @apply bg-ink text-page;
+        box-shadow: 0 16px 40px -12px rgb(var(--ink) / 0.4);
+    }
+    .btn-outline {
+        @apply border border-ink/20 text-ink;
+    }
+    .btn-outline:hover {
+        @apply border-ink bg-ink text-page;
+    }
+    /* fixed, for always-dark photo/navy panels */
+    .btn-sky {
+        @apply bg-sky-400 text-navy-950;
+        box-shadow: 0 12px 40px -10px rgba(91, 155, 240, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+    }
+    .btn-sky:hover {
+        @apply bg-white;
+    }
+    .btn-ghost {
+        @apply border border-white/25 bg-white/5 text-white backdrop-blur-md;
+    }
+    .btn-ghost:hover {
+        @apply border-white/60 bg-white/15;
+    }
+    .btn .arrow {
+        transition: transform 0.5s var(--ease-out);
+    }
+    .btn:hover .arrow {
+        transform: translateX(4px);
+    }
+
+    /* Round icon button used beside links ("View all", cards) */
+    .circle-link {
+        @apply flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-ink/20 text-ink transition duration-500;
+    }
+    .group:hover .circle-link {
+        @apply border-brand bg-brand text-brand-fg;
+    }
+
+    /* ---------- Surfaces ---------- */
+    .surface {
+        @apply rounded-3xl border border-ink/10 bg-card;
+    }
+    .glass {
+        @apply border border-white/15 bg-white/[0.07] backdrop-blur-xl;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    }
+    .shadow-soft {
+        box-shadow: 0 30px 60px -30px rgb(var(--ink) / 0.25);
+    }
+
+    /* Card with a cursor-following spotlight (fine pointers only, see initSpotlight). */
+    .spot {
+        position: relative;
+        isolation: isolate;
+    }
+    .spot::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        border-radius: inherit;
+        background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 0%), rgb(var(--brand) / 0.16), transparent 60%);
+        opacity: 0;
+        transition: opacity 0.5s var(--ease-out);
+    }
+    .spot:hover::before {
+        opacity: 1;
+    }
+
+    /* Hairline gradient border for panels on dark. */
+    .hairline {
+        position: relative;
+    }
+    .hairline::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        padding: 1px;
+        background: linear-gradient(140deg, rgba(133, 184, 251, 0.55), rgba(255, 255, 255, 0.04) 40%, rgba(91, 155, 240, 0.25));
+        -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+        -webkit-mask-composite: xor;
+        mask-composite: exclude;
+        pointer-events: none;
+    }
+
+    /* Fine film grain over dark sections; adds tactility, hides banding. */
+    .grain::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        opacity: 0.06;
+        mix-blend-mode: overlay;
+        background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+    }
+
+    /* Accent words with a continuous travelling light: a bright highlight glides across the
+       phrase word by word (~4s per word), a soft halo pulses with it, and the next pass
+       starts straight away. .text-glow follows the theme; .text-shine-inv is for the
+       always-dark photo panels. --g is each word's index inside the accent phrase. */
+    .text-glow,
+    .text-shine-inv {
+        background-image: linear-gradient(
+            110deg,
+            var(--glow-base) 0%, var(--glow-base) 32%,
+            var(--glow-soft) 43%, var(--glow-hi) 50%, var(--glow-soft) 57%,
+            var(--glow-base) 68%, var(--glow-base) 100%
+        );
+        background-size: 250% 100%;
+        background-position: 88% 0;
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        filter: drop-shadow(0 0 6px var(--glow-halo));
+        animation:
+            glint 4.2s cubic-bezier(0.37, 0, 0.63, 1) infinite,
+            glowpulse 4.2s ease-in-out infinite;
+        animation-delay: calc(var(--g, 0) * 0.3s + 0.6s);
+    }
+    .text-glow {
+        --glow-base: rgb(var(--brand));
+        --glow-soft: #5fa2ff;
+        --glow-hi: #a9d0ff;
+        --glow-halo: rgb(var(--brand) / 0.28);
+    }
+    .dark .text-glow {
+        --glow-soft: #cfe4ff;
+        --glow-hi: #ffffff;
+        --glow-halo: rgba(125, 183, 255, 0.35);
+    }
+    .text-shine-inv {
+        --glow-base: #6eaeff;
+        --glow-soft: #cfe4ff;
+        --glow-hi: #ffffff;
+        --glow-halo: rgba(125, 183, 255, 0.35);
+    }
+
+    /* ---------- Forms ---------- */
+    .field-label {
+        @apply mb-2 block text-[0.68rem] font-semibold uppercase tracking-[0.2em] text-mute;
+    }
+    .field {
+        @apply block w-full rounded-2xl border border-ink/15 bg-card px-5 py-4 text-base text-ink placeholder:text-mute/60 focus:border-brand focus:ring-4 focus:ring-brand/15;
+        transition: border-color 0.3s, box-shadow 0.3s;
+    }
+    select.field {
+        @apply pr-10;
+    }
+
+    /* ---------- Header ---------- */
+    .nav-link {
+        @apply rounded-full px-3 py-2 text-[0.8rem] font-medium opacity-80 xl:px-4 xl:text-[0.82rem] transition duration-300 hover:bg-white/10 hover:opacity-100;
+    }
+    .nav-link.is-active {
+        @apply bg-white/10 opacity-100;
+    }
+    .site-header.is-solid .nav-link:hover,
+    .site-header.is-solid .nav-link.is-active {
+        background: rgb(var(--ink) / 0.07);
+    }
+    .icon-btn {
+        @apply flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-full transition duration-300;
+        border: 1px solid currentColor;
+        border: 1px solid color-mix(in srgb, currentColor 22%, transparent);
+    }
+    .pill-link {
+        @apply inline-flex items-center gap-2 rounded-full px-4 py-2.5 text-[0.82rem] font-semibold transition duration-300;
+        border: 1px solid currentColor;
+        border: 1px solid color-mix(in srgb, currentColor 28%, transparent);
+    }
+    .pill-link:hover {
+        background: color-mix(in srgb, currentColor 10%, transparent);
+    }
+    .icon-btn:hover {
+        background: color-mix(in srgb, currentColor 10%, transparent);
+    }
+}
+
+/* Header states: white-on-photo at the top, themed glass once scrolled */
+.site-header {
+    color: #fff;
+    background: rgba(6, 12, 31, 0.28);
+    border-color: rgba(255, 255, 255, 0.16);
+    transition: transform 0.6s var(--ease-out), background-color 0.5s, border-color 0.5s, box-shadow 0.5s, color 0.5s;
+}
+.site-header.is-solid {
+    color: rgb(var(--ink));
+    background: rgb(var(--card) / 0.88);
+    border-color: rgb(var(--ink) / 0.1);
+    box-shadow: 0 20px 50px -24px rgb(var(--ink) / 0.35);
+}
+.site-header.is-hidden {
+    transform: translateY(-140%);
+}
+/* While the full-screen menu is open the header sits on top of it, restyled to match. */
+.menu-open .site-header {
+    color: rgb(var(--ink));
+    background: transparent;
+    border-color: transparent;
+    box-shadow: none;
+    backdrop-filter: none;
+}
+html:not(.dark) .menu-open .site-header .logo-light {
+    display: block;
+}
+html:not(.dark) .menu-open .site-header .logo-dark {
+    display: none;
+}
+.logo-light {
+    display: none;
+}
+html:not(.dark) .site-header.is-solid .logo-light {
+    display: block;
+}
+html:not(.dark) .site-header.is-solid .logo-dark {
+    display: none;
+}
+
+/* Theme toggle icon swap */
+.theme-toggle .i-moon {
+    display: none;
+}
+.dark .theme-toggle .i-sun {
+    display: none;
+}
+.dark .theme-toggle .i-moon {
+    display: block;
+}
+
+/* ---------- Progressive enhancement gate ----------
+   Reveal styles only apply when JS has flagged <html class="js">, so
+   content is never invisible if scripts fail. */
+
+.js [data-reveal] {
     opacity: 0;
-    transform: translateY(24px);
-    transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    transform: translateY(20px);
+    transition: opacity 0.55s var(--ease-out), transform 0.55s var(--ease-out);
+    transition-delay: var(--d, 0ms);
 }
-[data-reveal].is-revealed {
+.js [data-reveal].is-in {
     opacity: 1;
+    transform: none;
+}
+.js [data-reveal='fade'] {
+    transform: none;
+}
+.js [data-reveal='scale'] {
+    transform: scale(0.95);
+}
+.js [data-reveal='scale'].is-in {
+    transform: none;
+}
+
+/* Image unveil: clip-path wipe with a settling zoom. */
+.js [data-unveil] {
+    clip-path: inset(0 0 100% 0);
+    transition: clip-path 1s var(--ease-out);
+    transition-delay: var(--d, 0ms);
+}
+.js [data-unveil].is-in {
+    clip-path: inset(0 0 0% 0);
+}
+.js [data-unveil] img {
+    transform: scale(1.2);
+    transition: transform 1.3s var(--ease-out);
+    transition-delay: var(--d, 0ms);
+}
+.js [data-unveil].is-in img {
+    transform: scale(1);
+}
+
+/* Headline split: each word rises out of its own mask. */
+.split-word {
+    display: inline-block;
+    overflow: hidden;
+    vertical-align: top;
+    /* Generous padding (cancelled by the negative margin) leaves room for the glow halo. */
+    padding: 0.3em 0.4em 0.32em 0.16em;
+    margin: -0.3em -0.4em -0.32em -0.16em;
+}
+.split-word > span {
+    display: inline-block;
+    transform: translateY(0);
+}
+.js [data-split] .split-word > span {
+    transform: translateY(190%);
+    transition: transform 0.6s var(--ease-out);
+    transition-delay: calc(var(--i, 0) * 25ms + var(--d, 0ms));
+}
+.js [data-split].is-in .split-word > span {
     transform: translateY(0);
 }
 
-@media (prefers-reduced-motion: reduce) {
-    [data-reveal] {
-        opacity: 1;
-        transform: none;
-        transition: none;
+/* Scroll-scrubbed paragraph: words light up as you read (see initScrub). */
+.scrub-word {
+    opacity: 0.2;
+    transition: opacity 0.35s linear;
+}
+.scrub-word.on {
+    opacity: 1;
+}
+
+/* Hero image crossfade + slow settle */
+.hero-slide {
+    opacity: 0;
+    transform: scale(1.08);
+    transition: opacity 2.4s var(--ease-in-out), transform 9s linear;
+}
+.hero-slide.is-active {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* The light enters just off the left edge and leaves just off the right, so every
+   loop starts and ends on plain colour: seamless, with no dead time between passes. */
+@keyframes glint {
+    from { background-position: 88% 0; }
+    to { background-position: 12% 0; }
+}
+/* The halo swells as the light passes over a word, then settles. */
+@keyframes glowpulse {
+    0%, 100% { filter: drop-shadow(0 0 5px var(--glow-halo)); }
+    50% { filter: drop-shadow(0 0 20px var(--glow-halo)) drop-shadow(0 0 6px var(--glow-halo)); }
+}
+
+/* Two-photo crossfade (About block on Home): slow dissolve + gentle settle, dots follow along. */
+.xf-slide {
+    opacity: 0;
+    transform: scale(1.06);
+    transition: opacity 1.8s var(--ease-in-out), transform 7s linear;
+}
+.xf-slide.is-active {
+    opacity: 1;
+    transform: scale(1);
+}
+.xf-dot {
+    height: 0.35rem;
+    width: 0.35rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.55);
+    transition: width 0.6s var(--ease-out), background-color 0.4s;
+}
+.xf-dot.is-active {
+    width: 2rem;
+    background: #fff;
+}
+
+/* Aurora: slow blurred light sources, hero + CTA panels only. */
+@keyframes drift {
+    0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+    50% { transform: translate3d(4%, -6%, 0) scale(1.18); }
+}
+.aurora {
+    animation: drift 16s ease-in-out infinite;
+    will-change: transform;
+}
+
+/* Marquee */
+@keyframes marquee {
+    to { transform: translateX(-50%); }
+}
+.marquee-track {
+    display: flex;
+    width: max-content;
+    animation: marquee 48s linear infinite;
+}
+.marquee:hover .marquee-track {
+    animation-play-state: paused;
+}
+
+/* Scroll cue */
+@keyframes cue {
+    0% { transform: translateY(-100%); }
+    60%, 100% { transform: translateY(100%); }
+}
+.cue::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: #85b8fb;
+    animation: cue 2.2s var(--ease-in-out) infinite;
+}
+
+/* Mobile menu */
+.menu-panel {
+    clip-path: circle(0% at calc(100% - 2.5rem) 2.5rem);
+    visibility: hidden;
+    transition: clip-path 0.9s var(--ease-out), visibility 0s 0.9s;
+}
+.menu-open .menu-panel {
+    clip-path: circle(150% at calc(100% - 2.5rem) 2.5rem);
+    visibility: visible;
+    transition: clip-path 0.9s var(--ease-out), visibility 0s;
+}
+.menu-link {
+    opacity: 0;
+    transform: translateY(32px);
+    transition: opacity 0.7s var(--ease-out), transform 0.7s var(--ease-out);
+}
+.menu-open .menu-link {
+    opacity: 1;
+    transform: none;
+    transition-delay: calc(var(--i) * 60ms + 250ms);
+}
+.menu-open .bar-1 {
+    transform: translateY(0) rotate(45deg);
+}
+.menu-open .bar-2 {
+    transform: translateY(0) rotate(-45deg);
+}
+.bar-1,
+.bar-2 {
+    transition: transform 0.5s var(--ease-out);
+}
+
+/* Accordion (grid-rows height animation, no fixed heights) */
+.acc-body {
+    display: grid;
+    grid-template-rows: 1fr;
+    transition: grid-template-rows 0.6s var(--ease-out);
+}
+.js .acc-body {
+    grid-template-rows: 0fr;
+}
+.acc-body > div {
+    overflow: hidden;
+}
+.js .acc-item.is-open .acc-body {
+    grid-template-rows: 1fr;
+}
+.acc-item .acc-plus {
+    transition: transform 0.5s var(--ease-out), background-color 0.3s, color 0.3s;
+}
+.acc-item.is-open .acc-plus {
+    transform: rotate(45deg);
+    @apply bg-brand text-brand-fg;
+}
+
+/* Draggable rails */
+.rail {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    cursor: grab;
+    overscroll-behavior-x: contain;
+}
+.rail::-webkit-scrollbar {
+    display: none;
+}
+.rail.is-dragging {
+    cursor: grabbing;
+    scroll-snap-type: none;
+    scroll-behavior: auto;
+}
+.rail.is-dragging a {
+    pointer-events: none;
+}
+
+/* Gallery: masonry columns, filterable, with lightbox */
+.masonry {
+    column-gap: 1rem;
+    columns: 1;
+}
+@media (min-width: 560px) {
+    .masonry { columns: 2; }
+}
+@media (min-width: 1024px) {
+    .masonry { columns: 3; column-gap: 1.25rem; }
+}
+.masonry > * {
+    break-inside: avoid;
+    margin-bottom: 1rem;
+}
+@media (min-width: 1024px) {
+    .masonry > * { margin-bottom: 1.25rem; }
+}
+@keyframes pop-in {
+    from { opacity: 0; transform: translateY(14px) scale(0.98); }
+    to { opacity: 1; transform: none; }
+}
+.g-item.pop {
+    animation: pop-in 0.7s var(--ease-out) both;
+    animation-delay: var(--d, 0ms);
+}
+.g-item[hidden] {
+    display: none;
+}
+
+/* Lightbox */
+.lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    background: rgba(4, 8, 22, 0.96);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.4s var(--ease-out), visibility 0s 0.4s;
+}
+.lightbox.is-open {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.4s var(--ease-out), visibility 0s;
+}
+.lightbox img {
+    transition: opacity 0.35s var(--ease-out), transform 0.5s var(--ease-out);
+}
+.lightbox img.is-swapping {
+    opacity: 0;
+    transform: scale(0.98);
+}
+
+/* Star-rating input: labels sit in reverse DOM order so a checked star lights all stars up to it. */
+.stars {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+    gap: 0.15rem;
+}
+.stars input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+.stars label {
+    cursor: pointer;
+    color: rgb(var(--ink) / 0.2);
+    transition: color 0.2s, transform 0.2s var(--ease-out);
+}
+.stars label:hover,
+.stars label:hover ~ label,
+.stars input:checked ~ label {
+    color: rgb(var(--brand));
+}
+.stars label:hover {
+    transform: scale(1.12);
+}
+.stars input:focus-visible + label {
+    outline: 2px solid rgb(var(--brand));
+    outline-offset: 2px;
+    border-radius: 6px;
+}
+
+/* WhatsApp shortcut: appears once the visitor scrolls past the hero */
+.fab {
+    transition: opacity 0.4s var(--ease-out), transform 0.4s var(--ease-out);
+}
+.js .fab:not(.is-on) {
+    opacity: 0;
+    transform: translateY(12px) scale(0.9);
+    pointer-events: none;
+}
+
+/* Slim scroll-progress hairline */
+#progress {
+    will-change: transform;
+}
+
+/* Safe areas for phones with a home indicator */
+.safe-bottom {
+    padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
+}
+
+/* ---------- Lighter motion on phones ---------- */
+@media (max-width: 767px) {
+    .js [data-reveal] {
+        transform: translateY(18px);
+        transition-duration: 0.8s;
     }
-}
-
-/* Slow, cinematic zoom for the hero background image only */
-@keyframes kenburns {
-    0% { transform: scale(1); }
-    100% { transform: scale(1.08); }
-}
-.animate-kenburns {
-    animation: kenburns 18s ease-in-out infinite alternate;
-}
-@media (prefers-reduced-motion: reduce) {
-    .animate-kenburns { animation: none; }
-}
-
-/* Slow-drifting ambient glow behind the hero (motion without clutter) */
-@keyframes heroglow {
-    0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.8; }
-    50% { transform: translate(3%, -4%) scale(1.15); opacity: 1; }
-}
-.animate-heroglow {
-    animation: heroglow 10s ease-in-out infinite;
-}
-
-/* Gradient sheen sweeping across headline text */
-@keyframes textShine {
-    to { background-position: 200% center; }
-}
-.animate-text-shine {
-    background-size: 200% auto;
-    animation: textShine 4s linear infinite;
-}
-
-/* Reusable gradient heading treatment for light-background sections */
-.text-gradient-brand {
-    background-image: linear-gradient(100deg, #101c44, #2a5fc4 45%, #5b9bf0 60%, #101c44);
-    background-size: 200% auto;
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    animation: textShine 6s linear infinite;
-}
-.dark .text-gradient-brand {
-    background-image: linear-gradient(100deg, #ffffff, #85b8fb 45%, #5b9bf0 60%, #ffffff);
-}
-
-/* Same treatment for headings sitting on a dark navy card/section
-   regardless of the site-wide light/dark toggle (e.g. the RMS panel). */
-.text-gradient-invert {
-    background-image: linear-gradient(100deg, #ffffff, #85b8fb 45%, #5b9bf0 60%, #ffffff);
-    background-size: 200% auto;
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    animation: textShine 6s linear infinite;
-}
-
-@media (prefers-reduced-motion: reduce) {
-    .animate-heroglow,
-    .animate-text-shine,
-    .text-gradient-brand {
+    .aurora {
         animation: none;
     }
+    .marquee-track {
+        animation-duration: 60s;
+    }
+    .hero-slide {
+        transform: none;
+        transition: opacity 1.8s var(--ease-in-out);
+    }
+    .hero-slide.is-active {
+        transform: none;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+    .js [data-reveal],
+    .js [data-unveil],
+    .js [data-unveil] img,
+    .js [data-split] .split-word > span,
+    .hero-slide,
+    .xf-slide,
+    .menu-link,
+    .g-item.pop {
+        opacity: 1;
+        transform: none;
+        clip-path: none;
+        transition: none;
+        animation: none;
+    }
+    .hero-slide:not(.is-active),
+    .xf-slide:not(.is-active) {
+        opacity: 0;
+    }
+    .aurora,
+    .marquee-track,
+    .cue::after,
+    .text-glow,
+    .text-shine-inv {
+        animation: none;
+    }
+    .scrub-word {
+        opacity: 1;
+    }
+}
+
+/* Formatted text written in the admin editor (x-prose). Colour and size are inherited from the parent. */
+.prose-oku > * + * {
+    margin-top: 1.15em;
+}
+.prose-oku h2,
+.prose-oku h3,
+.prose-oku h4 {
+    font-family: theme('fontFamily.serif');
+    color: rgb(var(--ink));
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+}
+.prose-oku h2 { font-size: 1.85em; margin-top: 1.9em; }
+.prose-oku h3 { font-size: 1.4em; margin-top: 1.7em; }
+.prose-oku h4 { font-size: 1.05em; margin-top: 1.5em; font-family: inherit; font-weight: 700; letter-spacing: 0.02em; }
+.prose-oku > :first-child { margin-top: 0; }
+.prose-oku strong, .prose-oku b { color: rgb(var(--ink)); font-weight: 700; }
+.prose-oku u { text-underline-offset: 3px; }
+.prose-oku a { color: rgb(var(--brand)); text-decoration: underline; text-underline-offset: 3px; overflow-wrap: anywhere; }
+.prose-oku ul, .prose-oku ol { padding-left: 1.5em; }
+.prose-oku ul { list-style: disc; }
+.prose-oku ol { list-style: decimal; }
+.prose-oku li + li { margin-top: 0.45em; }
+.prose-oku li::marker { color: rgb(var(--brand)); font-weight: 700; }
+.prose-oku blockquote {
+    border-left: 3px solid rgb(var(--brand));
+    padding: 0.2em 0 0.2em 1.15em;
+    font-family: theme('fontFamily.serif');
+    font-style: italic;
+    font-size: 1.2em;
+    line-height: 1.45;
+    color: rgb(var(--ink));
+}
+.prose-oku .ql-align-center { text-align: center; }
+.prose-oku .ql-align-right { text-align: right; }
+.prose-oku .ql-align-justify { text-align: justify; }
+.prose-oku .ql-indent-1 { padding-left: 2em; }
+.prose-oku .ql-indent-2 { padding-left: 4em; }
+.prose-oku .ql-indent-3 { padding-left: 6em; }
+.prose-oku { overflow-wrap: break-word; }
+.prose-dropcap > p:first-child::first-letter {
+    float: left;
+    margin-right: 0.75rem;
+    font-family: theme('fontFamily.serif');
+    font-size: 4.5rem;
+    line-height: 0.8;
+    color: rgb(var(--brand));
+}
+.prose-lead > p:first-child {
+    font-family: theme('fontFamily.serif');
+    font-size: 1.55em;
+    line-height: 1.3;
+    color: rgb(var(--ink));
+}
+
+/* Portrait photos are shown whole over a soft blurred copy of themselves (see initPortraitFit). */
+.fit-box {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+}
+.fit-box::before {
+    content: '';
+    position: absolute;
+    inset: -12%;
+    z-index: -1;
+    background: var(--fit-bg) center / cover no-repeat;
+    filter: blur(26px) saturate(1.1) brightness(0.9);
+}
+.fit-box > img.fit-contain {
+    object-fit: contain;
+    position: relative;
+}
+
+/* Crossfade slides (home About block): the whole photo, centred, over its own blurred copy. */
+.fit-backdrop {
+    position: absolute;
+    inset: -12%;
+    background: center / cover no-repeat;
+    filter: blur(26px) saturate(1.1) brightness(0.9);
+}
+.fit-img {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+/* Social icons: visible in the top bar (desktop) and as large buttons in the menu (phones). */
+.soc-btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 9999px;
+    color: #fff;
+    background: var(--soc, #1f2937);
+    box-shadow: 0 6px 18px -8px var(--soc, #1f2937);
+    transition: transform 0.35s var(--ease-out), box-shadow 0.35s var(--ease-out), filter 0.35s;
+    animation: soc-in 0.6s var(--ease-out) both;
+    animation-delay: calc(0.12s * var(--i, 0) + 0.25s);
+}
+.soc-btn:hover,
+.soc-btn:focus-visible {
+    transform: translateY(-3px) scale(1.08);
+    box-shadow: 0 14px 28px -10px var(--soc, #1f2937);
+    filter: saturate(1.15);
+}
+.soc-btn::after {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    border-radius: inherit;
+    border: 2px solid var(--soc, #1f2937);
+    opacity: 0;
+    animation: soc-ring 2.8s ease-out infinite;
+    animation-delay: calc(0.5s * var(--i, 0) + 1.2s);
+}
+.soc-facebook { --soc: #1877f2; }
+.soc-instagram { --soc: #e1306c; background: linear-gradient(135deg, #feda75, #fa7e1e 25%, #d62976 55%, #962fbf 80%, #4f5bd5); }
+.soc-tiktok { --soc: #111827; box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.35), 0 6px 18px -8px #111827; }
+.soc-lg {
+    width: auto;
+    height: auto;
+    padding: 0.8rem 1.1rem;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+    font-weight: 700;
+}
+@keyframes soc-in {
+    from { opacity: 0; transform: translateY(10px) scale(0.85); }
+    to { opacity: 1; transform: none; }
+}
+@keyframes soc-ring {
+    0% { transform: scale(1); opacity: 0.55; }
+    80%, 100% { transform: scale(1.6); opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .soc-btn, .soc-btn::after { animation: none; }
+}
+
+/* Small social icons for the phone row under the header. */
+.soc-sm {
+    width: 2rem;
+    height: 2rem;
+    box-shadow: 0 8px 20px -10px var(--soc, #1f2937);
+}
+
+/* Phones: the follow ring is slimmer, and its label stays readable. */
+@media (max-width: 639px) {
+    .soc-rail .soc-sm svg { width: 0.85rem; height: 0.85rem; }
+    .soc-rail > span { font-size: 0.5rem; }
 }
