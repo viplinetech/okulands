@@ -20,52 +20,51 @@ new #[Layout('layouts.guest')] class extends Component
 
         Session::regenerate();
 
-        $this->redirectIntended(default: route('dashboard', absolute: false), navigate: true);
+        $this->redirectIntended(default: route('dashboard', absolute: false), navigate: false);
     }
 }; ?>
 
 <div>
-    <!-- Session Status -->
-    <x-auth-session-status class="mb-4" :status="session('status')" />
+    @auth
+        <div class="surface p-6 sm:p-8">
+            <p class="eyebrow text-brand">Already signed in</p>
+            <h2 class="display mt-3 text-3xl text-ink">You are signed in as {{ auth()->user()->name }}.</h2>
+            <p class="mt-3 text-sm leading-relaxed text-mute">Realtor sign-in needs a separate session. Sign out first, then sign in with the account you want to use.</p>
+            <div class="mt-6 flex flex-col gap-3 sm:flex-row">
+                <a href="{{ route('dashboard') }}" class="btn btn-primary">Go to my dashboard</a>
+                <form method="POST" action="{{ route('logout') }}">@csrf<button type="submit" class="btn btn-outline w-full sm:w-auto">Sign out</button></form>
+            </div>
+        </div>
+    @else
+    <x-auth-session-status class="mb-6" :status="session('status')" />
 
-    <form wire:submit="login">
-        <!-- Email Address -->
+    <form wire:submit="login" class="space-y-5">
         <div>
             <x-input-label for="email" :value="__('Email')" />
-            <x-text-input wire:model="form.email" id="email" class="block mt-1 w-full" type="email" name="email" required autofocus autocomplete="username" />
+            <x-text-input wire:model="form.email" id="email" type="email" name="email" required autofocus autocomplete="username" placeholder="you@example.com" />
             <x-input-error :messages="$errors->get('form.email')" class="mt-2" />
         </div>
 
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
-
-            <x-text-input wire:model="form.password" id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="current-password" />
-
+        <div>
+            <div class="flex items-center justify-between">
+                <x-input-label for="password" :value="__('Password')" class="!mb-0" />
+                @if (Route::has('password.request'))
+                    <a class="text-xs font-semibold text-brand hover:underline" href="{{ route('password.request') }}" wire:navigate>{{ __('Forgot password?') }}</a>
+                @endif
+            </div>
+            <x-text-input wire:model="form.password" id="password" class="mt-2" type="password" name="password" required autocomplete="current-password" />
             <x-input-error :messages="$errors->get('form.password')" class="mt-2" />
         </div>
 
-        <!-- Remember Me -->
-        <div class="block mt-4">
-            <label for="remember" class="inline-flex items-center">
-                <input wire:model="form.remember" id="remember" type="checkbox" class="rounded dark:bg-gray-900 border-gray-300 dark:border-gray-700 text-indigo-600 shadow-sm focus:ring-indigo-500 dark:focus:ring-indigo-600 dark:focus:ring-offset-gray-800" name="remember">
-                <span class="ms-2 text-sm text-gray-600 dark:text-gray-400">{{ __('Remember me') }}</span>
-            </label>
-        </div>
+        <label for="remember" class="flex items-center gap-3 text-sm text-mute">
+            <input wire:model="form.remember" id="remember" type="checkbox" class="h-5 w-5 rounded-md border-ink/25 text-brand focus:ring-brand/30" name="remember">
+            {{ __('Keep me signed in') }}
+        </label>
 
-        <div class="flex items-center justify-end mt-4">
-            @if (Route::has('password.request'))
-                <a class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800" href="{{ route('password.request') }}" wire:navigate>
-                    {{ __('Forgot your password?') }}
-                </a>
-            @endif
-
-            <x-primary-button class="ms-3">
-                {{ __('Log in') }}
-            </x-primary-button>
-        </div>
+        <x-primary-button class="w-full">
+            {{ __('Log in') }}
+            <x-icon name="arrow" class="arrow h-4 w-4" />
+        </x-primary-button>
     </form>
+    @endauth
 </div>

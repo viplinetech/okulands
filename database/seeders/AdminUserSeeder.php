@@ -9,19 +9,26 @@ namespace Database\Seeders;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 
+/**
+ * No default admin password ever ships. Set ADMIN_EMAIL and ADMIN_PASSWORD in .env for a one-off
+ * seed, or (preferred) run:  php artisan okulands:admin you@example.com
+ */
 class AdminUserSeeder extends Seeder
 {
     public function run(): void
     {
-        User::firstOrCreate(
-            ['email' => 'admin@okulands.test'],
-            [
-                'name' => 'Oku Lands Admin',
-                'password' => 'password',
-                'role' => 'admin',
-                'status' => 'active',
-                'email_verified_at' => now(),
-            ]
-        );
+        $email = env('ADMIN_EMAIL');
+        $password = env('ADMIN_PASSWORD');
+
+        if (! $email || ! $password) {
+            $this->command?->warn('No admin created. Run: php artisan okulands:admin your@email.com');
+
+            return;
+        }
+
+        $user = User::firstOrNew(['email' => strtolower($email)]);
+        $user->name = $user->name ?: 'Oku Lands Admin';
+        $user->password = $password;
+        $user->forceFill(['role' => 'admin', 'status' => 'active', 'email_verified_at' => $user->email_verified_at ?? now()])->save();
     }
 }

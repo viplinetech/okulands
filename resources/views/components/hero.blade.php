@@ -1,131 +1,115 @@
 {{--
     Crafted & Developed by Vipline Technologies Limited - ViplineTech (www.viplinetech.com)
 
-    Full-viewport cinematic hero: one headline, one supporting line, the
-    trust-stat strip on the dark background (replaces a separate stats
-    section), and a floating search bar straddling the hero's bottom edge.
+    Cinematic full-viewport hero. Images, headline and sub-headline all come
+    from the admin (Settings); the defaults only show until they are set.
+    Always dark (photo + navy scrim) in both themes so the type stays legible.
 --}}
-@props(['images' => []])
+@props(['images' => [], 'headline', 'subheadline', 'locations' => []])
 
 @php
-    // Admin-uploaded hero images take priority; otherwise rotate through a
-    // curated set of Nigeria-relevant real estate/construction/land photography
-    // so the hero never feels static while waiting for real uploads.
-    $rotatingImages = count($images) > 0 ? $images : [
-        'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1920&q=80',
-        'https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1920&q=80',
-        'https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&w=1920&q=80',
-        'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1920&q=80',
-    ];
+    // Split the headline into a plain lead and an italic accent, at the first
+    // punctuation mark, or halfway through the words if there is none.
+    if (preg_match('/^(.+?[,.:;])\s+(.+)$/u', $headline, $m)) {
+        [$lead, $accent] = [$m[1], $m[2]];
+    } else {
+        $words = preg_split('/\s+/', trim($headline));
+        $cut = (int) ceil(count($words) / 2);
+        [$lead, $accent] = [implode(' ', array_slice($words, 0, $cut)), implode(' ', array_slice($words, $cut))];
+    }
 @endphp
 
-<section
-    x-data="{
-        images: {{ Illuminate\Support\Js::from($rotatingImages) }},
-        active: 0,
-        init() {
-            if (this.images.length > 1) {
-                setInterval(() => { this.active = (this.active + 1) % this.images.length; }, 6000);
-            }
-        }
-    }"
-    class="relative flex min-h-[92vh] items-center overflow-hidden bg-navy-950"
->
-    {{-- Background image(s) with navy overlay for legibility --}}
-    <div class="absolute inset-0">
-        <template x-for="(img, i) in images" :key="i">
+@push('head')
+    @if (! empty($images[0]))
+        <link rel="preload" as="image" href="{{ $images[0] }}" fetchpriority="high">
+    @endif
+@endpush
+
+<section class="grain relative isolate flex min-h-[100svh] flex-col justify-end overflow-hidden bg-navy-950 text-white">
+    <div class="absolute inset-0 -z-10">
+        @foreach ($images as $i => $src)
             <img
-                :src="img"
-                alt="Oku Lands & Properties: real estate, construction and agriculture across Nigeria"
-                class="absolute inset-0 h-full w-full object-cover transition-opacity duration-[2200ms] ease-in-out"
-                :class="active === i ? 'opacity-100 animate-kenburns' : 'opacity-0'"
-                loading="eager"
+                src="{{ $src }}"
+                alt="{{ $i === 0 ? 'Premium land and property by Oku Lands & Properties, Nigeria' : '' }}"
+                class="hero-slide absolute inset-0 h-full w-full object-cover {{ $i === 0 ? 'is-active' : '' }}"
+                @if ($i === 0) fetchpriority="high" @else loading="lazy" @endif
+                decoding="async"
             >
-        </template>
-        <div class="absolute inset-0 bg-gradient-to-t from-navy-950 via-navy-950/75 to-navy-950/40"></div>
-        <div class="absolute inset-0 bg-navy-950/20"></div>
+        @endforeach
+        <div class="absolute inset-0 bg-gradient-to-b from-navy-950/75 via-navy-950/45 to-navy-950"></div>
+        <div class="absolute inset-0 bg-gradient-to-r from-navy-950/90 via-navy-950/40 to-transparent"></div>
 
-        {{-- Subtle animated glow, adds motion without clutter --}}
-        <div class="absolute -left-32 top-0 h-[32rem] w-[32rem] rounded-full bg-sky-500/20 blur-[110px] animate-heroglow"></div>
-        <div class="absolute -right-24 bottom-0 h-96 w-96 rounded-full bg-navy-400/20 blur-[110px] animate-heroglow" style="animation-delay:4s"></div>
+        <div class="aurora absolute -left-40 top-1/4 h-[36rem] w-[36rem] rounded-full bg-sky-500/25 blur-[130px]"></div>
+        <div class="aurora absolute -right-32 bottom-10 h-[28rem] w-[28rem] rounded-full bg-navy-400/30 blur-[120px]" style="animation-delay:-8s"></div>
     </div>
 
-    <div class="relative z-10 mx-auto w-full max-w-7xl px-5 pb-28 pt-28 sm:px-8">
-        <div class="max-w-2xl">
-            <span data-reveal class="inline-block text-xs font-semibold uppercase tracking-[0.25em] text-sky-300">
-                Real Estate &middot; Construction &middot; Agriculture
-            </span>
+    <div class="mx-auto w-full max-w-7xl px-5 pb-8 pt-32 sm:px-8 sm:pb-10 sm:pt-36">
+        <p data-reveal data-delay="100" class="eyebrow whitespace-nowrap text-sky-300 !text-[clamp(0.5rem,2.6vw,0.62rem)] !tracking-[0.06em] sm:!text-[0.72rem] sm:!tracking-[0.25em] sm:!tracking-[0.25em]"><span class="sm:hidden">Bulk Lands &middot; Contractors &middot; Blocks</span><span class="hidden sm:inline">Bulk Lands &middot; General Contractors &middot; Block Industry</span></p>
 
-            <h1 data-reveal data-reveal-delay="80" class="mt-5 font-serif text-4xl font-semibold leading-[1.08] tracking-tight text-white sm:text-5xl lg:text-[3.4rem]">
-                Land. Homes.
-                <span class="block bg-gradient-to-r from-sky-300 via-white to-sky-300 bg-clip-text text-transparent animate-text-shine">Legacy.</span>
-                Secured across Nigeria.
-            </h1>
+        <h1 data-split data-delay="200" class="display mt-6 text-[clamp(3.1rem,10.5vw,9rem)]">
+            {{ $lead }}<br>
+            <span class="italic text-shine-inv">{{ $accent }}</span>
+        </h1>
 
-            <p data-reveal data-reveal-delay="160" class="mt-5 max-w-lg text-base leading-relaxed text-white/70">
-                Verified land and property opportunities across Real Estate, Construction and Agriculture,
-                backed by a company built on trust and a referral network that rewards every realtor.
-            </p>
-
-            <div data-reveal data-reveal-delay="240" class="mt-9 flex flex-wrap gap-4">
-                <a href="{{ url('/properties') }}" class="rounded-md bg-sky-500 px-7 py-3.5 text-sm font-semibold text-white transition hover:bg-sky-400">
-                    Browse Properties
-                </a>
-                <a href="{{ url('/contact') }}" class="rounded-md border border-white/30 px-7 py-3.5 text-sm font-semibold text-white transition hover:border-white/60">
-                    Book a Free Inspection
-                </a>
+        <div class="mt-8 flex flex-col gap-8 sm:mt-10 lg:flex-row lg:items-end lg:justify-between">
+            <div>
+                <p data-reveal data-delay="600" class="max-w-md text-base leading-relaxed text-white/75 sm:text-lg">{{ $subheadline }}</p>
+                <div data-reveal data-delay="750" class="mt-7 flex flex-col gap-3 sm:flex-row">
+                    <a href="{{ route('properties.index') }}" data-magnetic class="btn btn-sky">
+                        Explore properties
+                        <x-icon name="arrow" class="arrow h-4 w-4" />
+                    </a>
+                    <a href="{{ route('contact', ['interest' => 'inspection']) }}" data-magnetic class="btn btn-ghost">Book a free inspection</a>
+                </div>
             </div>
 
-            {{-- Trust stat strip --}}
-            <div data-reveal data-reveal-delay="320" class="mt-14 grid max-w-lg grid-cols-2 divide-x divide-white/15 sm:grid-cols-4">
-                @foreach ([
-                    ['n' => 1101, 'suffix' => '+', 'label' => 'Happy Clients'],
-                    ['n' => 459, 'suffix' => '+', 'label' => 'Properties Sold'],
-                    ['n' => 137, 'suffix' => '+', 'label' => 'Active Realtors'],
-                    ['n' => 3, 'suffix' => '', 'label' => 'Sectors, One Co.'],
-                ] as $stat)
-                    <div class="px-4 py-2 text-center first:pl-0 sm:text-left">
-                        <div class="font-serif text-xl font-semibold text-white sm:text-2xl">
-                            <span data-counter="{{ $stat['n'] }}" data-counter-suffix="{{ $stat['suffix'] }}">0</span>
-                        </div>
-                        <div class="mt-1 text-[0.65rem] font-medium uppercase tracking-wider text-white/45">{{ $stat['label'] }}</div>
-                    </div>
-                @endforeach
-            </div>
         </div>
-    </div>
 
-    {{-- Floating search bar, straddling the hero's bottom edge --}}
-    <div data-reveal data-reveal-delay="400" class="absolute inset-x-0 -bottom-9 z-20 px-5 sm:px-8">
-        <div class="mx-auto max-w-5xl rounded-lg border border-navy-900/10 bg-white shadow-premium-lg dark:border-white/10 dark:bg-navy-900">
-            <form action="{{ url('/properties') }}" method="GET" class="grid grid-cols-1 divide-y divide-navy-900/10 sm:grid-cols-4 sm:divide-x sm:divide-y-0 dark:divide-white/10">
-                <div class="px-5 py-4">
-                    <label class="block text-[0.65rem] font-semibold uppercase tracking-widest text-slate-400">Location</label>
-                    <input type="text" name="q" placeholder="e.g. Amansea, Awka" class="mt-1 w-full border-0 bg-transparent p-0 text-sm text-navy-900 placeholder:text-slate-400 focus:outline-none focus:ring-0 dark:text-white">
-                </div>
-                <div class="px-5 py-4">
-                    <label class="block text-[0.65rem] font-semibold uppercase tracking-widest text-slate-400">Type</label>
-                    <select name="sector" class="mt-1 w-full border-0 bg-transparent p-0 text-sm text-navy-900 focus:outline-none focus:ring-0 dark:text-white">
-                        <option value="">Any Sector</option>
-                        <option value="real_estate">Real Estate</option>
-                        <option value="construction">Construction</option>
-                        <option value="agriculture">Agriculture</option>
+        {{-- Property search: frosted glass, labelled fields, location autocomplete --}}
+        <form data-reveal data-delay="850" action="{{ route('properties.index') }}" method="GET" role="search" aria-label="Search properties"
+              class="glass hairline mt-10 grid grid-cols-1 overflow-hidden rounded-3xl sm:grid-cols-2 lg:mt-12 lg:grid-cols-[1.4fr_1fr_1fr_auto] lg:rounded-full">
+            <label class="group flex items-center gap-4 border-b border-white/10 px-5 py-3.5 transition focus-within:bg-white/10 sm:border-r sm:px-6 lg:border-b-0 lg:pl-8">
+                <x-icon name="pin" class="h-5 w-5 shrink-0 text-sky-300" />
+                <span class="min-w-0 flex-1">
+                    <span class="block text-[0.62rem] font-semibold uppercase tracking-[0.22em] text-white/55">Location</span>
+                    <input type="text" name="q" list="hero-locations" autocomplete="off" placeholder="City, area or keyword" class="mt-0.5 w-full border-0 bg-transparent p-0 text-[0.95rem] font-medium text-white placeholder:text-white/40 focus:ring-0">
+                </span>
+            </label>
+            <label class="group flex items-center gap-4 border-b border-white/10 px-5 py-3.5 transition focus-within:bg-white/10 sm:px-6 lg:border-b-0 lg:border-r">
+                <x-icon name="building" class="h-5 w-5 shrink-0 text-sky-300" />
+                <span class="min-w-0 flex-1">
+                    <span class="block text-[0.62rem] font-semibold uppercase tracking-[0.22em] text-white/55">Type</span>
+                    <select name="sector" class="mt-0.5 w-full border-0 bg-transparent p-0 pr-6 text-[0.95rem] font-medium text-white focus:ring-0 [&>option]:text-navy-900">
+                        <option value="">All types</option>
+                        @foreach (\App\Models\Property::activeSectors() as $value => $label)
+                            <option value="{{ $value }}">{{ $label }}</option>
+                        @endforeach
                     </select>
-                </div>
-                <div class="px-5 py-4">
-                    <label class="block text-[0.65rem] font-semibold uppercase tracking-widest text-slate-400">Budget</label>
-                    <select name="budget" class="mt-1 w-full border-0 bg-transparent p-0 text-sm text-navy-900 focus:outline-none focus:ring-0 dark:text-white">
-                        <option value="">Any Budget</option>
+                </span>
+            </label>
+            <label class="group flex items-center gap-4 border-b border-white/10 px-5 py-3.5 transition focus-within:bg-white/10 sm:border-r sm:px-6 lg:border-b-0 lg:border-r">
+                <x-icon name="wallet" class="h-5 w-5 shrink-0 text-sky-300" />
+                <span class="min-w-0 flex-1">
+                    <span class="block text-[0.62rem] font-semibold uppercase tracking-[0.22em] text-white/55">Budget</span>
+                    <select name="budget" class="mt-0.5 w-full border-0 bg-transparent p-0 pr-6 text-[0.95rem] font-medium text-white focus:ring-0 [&>option]:text-navy-900">
+                        <option value="">Any budget</option>
                         <option value="0-5000000">Under &#8358;5M</option>
                         <option value="5000000-20000000">&#8358;5M &ndash; &#8358;20M</option>
                         <option value="20000000-">Above &#8358;20M</option>
                     </select>
-                </div>
-                <button type="submit" class="flex items-center justify-center gap-2 bg-sky-500 px-5 py-4 text-sm font-semibold text-white transition hover:bg-sky-400 sm:rounded-r-lg">
-                    <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3" stroke-linecap="round"/></svg>
-                    Search
-                </button>
-            </form>
-        </div>
+                </span>
+            </label>
+            <button type="submit" class="btn btn-sky m-2 sm:col-span-2 lg:col-span-1 lg:px-9">
+                <x-icon name="search" class="h-4 w-4" />
+                Search
+            </button>
+            @if ($locations)
+                <datalist id="hero-locations">
+                    @foreach ($locations as $loc)
+                        <option value="{{ $loc }}"></option>
+                    @endforeach
+                </datalist>
+            @endif
+        </form>
     </div>
 </section>

@@ -13,8 +13,13 @@ class Lead extends Model
 {
     protected $fillable = [
         'name', 'email', 'phone', 'message', 'type',
-        'property_id', 'referrer_id', 'status', 'view_count', 'source',
+        'property_id', 'referrer_id', 'status', 'view_count', 'source', 'notes', 'contacted_at',
     ];
+
+    protected function casts(): array
+    {
+        return ['contacted_at' => 'datetime'];
+    }
 
     public function property(): BelongsTo
     {

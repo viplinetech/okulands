@@ -14,12 +14,19 @@ new #[Layout('layouts.guest')] class extends Component
     public function sendVerification(): void
     {
         if (Auth::user()->hasVerifiedEmail()) {
-            $this->redirectIntended(default: route('dashboard', absolute: false), navigate: true);
+            $this->redirect(route("dashboard", absolute: false));
 
             return;
         }
 
-        Auth::user()->sendEmailVerificationNotification();
+        try {
+            Auth::user()->sendEmailVerificationNotification();
+        } catch (\Throwable $e) {
+            report($e);
+            Session::flash('mail_error', 'We could not send that email right now. Please try again in a few minutes.');
+
+            return;
+        }
 
         Session::flash('status', 'verification-link-sent');
     }
@@ -36,23 +43,31 @@ new #[Layout('layouts.guest')] class extends Component
 }; ?>
 
 <div>
-    <div class="mb-4 text-sm text-gray-600 dark:text-gray-400">
-        {{ __('Thanks for signing up! Before getting started, could you verify your email address by clicking on the link we just emailed to you? If you didn\'t receive the email, we will gladly send you another.') }}
-    </div>
-
-    @if (session('status') == 'verification-link-sent')
-        <div class="mb-4 font-medium text-sm text-green-600 dark:text-green-400">
-            {{ __('A new verification link has been sent to the email address you provided during registration.') }}
+    @if (session('mail_error'))
+        <div class="mb-4 flex items-start gap-3 rounded-2xl border border-flag-500/30 bg-flag-500/10 px-4 py-4 text-sm leading-relaxed text-ink">
+            <x-icon name="alert" class="mt-0.5 h-5 w-5 shrink-0 text-flag-500" />
+            <span>{{ session('mail_error') }}</span>
         </div>
     @endif
 
-    <div class="mt-4 flex items-center justify-between">
+    <div class="flex items-start gap-3 rounded-2xl border border-brand/25 bg-brand/10 px-4 py-4 text-sm leading-relaxed text-ink">
+        <x-icon name="mail" class="mt-0.5 h-5 w-5 shrink-0 text-brand" />
+        <span>We sent a confirmation link to <strong>{{ auth()->user()->email }}</strong>. Open it to activate your realtor account and referral link. Check your spam folder if it does not arrive within a minute.</span>
+    </div>
+
+    @if (session('status') == 'verification-link-sent')
+        <div class="mt-4 rounded-xl bg-emerald-500/10 px-4 py-3 text-sm font-medium text-emerald-600 dark:text-emerald-400">
+            A new verification link has been sent to your email address.
+        </div>
+    @endif
+
+    <div class="mt-6 flex flex-wrap items-center justify-between gap-3">
         <x-primary-button wire:click="sendVerification">
-            {{ __('Resend Verification Email') }}
+            {{ __('Resend verification email') }}
         </x-primary-button>
 
-        <button wire:click="logout" type="submit" class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800">
-            {{ __('Log Out') }}
+        <button wire:click="logout" type="button" class="text-sm font-semibold text-mute underline hover:text-ink">
+            {{ __('Log out') }}
         </button>
     </div>
 </div>

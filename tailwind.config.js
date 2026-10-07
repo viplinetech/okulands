@@ -3,8 +3,8 @@
  *
  * Brand palette matches Oku Lands' own marketing flyers: midnight navy +
  * royal/sky blue as the primary identity, with a single sharp red accent
- * (the location-pin color) used sparingly. Ivory page background keeps the
- * light-mode-first, premium feel.
+ * (the location-pin color) used sparingly. A cool, blue-tinted paper tone
+ * (never warm cream) is used for light sections against the dark navy.
  */
 
 import defaultTheme from 'tailwindcss/defaultTheme';
@@ -15,6 +15,9 @@ import typography from '@tailwindcss/typography';
 export default {
     darkMode: 'class',
 
+    // Classes toggled from resources/js/app.js (not scanned, since JS isn't in `content`).
+    safelist: ['opacity-0', 'opacity-70', 'ring-2', 'bg-ink', 'text-page', 'border-ink'],
+
     content: [
         './vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php',
         './storage/framework/views/*.php',
@@ -24,8 +27,8 @@ export default {
     theme: {
         extend: {
             fontFamily: {
-                sans: ['Inter', ...defaultTheme.fontFamily.sans],
-                serif: ['Fraunces', ...defaultTheme.fontFamily.serif],
+                sans: ['Manrope', ...defaultTheme.fontFamily.sans],
+                serif: ['Instrument Serif', ...defaultTheme.fontFamily.serif],
             },
             colors: {
                 navy: {
@@ -60,22 +63,16 @@ export default {
                     500: '#dc2626',
                     600: '#b91c1c',
                 },
-                ivory: {
-                    DEFAULT: '#FAF8F3',
-                    100: '#FFFFFF',
-                    200: '#F3EFE4',
-                },
-                gold: {
-                    50: '#faf6ef',
-                    100: '#f0e4cd',
-                    200: '#e3cda1',
-                    300: '#d4b483',
-                    400: '#c3a06a',
-                    500: '#b8935a',
-                    600: '#9c7846',
-                    700: '#7c5f38',
-                    800: '#5f4a2c',
-                    900: '#4a3a23',
+                /* Semantic theme tokens (values live in app.css, flipped by html.dark).
+                   Light is the default; every public page uses these, never raw colours. */
+                page: 'rgb(var(--page) / <alpha-value>)',
+                card: 'rgb(var(--card) / <alpha-value>)',
+                soft: 'rgb(var(--soft) / <alpha-value>)',
+                ink: 'rgb(var(--ink) / <alpha-value>)',
+                mute: 'rgb(var(--mute) / <alpha-value>)',
+                brand: {
+                    DEFAULT: 'rgb(var(--brand) / <alpha-value>)',
+                    fg: 'rgb(var(--brand-fg) / <alpha-value>)',
                 },
                 slate: {
                     ...defaultTheme.colors.slate,

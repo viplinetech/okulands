@@ -14,13 +14,14 @@ class Sale extends Model
 {
     protected $fillable = [
         'property_id', 'realtor_id', 'lead_id', 'buyer_name', 'buyer_email',
-        'buyer_phone', 'amount', 'status', 'approved_by', 'approved_at',
+        'buyer_phone', 'amount', 'quantity', 'status', 'approved_by', 'approved_at', 'reference', 'notes',
     ];
 
     protected function casts(): array
     {
         return [
             'amount' => 'decimal:2',
+            'quantity' => 'integer',
             'approved_at' => 'datetime',
         ];
     }

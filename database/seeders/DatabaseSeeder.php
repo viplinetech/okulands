@@ -19,6 +19,8 @@ class DatabaseSeeder extends Seeder
             AdminUserSeeder::class,
             CommissionSettingSeeder::class,
             SiteSettingSeeder::class,
+            ServiceSeeder::class,
+            FaqSeeder::class,
         ]);
     }
 }
