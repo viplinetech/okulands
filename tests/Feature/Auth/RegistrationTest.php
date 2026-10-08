@@ -36,6 +36,7 @@ class RegistrationTest extends TestCase
             'gender' => 'male',
             'password' => 'StrongPass123',
             'password_confirmation' => 'StrongPass123',
+            'terms' => true,
         ], $overrides);
 
         foreach ($data as $key => $value) {
@@ -176,5 +177,17 @@ class RegistrationTest extends TestCase
         $this->fill(Volt::test('pages.auth.register'), ['gender' => ''])->call('register')->assertHasErrors('gender');
 
         $this->assertDatabaseCount('users', 0);
+    }
+
+    public function test_agreeing_to_the_terms_is_required_and_the_page_links_to_them(): void
+    {
+        $this->fill(Volt::test('pages.auth.register'), ['terms' => false])->call('register')->assertHasErrors('terms');
+        $this->assertDatabaseCount('users', 0);
+
+        $this->get('/register')
+            ->assertSee('Terms of Use')
+            ->assertSee('Privacy Policy')
+            ->assertSee(route('legal', 'terms'), false)
+            ->assertSee(route('legal', 'privacy-policy'), false);
     }
 }
