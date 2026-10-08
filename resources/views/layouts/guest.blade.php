@@ -46,7 +46,10 @@
         {{-- Left panel (always dark) --}}
         <aside class="grain relative hidden overflow-hidden bg-navy-950 text-white lg:block">
             @if (! $isAdminView && $hero)
-                <img src="{{ $hero }}" alt="" class="absolute inset-0 h-full w-full object-cover" decoding="async">
+                {{-- object-position favours the lower two-thirds of the photo: this panel is tall and
+                     narrow, and a plain centred crop pushes a photo's plain sky strip to the top,
+                     under the gradient, looking like dead space instead of a photo. --}}
+                <img src="{{ $hero }}" alt="" class="absolute inset-0 h-full w-full object-cover [object-position:50%_70%]" decoding="async">
             @endif
             <div class="absolute inset-0 bg-gradient-to-b {{ $isAdminView ? 'from-navy-900 via-navy-950 to-navy-950' : 'from-navy-950/70 via-navy-950/55 to-navy-950/95' }}"></div>
             <div class="aurora absolute -left-24 top-1/3 h-[28rem] w-[28rem] rounded-full bg-sky-500/25 blur-[120px]"></div>
