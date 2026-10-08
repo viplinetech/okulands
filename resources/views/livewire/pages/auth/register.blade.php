@@ -37,6 +37,8 @@ new #[Layout('layouts.guest')] class extends Component
 
     public ?string $invitedBy = null;
 
+    public bool $terms = false;
+
     public function mount(ReferralAttribution $attribution): void
     {
         session(['register_shown_at' => time()]);
@@ -90,10 +92,12 @@ new #[Layout('layouts.guest')] class extends Component
             'phone' => ['required', 'string', 'regex:/^[0-9]{7,11}$/'],
             'gender' => ['required', 'in:male,female'],
             'password' => ['required', 'string', 'confirmed', Password::defaults()],
+            'terms' => ['accepted'],
         ], [
             'gender.required' => 'Please choose your gender.',
             'gender.in' => 'Please choose your gender.',
             'phone.regex' => 'Enter the number in digits only, up to 11 digits, without the country code or the first 0.',
+            'terms.accepted' => 'Please agree to the Terms of Use and Privacy Policy to continue.',
         ]);
 
         RateLimiter::hit($key, 3600);
@@ -198,11 +202,15 @@ new #[Layout('layouts.guest')] class extends Component
             @endscript
         @endif
 
+        <label class="flex items-start gap-3 text-xs leading-relaxed text-mute">
+            <input wire:model="terms" type="checkbox" required class="mt-0.5 h-4 w-4 shrink-0 rounded border-ink/30 text-brand focus:ring-brand">
+            <span>I agree to the <a href="{{ route('legal', 'terms') }}" target="_blank" class="font-semibold text-brand hover:underline">Terms of Use</a> and <a href="{{ route('legal', 'privacy-policy') }}" target="_blank" class="font-semibold text-brand hover:underline">Privacy Policy</a>, and to represent Oku Lands honestly and not make promises on the company&rsquo;s behalf.</span>
+        </label>
+        <x-input-error :messages="$errors->get('terms')" class="-mt-2" />
+
         <x-primary-button class="w-full">
             {{ __('Create my account') }}
             <x-icon name="arrow" class="arrow h-4 w-4" />
         </x-primary-button>
-
-        <p class="text-center text-xs leading-relaxed text-mute">By creating an account you agree to represent Oku Lands honestly and not to make promises on the company&rsquo;s behalf.</p>
     </form>
 </div>
