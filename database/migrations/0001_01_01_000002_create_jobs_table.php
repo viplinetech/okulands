@@ -37,8 +37,12 @@ return new class extends Migration
         Schema::create('failed_jobs', function (Blueprint $table) {
             $table->id();
             $table->string('uuid')->unique();
-            $table->string('connection');
-            $table->string('queue');
+            // Shortened (not the 191 global default): some hosts still run MySQL/MariaDB without
+            // the "large prefix" row format, where a 3-column index on two 191-char utf8mb4
+            // strings exceeds the 1000-byte index-key limit. 100 chars keeps this index well
+            // under that limit while still comfortably fitting a queue/connection name.
+            $table->string('connection', 100);
+            $table->string('queue', 100);
             $table->longText('payload');
             $table->longText('exception');
             $table->timestamp('failed_at')->useCurrent();
