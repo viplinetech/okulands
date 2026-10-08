@@ -122,8 +122,8 @@
         <div class="flex items-center justify-between gap-2 py-2 pl-4 pr-1.5 sm:gap-3 sm:pl-7 sm:pr-2">
             <a href="{{ route('home') }}" class="flex shrink-0 items-center gap-2.5" aria-label="{{ $settings->site_name }}, home">
                 @if ($settings->logoUrl() || $settings->logoDarkUrl())
-                    <img src="{{ $settings->logoDarkUrl() }}" alt="{{ $settings->site_name }}" class="logo-dark h-10 w-auto sm:h-12" width="160" height="44">
-                    <img src="{{ $settings->logoUrl() ?? $settings->logoDarkUrl() }}" alt="" aria-hidden="true" class="logo-light h-10 w-auto sm:h-12" width="160" height="44">
+                    <img src="{{ $settings->logoDarkUrl() }}" alt="{{ $settings->site_name }}" class="logo-dark h-14 w-auto sm:h-20" width="200" height="80">
+                    <img src="{{ $settings->logoUrl() ?? $settings->logoDarkUrl() }}" alt="" aria-hidden="true" class="logo-light h-14 w-auto sm:h-20" width="200" height="80">
                 @else
                     <x-brand-mark class="h-8 w-8" />
                     <span class="font-serif text-[1.2rem] sm:text-[1.4rem] leading-none tracking-tight">Oku Lands</span>
