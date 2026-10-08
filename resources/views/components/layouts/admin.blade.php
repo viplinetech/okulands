@@ -26,8 +26,13 @@
     {{-- Desktop sidebar --}}
     <aside class="app-sidebar" aria-label="Admin menu">
         <a href="{{ route('admin.dashboard') }}" class="mb-2 flex items-center gap-2.5 px-2 text-ink">
-            <x-brand-mark class="h-9 w-9" />
-            <span class="leading-tight"><span class="block font-serif text-xl">Oku Lands</span><span class="block text-[0.6rem] font-bold uppercase tracking-[0.22em] text-brand">Admin console</span></span>
+            @if ($settings->logoUrl())
+                <img src="{{ $settings->logoUrl() }}" alt="{{ $settings->site_name }}" class="h-9 w-auto dark:hidden">
+                <img src="{{ $settings->logoDarkUrl() }}" alt="" aria-hidden="true" class="hidden h-9 w-auto dark:block">
+            @else
+                <x-brand-mark class="h-9 w-9" />
+            @endif
+            <span class="leading-tight"><span class="block font-serif text-xl">{{ $settings->site_name ?: 'Oku Lands' }}</span><span class="block text-[0.6rem] font-bold uppercase tracking-[0.22em] text-brand">Admin console</span></span>
         </a>
         <x-app.admin-nav :counts="$counts" />
         <div class="mt-auto pt-6">
@@ -79,8 +84,13 @@
 <aside id="admin-drawer" class="drawer" data-drawer-panel aria-label="Admin menu">
     <div class="mb-2 flex items-center justify-between px-2">
         <span class="flex items-center gap-2.5 text-ink">
-            <x-brand-mark class="h-9 w-9" />
-            <span class="leading-tight"><span class="block font-serif text-xl">Oku Lands</span><span class="block text-[0.6rem] font-bold uppercase tracking-[0.22em] text-brand">Admin console</span></span>
+            @if ($settings->logoUrl())
+                <img src="{{ $settings->logoUrl() }}" alt="{{ $settings->site_name }}" class="h-9 w-auto dark:hidden">
+                <img src="{{ $settings->logoDarkUrl() }}" alt="" aria-hidden="true" class="hidden h-9 w-auto dark:block">
+            @else
+                <x-brand-mark class="h-9 w-9" />
+            @endif
+            <span class="leading-tight"><span class="block font-serif text-xl">{{ $settings->site_name ?: 'Oku Lands' }}</span><span class="block text-[0.6rem] font-bold uppercase tracking-[0.22em] text-brand">Admin console</span></span>
         </span>
         <button type="button" data-drawer-close class="icon-action" aria-label="Close menu"><x-icon name="x" class="h-4 w-4" /></button>
     </div>
