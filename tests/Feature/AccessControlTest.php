@@ -107,13 +107,13 @@ class AccessControlTest extends TestCase
         }
     }
 
-    public function test_an_admin_without_two_factor_can_only_reach_the_security_page(): void
+    public function test_an_admin_without_two_factor_can_use_the_whole_backend_normally(): void
     {
         $admin = User::factory()->admin()->create();
         $this->actingAs($admin);
 
-        $this->get('/adminbackend/dashboard')->assertRedirect(route('admin.security'));
-        $this->get('/adminbackend/leads')->assertRedirect(route('admin.security'));
+        $this->get('/adminbackend/dashboard')->assertOk();
+        $this->get('/adminbackend/leads')->assertOk();
         $this->get('/adminbackend/security')->assertOk();
     }
 
