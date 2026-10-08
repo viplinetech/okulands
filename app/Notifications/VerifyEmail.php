@@ -15,13 +15,19 @@ class VerifyEmail extends BaseVerifyEmail
     public function toMail($notifiable): MailMessage
     {
         $url = $this->verificationUrl($notifiable);
+        $group = config('services.realtor_whatsapp_group');
 
-        return (new MailMessage)
+        $mail = (new MailMessage)
             ->subject('Confirm your email to activate your realtor account')
             ->greeting('Hello '.$notifiable->firstName().',')
             ->line('Thank you for registering as a realtor with Oku Lands & Properties. Before you can sign in and access your dashboard, please confirm that this is your correct email address.')
             ->action('Verify Email Address', $url)
-            ->line('Once verified, you will have full access to your referral link, leads and earnings.')
-            ->line('If you did not create this account, no further action is required.');
+            ->line('Once verified, you will have full access to your referral link, leads and earnings.');
+
+        if ($group) {
+            $mail->line('While you are at it, join our **[Realtor WhatsApp group]('.$group.')**, where new listings, sales wins and commission updates reach our realtors first.');
+        }
+
+        return $mail->line('If you did not create this account, no further action is required.');
     }
 }

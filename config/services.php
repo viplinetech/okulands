@@ -37,6 +37,12 @@ return [
     // Invite link to the Oku Lands Realtor WhatsApp group, shown to realtors after they confirm their email.
     'realtor_whatsapp_group' => env('REALTOR_WHATSAPP_GROUP_URL'),
 
+    // Google Gemini (aistudio.google.com): powers "Generate using OkuLands Smart AI" in the admin.
+    'gemini' => [
+        'key' => env('GEMINI_API_KEY'),
+        'model' => env('GEMINI_MODEL', 'gemini-3.8-flash'),
+    ],
+
     'slack' => [
         'notifications' => [
             'bot_user_oauth_token' => env('SLACK_BOT_USER_OAUTH_TOKEN'),

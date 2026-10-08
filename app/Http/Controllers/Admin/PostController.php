@@ -36,7 +36,7 @@ class PostController extends ResourceController
                 ['name' => 'category', 'label' => 'Category', 'type' => 'text', 'rules' => ['nullable', 'string', 'max:60'], 'list' => ['Buying guide', 'Agriculture', 'Construction', 'Company news', 'Market insight']],
                 ['name' => 'published_at', 'label' => 'Publish date & time', 'type' => 'datetime', 'rules' => ['nullable', 'date'], 'help' => 'Empty = draft (not shown on the website).'],
                 ['name' => 'excerpt', 'label' => 'Short summary', 'type' => 'textarea', 'rows' => 3, 'rules' => ['nullable', 'string', 'max:300'], 'help' => 'Shown on the blog list and in Google results.'],
-                ['name' => 'body', 'label' => 'Article', 'type' => 'richtext', 'rules' => ['required', 'string', 'max:100000'], 'help' => 'Use the toolbar for headings, bold, lists and links. Press Enter for a new paragraph.'],
+                ['name' => 'body', 'label' => 'Article', 'type' => 'richtext', 'ai' => 'blog', 'rules' => ['required', 'string', 'max:100000'], 'help' => 'Use the toolbar for headings, bold, lists and links. Press Enter for a new paragraph. Type a title above, then use the AI button to draft the article; edit it before publishing.'],
                 ['name' => 'cover_image', 'label' => 'Cover photo', 'type' => 'image', 'folder' => 'blog'],
             ],
         ];

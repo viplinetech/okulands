@@ -117,6 +117,12 @@ document.querySelectorAll('[data-rte]').forEach((root) => {
     status.textContent = `${words(quill)} words`;
     quill.on('text-change', sync);
 
+    // Lets another script (e.g. the AI-generate button) replace this editor's content programmatically.
+    root.setRteHtml = (html) => {
+        quill.setContents(quill.clipboard.convert({ html: toHtml(html) }));
+        sync();
+    };
+
     const form = source.form;
     if (form) form.addEventListener('submit', sync, true);
 
