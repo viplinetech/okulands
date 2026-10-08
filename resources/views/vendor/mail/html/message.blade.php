@@ -1,10 +1,10 @@
 @php
-    // The admin's uploaded logo, made absolute (email clients cannot resolve a relative /storage/... path).
+    // The admin's uploaded logo, converted to PNG (email clients, Gmail's image proxy especially,
+    // render the site's native WebP uploads as a blocky, dark artifact) and made absolute (email
+    // clients cannot resolve a relative /storage/... path).
     $okuSettings = \App\Models\SiteSetting::current();
-    $okuLogo = $okuSettings->logoDarkUrl() ?? $okuSettings->logoUrl();
-    if ($okuLogo && ! str_starts_with($okuLogo, 'http')) {
-        $okuLogo = url($okuLogo);
-    }
+    $okuLogoPath = $okuSettings->logo_dark_path ?: $okuSettings->logo_path;
+    $okuLogo = $okuLogoPath ? app(\App\Services\EmailImage::class)->pngUrl($okuLogoPath) : null;
 @endphp
 <x-mail::layout>
 {{-- Header: the uploaded logo on the brand-navy band, or the site name if none is uploaded yet --}}
