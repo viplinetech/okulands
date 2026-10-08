@@ -329,6 +329,64 @@ function initAiGenerate() {
     });
 }
 
+/* One-click "Generate [X] using OkuLands Smart AI" at the top of a New-record page: the AI picks
+   its own topic and fills in every field (title, category, summary, body) with nothing typed
+   first. See data-ai-generate above for the per-field, title-driven version. */
+function initAiFullGenerate() {
+    const btn = document.querySelector('[data-ai-full]');
+    if (!btn) return;
+
+    const form = document.querySelector('form');
+    const status = document.querySelector('[data-ai-full-status]');
+    const label = btn.querySelector('[data-ai-full-label]');
+    const originalLabel = label?.textContent;
+
+    const setField = (name, value) => {
+        const el = form?.querySelector(`[name="${name}"]`);
+        if (el) el.value = value ?? '';
+    };
+
+    btn.addEventListener('click', async () => {
+        btn.disabled = true;
+        if (label) label.textContent = 'Generating…';
+        if (status) { status.textContent = 'OkuLands Smart AI is drafting a full post. This can take a few seconds.'; status.classList.remove('err'); }
+
+        try {
+            const res = await fetch(btn.dataset.url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Accept: 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '',
+                },
+                body: JSON.stringify({}),
+            });
+            const data = await res.json().catch(() => ({}));
+            if (!res.ok) throw new Error(data.message || 'OkuLands Smart AI could not generate a post right now.');
+
+            setField('title', data.title);
+            setField('category', data.category);
+            setField('excerpt', data.excerpt);
+
+            const bodyRoot = form?.querySelector('[data-rte]');
+            if (bodyRoot?.setRteHtml) {
+                bodyRoot.setRteHtml(data.body || '');
+            } else {
+                const textarea = form?.querySelector('[name="body"]');
+                if (textarea) textarea.value = data.body || '';
+            }
+
+            if (status) status.textContent = 'Draft generated below. Review it, add a cover photo, then publish when ready.';
+            form?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        } catch (e) {
+            if (status) { status.textContent = e.message || 'Something went wrong. Please try again.'; status.classList.add('err'); }
+        } finally {
+            btn.disabled = false;
+            if (label) label.textContent = originalLabel;
+        }
+    });
+}
+
 function boot() {
     const safe = (fn) => { try { fn(); } catch (e) { console.warn(fn.name, e); } };
     safe(initOverlays);
@@ -342,6 +400,7 @@ function boot() {
     safe(initSingleSubmit);
     safe(initCheckAll);
     safe(initAiGenerate);
+    safe(initAiFullGenerate);
     // The rich-text editor is only downloaded on pages that have one.
     if (document.querySelector('[data-rte]')) import('./editor.js').catch(() => {});
 }

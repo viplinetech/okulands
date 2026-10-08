@@ -7,6 +7,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\NewsPost;
 use App\Services\Gemini;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -90,6 +91,81 @@ class AiController extends Controller
             PROMPT;
 
         return $this->respond($gemini, $prompt);
+    }
+
+    /**
+     * One click, nothing typed first: the AI picks its own topic and writes the whole post
+     * (title, category, short summary and the article itself) in one go.
+     */
+    public function blogPostFull(Gemini $gemini): JsonResponse
+    {
+        $categories = ['Buying guide', 'Construction', 'Agriculture', 'Company news', 'Market insight'];
+        $avoid = NewsPost::query()->latest()->limit(8)->pluck('title')->implode('; ') ?: 'none yet';
+
+        $prompt = <<<PROMPT
+            You are writing a brand new blog article for the Oku Lands & Properties website. Oku Lands
+            is a Nigerian company based in Anambra State, serving Awka and Enugu, that handles bulk
+            land sales, general contracting/construction, block production, and real estate, and also
+            runs a network of independent realtors who earn commission referring buyers.
+
+            Pick your own useful, specific topic (ideas, advice or an explanation related to buying
+            land, real estate, construction, block production, or the realtor programme). Do not pick
+            a generic "welcome to our blog" topic, and do not repeat any of these recent titles:
+            {$avoid}
+
+            Rules:
+            - Plain English, professional and trustworthy Nigerian tone. No slang, no exaggerated
+              claims, no filler, and never use an em dash (—) anywhere.
+            - Do not invent specific prices, legal claims, or named locations beyond Awka/Enugu/Anambra.
+            - The article body: 350-550 words. A short opening paragraph, 2-4 short sections (a short
+              <h3> subheading each, if it helps), a brief closing paragraph. <ul>/<li> for any list of
+              tips or steps. Only these HTML tags: <p>, <h3>, <ul>, <li>, <strong>, <em>. No markdown,
+              no emoji, no code fences, no title repeated as a heading inside the body.
+            - The short summary: 1-2 plain sentences, no HTML, under 200 characters.
+            - The category must be exactly one of: {$this->list($categories)}.
+
+            Respond with ONLY a single JSON object, no markdown fences, no extra text, in exactly this
+            shape: {"title": "...", "category": "...", "excerpt": "...", "body": "..."}
+            PROMPT;
+
+        try {
+            $parsed = $this->parseJson($gemini->generate($prompt));
+        } catch (\RuntimeException $e) {
+            return response()->json(['message' => $e->getMessage()], 422);
+        }
+
+        return response()->json([
+            'title' => (string) ($parsed['title'] ?? ''),
+            'category' => in_array($parsed['category'] ?? null, $categories, true) ? $parsed['category'] : $categories[0],
+            'excerpt' => (string) ($parsed['excerpt'] ?? ''),
+            'body' => $this->toParagraphs((string) ($parsed['body'] ?? '')),
+        ]);
+    }
+
+    private function list(array $items): string
+    {
+        return implode(', ', $items);
+    }
+
+    /** @return array<string, mixed> */
+    private function parseJson(string $text): array
+    {
+        $text = trim(preg_replace('/^```(?:json)?\s*|\s*```$/', '', trim($text)) ?? $text);
+
+        $decoded = json_decode($text, true);
+
+        if (! is_array($decoded)) {
+            // The model sometimes wraps the JSON in a sentence; pull out the {...} block and retry.
+            if (preg_match('/\{.*\}/s', $text, $m)) {
+                $decoded = json_decode($m[0], true);
+            }
+        }
+
+        if (! is_array($decoded) || empty($decoded['body'])) {
+            throw new \RuntimeException('OkuLands Smart AI could not generate a post this time. Please try again.');
+        }
+
+        return $decoded;
     }
 
     private function respond(Gemini $gemini, string $prompt): JsonResponse

@@ -22,6 +22,8 @@ class PostController extends ResourceController
             'subtitle' => 'Articles and company news. A post goes live at its publish date; leave it empty to keep a draft.',
             'icon' => 'newspaper',
             'route' => 'admin.posts',
+            // One-click, nothing typed first: picks its own topic and fills in every field.
+            'fullAi' => ['route' => 'admin.ai.blog-post-full', 'label' => 'Generate blog using OkuLands Smart AI'],
             'search' => ['title', 'category', 'excerpt'],
             'order' => ['published_at', 'desc'],
             'view' => fn (NewsPost $p) => $p->published_at && $p->published_at->isPast() ? route('blog.show', $p->slug) : null,

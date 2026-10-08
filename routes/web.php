@@ -164,6 +164,7 @@ Route::middleware(['auth', 'active', 'twofactor', 'nostore'])->group(function ()
 
         Route::post('ai/property-description', [Admin\AiController::class, 'propertyDescription'])->middleware('throttle:20,1')->name('ai.property-description');
         Route::post('ai/blog-post', [Admin\AiController::class, 'blogPost'])->middleware('throttle:20,1')->name('ai.blog-post');
+        Route::post('ai/blog-post-full', [Admin\AiController::class, 'blogPostFull'])->middleware('throttle:20,1')->name('ai.blog-post-full');
 
 
         Route::get('settings', [Admin\SettingsController::class, 'edit'])->name('settings');
