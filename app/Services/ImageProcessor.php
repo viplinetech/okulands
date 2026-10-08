@@ -67,22 +67,39 @@ class ImageProcessor
         imagealphablending($source, false);
         imagesavealpha($source, true);
 
+        $uuid = Str::uuid();
+        $relative = 'uploads/'.trim($folder, '/').'/'.$uuid.'.webp';
+
+        // Branding (logo/favicon) also gets a lossless PNG saved alongside, straight from this same
+        // trimmed/oriented source. Email clients render the site's lossy WebP badly (Gmail's image
+        // proxy in particular turns it into a blocky, dark artifact) and need a universally
+        // supported format — generating that PNG now, from the original pixels, avoids a lossy
+        // WebP-to-PNG round trip later for no reason.
+        if ($folder === 'branding') {
+            ob_start();
+            imagepng($source);
+            Storage::disk('public')->put('uploads/'.trim($folder, '/').'/'.$uuid.'.png', ob_get_clean());
+        }
+
         ob_start();
         imagewebp($source, null, $quality);
         $binary = ob_get_clean();
         imagedestroy($source);
 
-        $relative = 'uploads/'.trim($folder, '/').'/'.Str::uuid().'.webp';
         Storage::disk('public')->put($relative, $binary);
 
         return $relative;
     }
 
-    /** Delete a previously stored upload. Only files under uploads/ are ever removed. */
+    /** Delete a previously stored upload (and its sibling email-PNG, if a branding upload made one). */
     public function delete(?string $path): void
     {
         if ($path && str_starts_with($path, 'uploads/') && ! str_contains($path, '..')) {
             Storage::disk('public')->delete($path);
+
+            if (str_ends_with($path, '.webp')) {
+                Storage::disk('public')->delete(substr($path, 0, -5).'.png');
+            }
         }
     }
 
