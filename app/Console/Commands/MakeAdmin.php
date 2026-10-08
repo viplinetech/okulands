@@ -86,7 +86,7 @@ class MakeAdmin extends Command
             $this->warn('Generated password (shown once, store it safely): '.$generated);
         }
 
-        $this->line('Two-factor authentication is required on first sign-in.');
+        $this->line('Two-factor authentication is optional; they can turn it on from Security whenever they like.');
 
         return self::SUCCESS;
     }

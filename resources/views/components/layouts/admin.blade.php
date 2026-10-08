@@ -38,7 +38,7 @@
                     <p class="truncate text-xs text-mute">Administrator</p>
                 </div>
                 <form method="POST" action="{{ route('logout') }}">@csrf
-                    <button type="submit" class="icon-action" aria-label="Sign out" title="Sign out"><x-icon name="logout" class="h-4 w-4" /></button>
+                    <button type="submit" class="shrink-0 rounded-full px-3 py-1.5 text-xs font-bold text-mute transition hover:bg-soft hover:text-ink">Sign out</button>
                 </form>
             </div>
         </div>
@@ -94,7 +94,7 @@
                 <p class="truncate text-xs text-mute">Administrator</p>
             </div>
             <form method="POST" action="{{ route('logout') }}">@csrf
-                <button type="submit" class="icon-action" aria-label="Sign out"><x-icon name="logout" class="h-4 w-4" /></button>
+                <button type="submit" class="shrink-0 rounded-full px-3 py-1.5 text-xs font-bold text-mute transition hover:bg-soft hover:text-ink">Sign out</button>
             </form>
         </div>
     </div>
