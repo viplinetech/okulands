@@ -134,6 +134,18 @@ class User extends Authenticatable implements MustVerifyEmail
         return Str::before($this->name, ' ');
     }
 
+    /** Personalised ("Hello, Name!") rather than Laravel's generic "Hello!". */
+    public function sendEmailVerificationNotification(): void
+    {
+        $this->notify(new \App\Notifications\VerifyEmail);
+    }
+
+    /** Personalised ("Hello, Name!") rather than Laravel's generic "Hello!". */
+    public function sendPasswordResetNotification($token): void
+    {
+        $this->notify(new \App\Notifications\ResetPassword($token));
+    }
+
     public function avatarUrl(): ?string
     {
         return SiteSetting::media($this->avatar);

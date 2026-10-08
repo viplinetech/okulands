@@ -41,7 +41,7 @@ class WithdrawalRejected extends AppNotification
             $mail->line('**Reason:** '.$w->notes);
         }
 
-        return $mail->line('The amount is still available in your balance — you can submit a new request any time.')
+        return $mail->line('The amount is still available in your balance, and you can submit a new request at any time.')
             ->action('View my earnings', route('realtor.earnings'));
     }
 }

@@ -40,7 +40,7 @@ class WithdrawalRequested extends AppNotification
             ->greeting('Withdrawal requested')
             ->line('**Realtor:** '.$w->user->name)
             ->line('**Amount:** ₦'.number_format((float) $w->amount))
-            ->line('**Bank:** '.($w->bank_name ?: '—').' · '.($w->account_name ?: '—').' · '.$w->maskedAccountNumber())
+            ->line('**Bank:** '.($w->bank_name ?: 'Not provided').' · '.($w->account_name ?: 'Not provided').' · '.$w->maskedAccountNumber())
             ->action('Review in the admin', route('admin.withdrawals.index'))
             ->line('Pay or reject it from the Withdrawals page.');
     }

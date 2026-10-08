@@ -7,7 +7,7 @@ use App\Models\ReferralVisit;
 use App\Models\SiteSetting;
 use App\Models\User;
 use App\Services\ReferralAttribution;
-use Illuminate\Auth\Notifications\VerifyEmail;
+use App\Notifications\VerifyEmail;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
