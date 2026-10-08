@@ -170,7 +170,7 @@ class TwoFactorTest extends TestCase
         $this->assertTrue($fresh->isAdmin());
         $this->assertDatabaseHas('activity_logs', ['action' => 'admin.two_factor_reset']);
 
-        // Back to enrolment: the admin can only reach the security page until 2FA is set up again.
-        $this->actingAs($fresh)->get('/adminbackend/dashboard')->assertRedirect(route('admin.security'));
+        // 2FA is optional, not enforced: the admin can keep working normally without it.
+        $this->actingAs($fresh)->get('/adminbackend/dashboard')->assertOk();
     }
 }

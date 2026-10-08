@@ -69,7 +69,6 @@
 
         <main id="main" class="app-main app-content {{ $wide ? 'app-content-wide' : '' }}">
             <x-app.flash />
-            <x-app.two-factor-reminder />
             {{ $slot }}
         </main>
     </div>

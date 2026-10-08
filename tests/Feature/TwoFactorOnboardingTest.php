@@ -23,38 +23,13 @@ class TwoFactorOnboardingTest extends TestCase
         ]);
     }
 
-    public function test_a_new_admin_can_work_during_the_grace_period_and_sees_a_reminder(): void
+    public function test_an_admin_without_two_factor_works_normally_with_no_nagging_or_enforcement(): void
     {
-        config(['security.admin_2fa_grace_days' => 7]);
         $admin = User::factory()->admin()->create();
 
-        $this->actingAs($admin)->get('/adminbackend/dashboard')->assertOk()->assertSee('Protect your admin account')->assertSee('7 days');
-        $this->assertEqualsWithDelta(now()->addDays(7)->timestamp, $admin->fresh()->two_factor_grace_ends_at->timestamp, 5);
-
-        // The security page shows the plain-language guide instead of the reminder banner.
-        $this->get('/adminbackend/security')->assertOk()->assertSee('How it works')->assertSee('Google Authenticator')->assertDontSee('Protect your admin account');
-    }
-
-    public function test_the_grace_period_ends_and_two_factor_becomes_required(): void
-    {
-        config(['security.admin_2fa_grace_days' => 7]);
-        $admin = User::factory()->admin()->create(['two_factor_grace_ends_at' => now()->subMinute()]);
-
-        $this->actingAs($admin)->get('/adminbackend/dashboard')->assertRedirect(route('admin.security'));
-        $this->get('/adminbackend/leads')->assertRedirect(route('admin.security'));
+        $this->actingAs($admin)->get('/adminbackend/dashboard')->assertOk()->assertDontSee('Protect your admin account');
+        $this->get('/adminbackend/leads')->assertOk();
         $this->get('/adminbackend/security')->assertOk();
-    }
-
-    public function test_the_grace_period_does_not_restart_each_visit(): void
-    {
-        config(['security.admin_2fa_grace_days' => 7]);
-        $admin = User::factory()->admin()->create();
-
-        $this->actingAs($admin)->get('/adminbackend/dashboard');
-        $admin->forceFill(['two_factor_grace_ends_at' => now()->addDays(5)])->save(); // two days later
-
-        $this->get('/adminbackend/dashboard')->assertOk()->assertSee('5 days');
-        $this->assertEqualsWithDelta(now()->addDays(5)->timestamp, $admin->fresh()->two_factor_grace_ends_at->timestamp, 5);
     }
 
     public function test_a_trusted_device_skips_the_code(): void

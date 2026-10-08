@@ -14,9 +14,8 @@ use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Two-factor gate for every signed-in request.
- *  - A user with 2FA enabled must pass the challenge once per session.
- *  - An admin without 2FA is sent to set it up before touching anything else (mandatory for admins).
- * The challenge, setup and logout routes are exempt (they are outside this middleware's group or listed here).
+ *  - A user (admin or realtor) who has turned 2FA on must pass the challenge once per session.
+ *  - 2FA is optional, never forced, for every account including admins.
  */
 class EnforceTwoFactor
 {
@@ -44,24 +43,6 @@ class EnforceTwoFactor
             }
 
             return $next($request);
-        }
-
-        // Admins must have 2FA. During the grace period they can work normally (with a reminder banner);
-        // afterwards only the security page (where they set it up) and logout are open to them.
-        if ($user->isAdmin() && ! $request->routeIs('admin.security*', 'logout', 'two-factor.*', 'account.password')) {
-            $days = (int) config('security.admin_2fa_grace_days', 7);
-
-            if ($days > 0) {
-                if (! $user->two_factor_grace_ends_at) {
-                    $user->forceFill(['two_factor_grace_ends_at' => now()->addDays($days)])->save();
-                }
-
-                if (now()->lt($user->two_factor_grace_ends_at)) {
-                    return $next($request);
-                }
-            }
-
-            return redirect()->route('admin.security')->with('warning', 'For your protection, turn on two-factor authentication to continue.');
         }
 
         return $next($request);
