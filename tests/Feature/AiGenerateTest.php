@@ -85,6 +85,32 @@ class AiGenerateTest extends TestCase
         $this->assertSame('<p>First paragraph.</p><p>Second paragraph.</p>', $response->json('html'));
     }
 
+    public function test_a_transient_503_is_retried_and_recovers(): void
+    {
+        config(['services.gemini.key' => 'test-key']);
+
+        Http::fakeSequence('generativelanguage.googleapis.com/*')
+            ->push(['error' => ['code' => 503, 'message' => 'busy']], 503)
+            ->push(['candidates' => [['content' => ['parts' => [['text' => '<p>Recovered after a retry.</p>']]]]]], 200);
+
+        $this->actingAs($this->admin())->withSession(['two_factor_passed' => true])
+            ->postJson(route('admin.ai.property-description'), ['title' => 'Test Plot'])
+            ->assertOk()
+            ->assertJson(['html' => '<p>Recovered after a retry.</p>']);
+    }
+
+    public function test_repeated_503s_fail_with_a_clear_busy_message(): void
+    {
+        config(['services.gemini.key' => 'test-key']);
+
+        Http::fake(['generativelanguage.googleapis.com/*' => Http::response(['error' => ['code' => 503]], 503)]);
+
+        $this->actingAs($this->admin())->withSession(['two_factor_passed' => true])
+            ->postJson(route('admin.ai.property-description'), ['title' => 'Test Plot'])
+            ->assertStatus(422)
+            ->assertJsonFragment(['message' => 'OkuLands Smart AI is unusually busy right now. Please try again in a moment.']);
+    }
+
     public function test_the_title_is_required(): void
     {
         $this->actingAs($this->admin())->withSession(['two_factor_passed' => true])
