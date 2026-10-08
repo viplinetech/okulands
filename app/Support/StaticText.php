@@ -118,7 +118,7 @@ Our realtor network extends that trust further, giving ambitious people a fair, 
 
     public static function ceoName(): string
     {
-        return 'Okunenenwu Enwu';
+        return 'Mr. Paul Ozoemena (Okunaenwu na Amansea)';
     }
 
     public static function ceoTitle(): string
