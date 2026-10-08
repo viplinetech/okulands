@@ -12,7 +12,7 @@
         <div class="flex flex-wrap items-start justify-between gap-5">
             <div>
                 <p class="stat-label !mt-0">Total earned</p>
-                <p class="mt-2 font-serif text-[2.6rem] leading-none text-white sm:text-6xl">₦<span data-counter="{{ (int) $summary['earned'] }}">{{ number_format($summary['earned']) }}</span></p>
+                <p class="mt-2 font-sans text-[2.4rem] font-extrabold leading-none tracking-tight text-white [font-variant-numeric:tabular-nums] sm:text-[3.4rem]">₦<span data-counter="{{ (int) $summary['earned'] }}">{{ number_format($summary['earned']) }}</span></p>
                 <div class="mt-4 flex flex-wrap gap-x-6 gap-y-1 text-sm">
                     <p class="text-white/60">Pending <strong class="ml-1 text-amber-300">₦{{ number_format($summary['pending']) }}</strong></p>
                     <p class="text-white/60">Paid out <strong class="ml-1 text-emerald-300">₦{{ number_format($summary['paid']) }}</strong></p>

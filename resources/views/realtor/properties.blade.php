@@ -32,7 +32,7 @@
                     <div class="flex flex-1 flex-col p-4">
                         <p class="font-serif text-xl leading-tight text-ink">{{ $p->title }}</p>
                         <p class="mt-1 flex items-center gap-1.5 text-xs text-mute"><x-icon name="pin" class="h-3.5 w-3.5 shrink-0 text-flag-500" /><span class="truncate">{{ $p->location }}</span></p>
-                        <p class="mt-3 font-serif text-2xl text-ink">₦{{ number_format($p->price) }}</p>
+                        <p class="mt-3 font-sans text-2xl font-extrabold tracking-tight text-ink [font-variant-numeric:tabular-nums]">₦{{ number_format($p->price) }}</p>
                         <div class="mt-4 grid grid-cols-3 gap-2">
                             <button type="button" data-copy="{{ $link }}" class="btn btn-outline btn-sm !px-2"><x-icon name="copy" class="h-4 w-4" /><span data-label>Copy</span></button>
                             <a href="https://wa.me/?text={{ rawurlencode($text) }}" target="_blank" rel="noopener" class="btn btn-outline btn-sm !px-2"><x-icon name="whatsapp" class="h-4 w-4 text-[#25D366]" />Share</a>

@@ -16,7 +16,7 @@
     <div class="grid gap-4 lg:grid-cols-3">
         <section class="stat stat-hero !p-5 sm:!p-7 lg:col-span-1">
             <p class="stat-label !mt-0">Sale amount</p>
-            <p class="mt-2 font-serif text-5xl leading-none text-white">₦{{ number_format($sale->amount) }}</p>
+            <p class="mt-2 font-sans text-5xl font-extrabold leading-none tracking-tight text-white [font-variant-numeric:tabular-nums]">₦{{ number_format($sale->amount) }}</p>
             <div class="mt-4"><x-app.badge :status="$sale->status" class="!bg-white/15 !text-white" /></div>
             @if ($sale->approved_at)<p class="mt-4 text-xs text-white/60">Approved {{ $sale->approved_at->format('M j, Y') }} by {{ $sale->approver?->name ?? 'admin' }}</p>@endif
         </section>

@@ -296,7 +296,9 @@ body.app-body {
         @apply flex h-10 w-10 items-center justify-center rounded-2xl bg-brand/10 text-brand;
     }
     .stat-value {
-        @apply mt-3 font-serif text-[2rem] leading-none text-ink sm:text-[2.35rem];
+        /* Numbers get the sans font with tabular figures: easier to scan at a glance than a
+           display serif, which matters more here than brand consistency with the headings. */
+        @apply mt-3 font-sans text-[1.9rem] font-extrabold leading-none tracking-tight text-ink [font-variant-numeric:tabular-nums] sm:text-[2.2rem];
     }
     .stat-label {
         @apply mt-2 text-[0.68rem] font-bold uppercase tracking-[0.16em] text-mute;
