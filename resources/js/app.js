@@ -682,6 +682,44 @@ function initFaqKb() {
         setTimeout(() => target.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'center' }), 300);
     }
 
+    // Ask OkuLands Smart AI: shown when a search finds nothing, answers the visitor's typed
+    // search directly, grounded in the site's own FAQ content (see FaqController::ask()).
+    const askBtn = root.querySelector('[data-faq-ai-ask]');
+    if (askBtn) {
+        const answerBox = root.querySelector('[data-faq-ai-answer]');
+        const answerText = root.querySelector('[data-faq-ai-text]');
+        const label = askBtn.querySelector('span');
+        const originalLabel = label?.textContent;
+
+        askBtn.addEventListener('click', async () => {
+            const question = input.value.trim();
+            if (!question) { input.focus(); return; }
+
+            askBtn.disabled = true;
+            if (label) label.textContent = 'Thinking…';
+            if (answerBox) answerBox.hidden = true;
+
+            try {
+                const res = await fetch(askBtn.dataset.url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', Accept: 'application/json', 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '' },
+                    body: JSON.stringify({ question }),
+                });
+                const data = await res.json().catch(() => ({}));
+                if (!res.ok) throw new Error(data.message || 'OkuLands Smart AI could not answer right now.');
+
+                if (answerText) answerText.textContent = data.answer || '';
+                if (answerBox) answerBox.hidden = false;
+            } catch (e) {
+                if (answerText) answerText.textContent = e.message || 'Something went wrong. Please try again, or contact our team below.';
+                if (answerBox) answerBox.hidden = false;
+            } finally {
+                askBtn.disabled = false;
+                if (label) label.textContent = originalLabel;
+            }
+        });
+    }
+
     // "Was this helpful?" (one vote per answer per browser)
     let voted = {};
     try { voted = JSON.parse(localStorage.getItem('okulands-faq-votes') || '{}'); } catch (e) {}

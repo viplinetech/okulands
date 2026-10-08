@@ -112,9 +112,22 @@
                         <div data-faq-empty hidden class="surface px-6 py-14 text-center sm:px-12">
                             <span class="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-brand/10 text-brand"><x-icon name="search" class="h-6 w-6" /></span>
                             <h2 class="display mt-6 text-3xl text-ink sm:text-4xl">No answers match your search.</h2>
-                            <p class="mx-auto mt-3 max-w-md text-mute">Try a different word, or ask our team directly. We usually reply the same day.</p>
+                            <p class="mx-auto mt-3 max-w-md text-mute">Let OkuLands Smart AI answer it directly, or ask our team. We usually reply the same day.</p>
+
+                            <div data-faq-ai class="mx-auto mt-7 max-w-lg">
+                                <button type="button" data-faq-ai-ask data-url="{{ route('faq.ask') }}" class="btn btn-primary w-full sm:w-auto">
+                                    <x-icon name="sparkle" class="h-4 w-4" /> <span>Ask OkuLands Smart AI</span>
+                                </button>
+
+                                <div data-faq-ai-answer hidden class="mt-5 rounded-3xl border border-brand/20 bg-brand/5 p-5 text-left sm:p-6">
+                                    <p class="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-brand"><x-icon name="sparkle" class="h-3.5 w-3.5" /> OkuLands Smart AI</p>
+                                    <p data-faq-ai-text class="mt-3 text-sm leading-relaxed text-ink"></p>
+                                    <p class="mt-4 text-xs text-mute">AI-generated answer. For anything specific (price, availability, legal), please contact our team directly.</p>
+                                </div>
+                            </div>
+
                             <div class="mt-7 flex flex-col justify-center gap-3 sm:flex-row">
-                                <a href="{{ route('contact') }}" class="btn btn-primary">Ask our team</a>
+                                <a href="{{ route('contact') }}" class="btn btn-outline">Ask our team</a>
                                 @if ($settings->whatsapp)
                                     <a href="{{ $settings->whatsappUrl('Hello Oku Lands, I have a question.') }}" target="_blank" rel="noopener" class="btn btn-outline"><x-icon name="whatsapp" class="h-5 w-5 text-[#25D366]" /> WhatsApp us</a>
                                 @endif
