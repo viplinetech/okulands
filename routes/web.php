@@ -49,6 +49,7 @@ Route::get('/faqs', [FaqController::class, 'index'])->name('faq');
 // Legal pages (fixed wording, see App\Support\LegalDefaults)
 Route::get('/{page}', [PageController::class, 'legal'])->whereIn('page', ['privacy-policy', 'terms'])->name('legal');
 Route::post('/faqs/{faqItem}/feedback', [FaqController::class, 'feedback'])->middleware('throttle:30,1')->name('faq.feedback');
+Route::post('/faqs/ask', [FaqController::class, 'ask'])->middleware('throttle:8,1')->name('faq.ask');
 
 // Realtor referral links, e.g. /ref/john-a1b2  (optionally  ?to=/properties/some-plot)
 Route::get('/ref/{code}', [ReferralController::class, 'track'])->where('code', '[A-Za-z0-9_-]+')->middleware('throttle:60,1')->name('referral');
