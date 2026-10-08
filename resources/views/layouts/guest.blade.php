@@ -54,8 +54,12 @@
             <div class="relative flex h-full flex-col justify-between p-12 xl:p-16">
                 @if ($isAdminView)
                     <span class="flex items-center gap-3">
-                        <x-brand-mark class="h-10 w-10" />
-                        <span class="leading-tight"><span class="block font-serif text-2xl">Oku Lands</span><span class="block text-[0.62rem] font-bold uppercase tracking-[0.24em] text-sky-300">Admin console</span></span>
+                        @if ($settings->logoDarkUrl())
+                            <img src="{{ $settings->logoDarkUrl() }}" alt="{{ $settings->site_name }}" class="h-10 w-auto">
+                        @else
+                            <x-brand-mark class="h-10 w-10" />
+                        @endif
+                        <span class="leading-tight"><span class="block font-serif text-2xl">{{ $settings->site_name ?: 'Oku Lands' }}</span><span class="block text-[0.62rem] font-bold uppercase tracking-[0.24em] text-sky-300">Admin console</span></span>
                     </span>
 
                     <div>
@@ -107,8 +111,15 @@
                 <div class="w-full max-w-md">
                     <div class="mb-8 flex items-center gap-2.5 text-ink lg:hidden">
                         @if ($isAdminView)
-                            <a href="{{ route('home') }}" class="flex items-center gap-2.5" aria-label="Back to the Oku Lands website"><x-brand-mark class="h-9 w-9" />
-                            <span class="leading-tight"><span class="block font-serif text-2xl">Oku Lands</span><span class="block text-[0.6rem] font-bold uppercase tracking-[0.22em] text-brand">Admin console</span></span></a>
+                            <a href="{{ route('home') }}" class="flex items-center gap-2.5" aria-label="Back to the Oku Lands website">
+                                @if ($settings->logoUrl())
+                                    <img src="{{ $settings->logoUrl() }}" alt="{{ $settings->site_name }}" class="h-9 w-auto dark:hidden">
+                                    <img src="{{ $settings->logoDarkUrl() }}" alt="" aria-hidden="true" class="hidden h-9 w-auto dark:block">
+                                @else
+                                    <x-brand-mark class="h-9 w-9" />
+                                @endif
+                                <span class="leading-tight"><span class="block font-serif text-2xl">{{ $settings->site_name ?: 'Oku Lands' }}</span><span class="block text-[0.6rem] font-bold uppercase tracking-[0.22em] text-brand">Admin console</span></span>
+                            </a>
                         @else
                             <a href="{{ route('home') }}" class="flex items-center gap-2.5" aria-label="{{ $settings->site_name }}">
                                 @if ($settings->logoUrl())
