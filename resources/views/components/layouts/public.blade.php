@@ -122,11 +122,7 @@
         <div class="flex items-center justify-between gap-2 py-2 pl-4 pr-1.5 sm:gap-3 sm:pl-7 sm:pr-2">
             <a href="{{ route('home') }}" class="flex shrink-0 items-center gap-2.5" aria-label="{{ $settings->site_name }}, home">
                 @if ($settings->logoUrl() || $settings->logoDarkUrl())
-                    {{-- A solid white chip behind the dark-header logo: guarantees contrast no matter how
-                         light/low-contrast the admin's uploaded "dark background" logo file is. --}}
-                    <span class="logo-dark flex items-center rounded-2xl bg-white px-2.5 py-1.5 shadow-sm sm:px-3 sm:py-2">
-                        <img src="{{ $settings->logoDarkUrl() }}" alt="{{ $settings->site_name }}" class="h-9 w-auto sm:h-11" width="160" height="44">
-                    </span>
+                    <img src="{{ $settings->logoDarkUrl() }}" alt="{{ $settings->site_name }}" class="logo-dark h-10 w-auto sm:h-12" width="160" height="44">
                     <img src="{{ $settings->logoUrl() ?? $settings->logoDarkUrl() }}" alt="" aria-hidden="true" class="logo-light h-10 w-auto sm:h-12" width="160" height="44">
                 @else
                     <x-brand-mark class="h-8 w-8" />
