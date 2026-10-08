@@ -11,7 +11,7 @@
                         <a href="{{ route($item['route'], $item['query']) }}" class="card group flex items-center gap-4 !p-5 transition hover:-translate-y-0.5 hover:shadow-soft">
                             <span class="stat-icon"><x-icon :name="$item['icon']" class="h-5 w-5" /></span>
                             <span class="min-w-0 flex-1">
-                                <span class="block font-serif text-4xl leading-none text-ink">{{ number_format($item['count']) }}</span>
+                                <span class="block font-sans text-4xl font-extrabold leading-none tracking-tight text-ink [font-variant-numeric:tabular-nums]">{{ number_format($item['count']) }}</span>
                                 <span class="mt-1 block text-sm font-semibold text-mute">{{ $item['label'] }}</span>
                             </span>
                             <x-icon name="arrow" class="h-4 w-4 shrink-0 text-mute transition group-hover:translate-x-1" />

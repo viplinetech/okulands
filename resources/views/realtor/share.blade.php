@@ -51,7 +51,7 @@
             <h2 class="card-title">Link activity</h2>
             <div class="mt-4 grid grid-cols-3 gap-3 text-center">
                 @foreach ([['Last 7 days', $clicks7], ['Last 30 days', $clicks30], ['All time', $clicksAll]] as [$label, $n])
-                    <div class="rounded-2xl bg-soft px-2 py-4"><p class="font-serif text-3xl text-ink">{{ number_format($n) }}</p><p class="mt-1 text-[0.62rem] font-bold uppercase tracking-wider text-mute">{{ $label }}</p></div>
+                    <div class="rounded-2xl bg-soft px-2 py-4"><p class="font-sans text-3xl font-extrabold tracking-tight text-ink [font-variant-numeric:tabular-nums]">{{ number_format($n) }}</p><p class="mt-1 text-[0.62rem] font-bold uppercase tracking-wider text-mute">{{ $label }}</p></div>
                 @endforeach
             </div>
         </section>

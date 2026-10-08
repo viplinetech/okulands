@@ -13,6 +13,7 @@ use Illuminate\Auth\Events\Lockout;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Auth\Events\Logout;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
@@ -33,6 +34,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Some hosts still run MySQL/MariaDB with the older 767-byte index-key limit (no "large
+        // prefix" / Barracuda row format), which errors on a utf8mb4 varchar(255) unique/primary
+        // key. 191 chars still comfortably fits an email address and keeps the index within limits.
+        Schema::defaultStringLength(191);
+
         // Every public-facing view (and the auth screens) can read the admin-managed settings.
         View::composer(
             ['components.layouts.public', 'components.layouts.realtor', 'components.layouts.admin', 'components.layouts.standalone', 'layouts.guest', 'home', 'pages.*', 'properties.*', 'blog.*', 'errors.*'],
