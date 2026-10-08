@@ -46,6 +46,13 @@ class ImageProcessor
 
         $source = $this->orient($source, $path, $info[2]);
 
+        // Logos are often exported with uneven transparent padding (more space on one side than
+        // the other), which makes them look off-centre wherever they're placed. Trim to the
+        // actual artwork, with a small even margin, so the file itself is properly centred.
+        if ($folder === 'branding' && $info[2] !== IMAGETYPE_JPEG) {
+            $source = $this->trimTransparentPadding($source);
+        }
+
         $width = imagesx($source);
         $height = imagesy($source);
         if ($width > $maxWidth) {
@@ -77,6 +84,69 @@ class ImageProcessor
         if ($path && str_starts_with($path, 'uploads/') && ! str_contains($path, '..')) {
             Storage::disk('public')->delete($path);
         }
+    }
+
+    /**
+     * Crop to the bounding box of visible (non-fully-transparent) pixels, with a small even
+     * margin added back on every side. Falls back to the original image if it has no real
+     * transparency (a flat background) or trimming would leave nothing.
+     */
+    private function trimTransparentPadding(\GdImage $image): \GdImage
+    {
+        imagealphablending($image, false);
+        imagesavealpha($image, true);
+
+        $width = imagesx($image);
+        $height = imagesy($image);
+
+        $minX = $width;
+        $minY = $height;
+        $maxX = -1;
+        $maxY = -1;
+
+        // Sample every pixel (logos are small uploads, so this is cheap) looking for anything
+        // that isn't fully transparent.
+        for ($y = 0; $y < $height; $y++) {
+            for ($x = 0; $x < $width; $x++) {
+                $alpha = (imagecolorat($image, $x, $y) >> 24) & 0x7F;
+                if ($alpha < 127) { // 127 = fully transparent in GD's 0-127 alpha scale
+                    $minX = min($minX, $x);
+                    $minY = min($minY, $y);
+                    $maxX = max($maxX, $x);
+                    $maxY = max($maxY, $y);
+                }
+            }
+        }
+
+        if ($maxX < $minX || $maxY < $minY) {
+            return $image; // nothing but transparent pixels (or no alpha channel at all)
+        }
+
+        $boxWidth = $maxX - $minX + 1;
+        $boxHeight = $maxY - $minY + 1;
+
+        // Only bother if there is meaningfully uneven padding to remove.
+        if ($boxWidth >= $width * 0.98 && $boxHeight >= $height * 0.98) {
+            return $image;
+        }
+
+        $margin = (int) round(max($boxWidth, $boxHeight) * 0.06);
+
+        $cropX = max(0, $minX - $margin);
+        $cropY = max(0, $minY - $margin);
+        $cropWidth = min($width - $cropX, $boxWidth + $margin * 2);
+        $cropHeight = min($height - $cropY, $boxHeight + $margin * 2);
+
+        $trimmed = imagecreatetruecolor($cropWidth, $cropHeight);
+        imagealphablending($trimmed, false);
+        imagesavealpha($trimmed, true);
+        $transparent = imagecolorallocatealpha($trimmed, 0, 0, 0, 127);
+        imagefill($trimmed, 0, 0, $transparent);
+
+        imagecopy($trimmed, $image, 0, 0, $cropX, $cropY, $cropWidth, $cropHeight);
+        imagedestroy($image);
+
+        return $trimmed;
     }
 
     /** Honour the camera's EXIF orientation so portrait photos are not stored sideways. */
