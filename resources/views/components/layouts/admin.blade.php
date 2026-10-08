@@ -32,7 +32,7 @@
             @else
                 <x-brand-mark class="h-9 w-9" />
             @endif
-            <span class="leading-tight"><span class="block font-serif text-xl">{{ $settings->site_name ?: 'Oku Lands' }}</span><span class="block text-[0.6rem] font-bold uppercase tracking-[0.22em] text-brand">Admin console</span></span>
+            <span class="font-bold uppercase tracking-[0.22em] text-brand text-xs">Admin console</span>
         </a>
         <x-app.admin-nav :counts="$counts" />
         <div class="mt-auto pt-6">
@@ -90,7 +90,7 @@
             @else
                 <x-brand-mark class="h-9 w-9" />
             @endif
-            <span class="leading-tight"><span class="block font-serif text-xl">{{ $settings->site_name ?: 'Oku Lands' }}</span><span class="block text-[0.6rem] font-bold uppercase tracking-[0.22em] text-brand">Admin console</span></span>
+            <span class="font-bold uppercase tracking-[0.22em] text-brand text-xs">Admin console</span>
         </span>
         <button type="button" data-drawer-close class="icon-action" aria-label="Close menu"><x-icon name="x" class="h-4 w-4" /></button>
     </div>

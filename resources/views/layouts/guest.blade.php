@@ -62,7 +62,7 @@
                         @else
                             <x-brand-mark class="h-10 w-10" />
                         @endif
-                        <span class="leading-tight"><span class="block font-serif text-2xl">{{ $settings->site_name ?: 'Oku Lands' }}</span><span class="block text-[0.62rem] font-bold uppercase tracking-[0.24em] text-sky-300">Admin console</span></span>
+                        <span class="text-xs font-bold uppercase tracking-[0.24em] text-sky-300">Admin console</span>
                     </span>
 
                     <div>
@@ -121,7 +121,7 @@
                                 @else
                                     <x-brand-mark class="h-9 w-9" />
                                 @endif
-                                <span class="leading-tight"><span class="block font-serif text-2xl">{{ $settings->site_name ?: 'Oku Lands' }}</span><span class="block text-[0.6rem] font-bold uppercase tracking-[0.22em] text-brand">Admin console</span></span>
+                                <span class="text-xs font-bold uppercase tracking-[0.22em] text-brand">Admin console</span>
                             </a>
                         @else
                             <a href="{{ route('home') }}" class="flex items-center gap-2.5" aria-label="{{ $settings->site_name }}">
