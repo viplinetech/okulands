@@ -169,14 +169,15 @@ new #[Layout('layouts.guest')] class extends Component
             <div>
                 <label for="password" class="field-label">Password</label>
                 <x-text-input wire:model="password" id="password" type="password" name="password" required autocomplete="new-password" />
-                <x-input-error :messages="$errors->get('password')" class="mt-2" />
             </div>
             <div>
                 <label for="password_confirmation" class="field-label">Confirm password</label>
                 <x-text-input wire:model="password_confirmation" id="password_confirmation" type="password" name="password_confirmation" required autocomplete="new-password" />
             </div>
         </div>
-        <p class="-mt-2 text-xs text-mute">At least 10 characters with upper and lower case letters and a number.</p>
+        {{-- Full width, not squeezed into the half-column above: a password error can run long. --}}
+        <x-input-error :messages="$errors->get('password')" class="-mt-2" />
+        <p class="-mt-2 text-xs text-mute">At least 8 characters with upper and lower case letters and a number.</p>
 
         <div class="hidden" aria-hidden="true"><input type="text" wire:model="website" tabindex="-1" autocomplete="off"></div>
 

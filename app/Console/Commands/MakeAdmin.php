@@ -56,7 +56,7 @@ class MakeAdmin extends Command
             $generated = Str::password(16, symbols: false);
             $password = $generated;
         } else {
-            $password = (string) $this->secret('Password (min 10 characters, upper + lower case and a number)');
+            $password = (string) $this->secret('Password (min 8 characters, upper + lower case and a number)');
             if ($password !== (string) $this->secret('Confirm password')) {
                 $this->error('The passwords do not match.');
 
@@ -64,7 +64,7 @@ class MakeAdmin extends Command
             }
         }
 
-        $check = Validator::make(['password' => $password], ['password' => [Password::min(10)->mixedCase()->numbers()]]);
+        $check = Validator::make(['password' => $password], ['password' => [Password::min(8)->mixedCase()->numbers()]]);
         if ($check->fails()) {
             $this->error($check->errors()->first('password'));
 

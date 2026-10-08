@@ -111,7 +111,7 @@
             <span class="stat-icon"><x-icon name="key" class="h-5 w-5" /></span>
             <div>
                 <h2 class="card-title">Change password</h2>
-                <p class="text-xs text-mute">10+ characters with upper and lower case letters and a number.</p>
+                <p class="text-xs text-mute">8+ characters with upper and lower case letters and a number.</p>
             </div>
         </div>
         <form method="POST" action="{{ route('account.password') }}" class="mt-5 space-y-4">
