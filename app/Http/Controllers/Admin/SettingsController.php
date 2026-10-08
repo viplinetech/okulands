@@ -173,7 +173,11 @@ class SettingsController extends Controller
         }
 
         if ($request->hasFile($input)) {
-            $stored = $images->store($request->file($input), $folder, $width, $quality);
+            // The favicon gets dedicated processing (bolder strokes, tightly centred): it's shown
+            // at 16-32px in a browser tab, where a logo's fine detail just blurs into a blob.
+            $stored = $input === 'favicon'
+                ? $images->storeFavicon($request->file($input))
+                : $images->store($request->file($input), $folder, $width, $quality);
             $images->delete($current);
             $current = $stored;
         }

@@ -35,6 +35,6 @@ class InspectionBooked extends Notification
         }
 
         return $mail->line('Our team will reach out to you shortly on '.($lead->phone ?: $lead->email).' to confirm a convenient date and time.')
-            ->line('Thank you for choosing Oku Lands — Homes Built on Trust.');
+            ->line('Thank you for choosing Oku Lands. Homes Built on Trust.');
     }
 }

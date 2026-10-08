@@ -91,6 +91,118 @@ class ImageProcessor
         return $relative;
     }
 
+    /**
+     * A favicon is shown at 16-32px in a browser tab: any fine detail (thin outlines, small
+     * cutouts) just blurs into an unrecognisable blob at that size. This trims to the artwork,
+     * bolds the strokes so they survive shrinking, adds a little even breathing room, and saves
+     * as PNG (favicon support for WebP is inconsistent across browsers; PNG is universal).
+     *
+     * @throws \InvalidArgumentException when the file is not an acceptable image
+     */
+    public function storeFavicon(UploadedFile $file): string
+    {
+        $path = $file->getRealPath();
+
+        if (! $file->isValid() || ! $path || $file->getSize() > self::MAX_BYTES) {
+            throw new \InvalidArgumentException('The image is missing, too large (max 12MB) or failed to upload.');
+        }
+
+        $info = @getimagesize($path);
+        if (! $info || ! in_array($info[2], self::ALLOWED, true) || ($info[0] * $info[1]) > self::MAX_PIXELS) {
+            throw new \InvalidArgumentException('Please upload a JPG, PNG, WebP or GIF image.');
+        }
+
+        $source = @imagecreatefromstring((string) file_get_contents($path));
+        if (! $source) {
+            throw new \InvalidArgumentException('That image could not be read. Try exporting it again.');
+        }
+
+        $source = $this->orient($source, $path, $info[2]);
+        if ($info[2] !== IMAGETYPE_JPEG) {
+            $source = $this->trimTransparentPadding($source);
+        }
+        $source = $this->boldenForSmallSize($source);
+
+        ob_start();
+        imagepng($source);
+        $binary = ob_get_clean();
+        imagedestroy($source);
+
+        $relative = 'uploads/branding/'.Str::uuid().'.png';
+        Storage::disk('public')->put($relative, $binary);
+
+        return $relative;
+    }
+
+    /**
+     * Thickens every stroke (each pixel takes on the most-opaque colour within a small radius of
+     * itself), then adds a touch of padding. Done at a fixed working size so the effect scales
+     * sensibly regardless of how large the original upload was.
+     */
+    private function boldenForSmallSize(\GdImage $image, int $workSize = 256, int $radius = 3): \GdImage
+    {
+        $resized = imagecreatetruecolor($workSize, $workSize);
+        imagealphablending($resized, false);
+        imagesavealpha($resized, true);
+        $transparent = imagecolorallocatealpha($resized, 0, 0, 0, 127);
+        imagefill($resized, 0, 0, $transparent);
+        imagecopyresampled($resized, $image, 0, 0, 0, 0, $workSize, $workSize, imagesx($image), imagesy($image));
+        imagedestroy($image);
+
+        $bold = imagecreatetruecolor($workSize, $workSize);
+        imagealphablending($bold, false);
+        imagesavealpha($bold, true);
+        $transparent2 = imagecolorallocatealpha($bold, 0, 0, 0, 127);
+        imagefill($bold, 0, 0, $transparent2);
+
+        for ($y = 0; $y < $workSize; $y++) {
+            for ($x = 0; $x < $workSize; $x++) {
+                $bestAlpha = 127;
+                $bestColor = null;
+                for ($dy = -$radius; $dy <= $radius; $dy++) {
+                    $ny = $y + $dy;
+                    if ($ny < 0 || $ny >= $workSize) {
+                        continue;
+                    }
+                    for ($dx = -$radius; $dx <= $radius; $dx++) {
+                        $nx = $x + $dx;
+                        if ($nx < 0 || $nx >= $workSize) {
+                            continue;
+                        }
+                        $color = imagecolorat($resized, $nx, $ny);
+                        $alpha = ($color >> 24) & 0x7F;
+                        if ($alpha < $bestAlpha) {
+                            $bestAlpha = $alpha;
+                            $bestColor = $color;
+                        }
+                    }
+                }
+                if ($bestColor !== null) {
+                    imagesetpixel($bold, $x, $y, $bestColor);
+                }
+            }
+        }
+        imagedestroy($resized);
+
+        // A little padding so the mark doesn't touch the very edge of the tab icon.
+        $padded = $this->trimTransparentPadding($bold);
+        $finalSize = max(imagesx($padded), imagesy($padded));
+        $canvas = imagecreatetruecolor($finalSize, $finalSize);
+        imagealphablending($canvas, false);
+        imagesavealpha($canvas, true);
+        $transparent3 = imagecolorallocatealpha($canvas, 0, 0, 0, 127);
+        imagefill($canvas, 0, 0, $transparent3);
+        imagecopy(
+            $canvas, $padded,
+            (int) round(($finalSize - imagesx($padded)) / 2),
+            (int) round(($finalSize - imagesy($padded)) / 2),
+            0, 0, imagesx($padded), imagesy($padded)
+        );
+        imagedestroy($padded);
+
+        return $canvas;
+    }
+
     /** Delete a previously stored upload (and its sibling email-PNG, if a branding upload made one). */
     public function delete(?string $path): void
     {
