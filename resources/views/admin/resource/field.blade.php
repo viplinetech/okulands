@@ -23,7 +23,18 @@
             <span class="switch" aria-hidden="true"></span>
         </label>
     @else
-        <label for="{{ $id }}" class="field-label">{{ $field['label'] }} @if ($required)<span class="text-flag-500">*</span>@endif</label>
+        <div class="mb-2 flex flex-wrap items-center justify-between gap-2">
+            <label for="{{ $id }}" class="field-label !mb-0">{{ $field['label'] }} @if ($required)<span class="text-flag-500">*</span>@endif</label>
+            @if ($type === 'richtext' && ! empty($field['ai']))
+                <button type="button" class="btn btn-outline btn-xs"
+                    data-ai-generate="{{ $field['ai'] }}"
+                    data-ai-target="{{ $id }}-rte"
+                    data-ai-url="{{ $field['ai'] === 'property' ? route('admin.ai.property-description') : route('admin.ai.blog-post') }}">
+                    <x-icon name="sparkle" class="h-3.5 w-3.5" />
+                    <span data-ai-label>Generate {{ $field['ai'] === 'property' ? 'description' : 'post' }} using OkuLands Smart AI</span>
+                </button>
+            @endif
+        </div>
 
         @switch($type)
             @case('textarea')
@@ -31,9 +42,12 @@
                 @break
 
             @case('richtext')
-                <div class="rte" data-rte @if (! empty($field['compact'])) data-rte-compact @endif data-placeholder="{{ $field['placeholder'] ?? 'Start writing…' }}">
+                <div id="{{ $id }}-rte" class="rte" data-rte @if (! empty($field['compact'])) data-rte-compact @endif data-placeholder="{{ $field['placeholder'] ?? 'Start writing…' }}">
                     <textarea id="{{ $id }}" name="{{ $name }}" rows="{{ $field['rows'] ?? 10 }}" class="field">{{ $value }}</textarea>
                 </div>
+                @if (! empty($field['ai']))
+                    <p class="hint mt-1" data-ai-status></p>
+                @endif
                 @break
 
             @case('lines')

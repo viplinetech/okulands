@@ -161,6 +161,9 @@ Route::middleware(['auth', 'active', 'twofactor', 'nostore'])->group(function ()
         Route::put('testimonials/{testimonial}', [Admin\TestimonialController::class, 'update'])->name('testimonials.update');
         Route::delete('testimonials/{testimonial}', [Admin\TestimonialController::class, 'destroy'])->name('testimonials.destroy');
 
+        Route::post('ai/property-description', [Admin\AiController::class, 'propertyDescription'])->middleware('throttle:20,1')->name('ai.property-description');
+        Route::post('ai/blog-post', [Admin\AiController::class, 'blogPost'])->middleware('throttle:20,1')->name('ai.blog-post');
+
 
         Route::get('settings', [Admin\SettingsController::class, 'edit'])->name('settings');
         Route::put('settings', [Admin\SettingsController::class, 'update'])->name('settings.update');

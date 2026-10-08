@@ -259,6 +259,76 @@ function initCheckAll() {
     }));
 }
 
+/* "Generate using OkuLands Smart AI" buttons next to a rich-text field. Gathers sibling form
+   fields by name (title, location… for a property; title, category for a blog post), posts them
+   to the matching AI endpoint, and drops the result into that editor via root.setRteHtml(). */
+function initAiGenerate() {
+    const fieldsFor = {
+        property: ['title', 'location', 'sector', 'type', 'price', 'size', 'bedrooms', 'bathrooms'],
+        blog: ['title', 'category'],
+    };
+
+    $$('[data-ai-generate]').forEach((btn) => {
+        const form = btn.closest('form');
+        const status = btn.closest('.form-full')?.querySelector('[data-ai-status]');
+        const label = btn.querySelector('[data-ai-label]');
+        const originalLabel = label?.textContent;
+
+        btn.addEventListener('click', async () => {
+            const kind = btn.dataset.aiGenerate;
+            const target = document.getElementById(btn.dataset.aiTarget);
+            if (!form || !target || !target.setRteHtml) return;
+
+            const names = fieldsFor[kind] || [];
+            const payload = {};
+            let missingTitle = false;
+            names.forEach((name) => {
+                const el = form.querySelector(`[name="${name}"]`);
+                let val = '';
+                if (el instanceof HTMLSelectElement) {
+                    val = el.selectedOptions[0]?.textContent.trim() || '';
+                } else if (el) {
+                    val = el.value.trim();
+                }
+                if (name === 'title' && !val) missingTitle = true;
+                if (val) payload[name] = val;
+            });
+
+            if (status) { status.textContent = ''; status.classList.remove('err'); }
+
+            if (missingTitle) {
+                if (status) { status.textContent = 'Please fill in the title first.'; status.classList.add('err'); }
+                return;
+            }
+
+            btn.disabled = true;
+            if (label) label.textContent = 'Generating…';
+
+            try {
+                const res = await fetch(btn.dataset.aiUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Accept: 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '',
+                    },
+                    body: JSON.stringify(payload),
+                });
+                const data = await res.json().catch(() => ({}));
+                if (!res.ok) throw new Error(data.message || 'The AI could not generate text right now.');
+
+                target.setRteHtml(data.html || '');
+                if (status) status.textContent = 'Draft generated. Review and edit it before saving.';
+            } catch (e) {
+                if (status) { status.textContent = e.message || 'Something went wrong. Please try again.'; status.classList.add('err'); }
+            } finally {
+                btn.disabled = false;
+                if (label) label.textContent = originalLabel;
+            }
+        });
+    });
+}
+
 function boot() {
     const safe = (fn) => { try { fn(); } catch (e) { console.warn(fn.name, e); } };
     safe(initOverlays);
@@ -271,6 +341,7 @@ function boot() {
     safe(initFlash);
     safe(initSingleSubmit);
     safe(initCheckAll);
+    safe(initAiGenerate);
     // The rich-text editor is only downloaded on pages that have one.
     if (document.querySelector('[data-rte]')) import('./editor.js').catch(() => {});
 }

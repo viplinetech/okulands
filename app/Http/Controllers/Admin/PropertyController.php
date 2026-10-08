@@ -49,7 +49,7 @@ class PropertyController extends ResourceController
                 ['name' => 'size', 'label' => 'Size (sqm)', 'type' => 'text', 'rules' => ['nullable', 'string', 'max:40'], 'section' => 'Details', 'placeholder' => '600'],
                 ['name' => 'bedrooms', 'label' => 'Bedrooms', 'type' => 'text', 'rules' => ['nullable', 'string', 'max:10'], 'section' => 'Details'],
                 ['name' => 'bathrooms', 'label' => 'Bathrooms', 'type' => 'text', 'rules' => ['nullable', 'string', 'max:10'], 'section' => 'Details'],
-                ['name' => 'description', 'label' => 'Description', 'type' => 'richtext', 'rules' => ['nullable', 'string', 'max:30000'], 'section' => 'Details', 'help' => 'Use the toolbar for headings, bold, lists and links. Press Enter for a new paragraph.'],
+                ['name' => 'description', 'label' => 'Description', 'type' => 'richtext', 'ai' => 'property', 'rules' => ['nullable', 'string', 'max:30000'], 'section' => 'Details', 'help' => 'Use the toolbar for headings, bold, lists and links. Press Enter for a new paragraph. Fill in the title, location and other details above, then use the AI button to draft a description you can edit before saving.'],
                 ['name' => 'images', 'label' => 'Photos', 'type' => 'images', 'folder' => 'properties', 'max' => 15, 'section' => 'Photos', 'help' => 'The first photo is the cover.'],
             ],
         ];
