@@ -44,7 +44,7 @@ class BlogAiGenerateTest extends TestCase
             ->post(route('admin.posts.generate-ai'));
 
         $post = NewsPost::firstOrFail();
-        $response->assertRedirect(route('blog.show', $post->slug));
+        $response->assertRedirect(route('admin.posts.index'))->assertSessionHas('success');
 
         $this->assertSame('Five Things to Check Before Buying Land in Anambra', $post->title);
         $this->assertSame('Buying guide', $post->category);

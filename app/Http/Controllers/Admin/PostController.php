@@ -144,9 +144,10 @@ class PostController extends ResourceController
             'published_at' => now()->subSeconds(5),
         ]);
 
-        // Published immediately, so take the admin straight to the live article, not the edit
-        // screen (they didn't ask to review it; they can still open it from the list to edit).
-        return redirect()->route('blog.show', $post->slug);
+        // Stays on the admin list, not the live article or the edit screen: just a confirmation
+        // that it was written and published successfully.
+        return redirect()->route('admin.posts.index')
+            ->with('success', 'OkuLands Smart AI generated and published "'.$title.'".');
     }
 
     /** @return array<string, mixed> */
