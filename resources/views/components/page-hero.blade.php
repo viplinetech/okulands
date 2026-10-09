@@ -2,17 +2,21 @@
     Crafted & Developed by Vipline Technologies Limited - ViplineTech (www.viplinetech.com)
     Banner used at the top of every inner page. Photo comes from the admin (Settings → page banners).
 --}}
-@props(['eyebrow' => null, 'title', 'accent' => null, 'subtitle' => null, 'image', 'crumb' => null, 'compact' => false])
+@props(['eyebrow' => null, 'title', 'accent' => null, 'subtitle' => null, 'image' => null, 'crumb' => null, 'compact' => false])
 
-@push('head')
-    <link rel="preload" as="image" href="{{ $image }}" fetchpriority="high">
-@endpush
+@if ($image)
+    @push('head')
+        <link rel="preload" as="image" href="{{ $image }}" fetchpriority="high">
+    @endpush
+@endif
 
 <section class="grain relative isolate overflow-hidden rounded-b-[2rem] bg-navy-950 text-white md:rounded-b-[3rem]">
     <div class="absolute inset-0 -z-10">
-        <img src="{{ $image }}" alt="" class="h-full w-full object-cover" fetchpriority="high" decoding="async">
-        <div class="absolute inset-0 bg-gradient-to-b from-navy-950/85 via-navy-950/60 to-navy-950/95"></div>
-        <div class="absolute inset-0 bg-gradient-to-r from-navy-950/80 via-navy-950/30 to-transparent"></div>
+        @if ($image)
+            <img src="{{ $image }}" alt="" class="h-full w-full object-cover" fetchpriority="high" decoding="async">
+            <div class="absolute inset-0 bg-gradient-to-b from-navy-950/85 via-navy-950/60 to-navy-950/95"></div>
+            <div class="absolute inset-0 bg-gradient-to-r from-navy-950/80 via-navy-950/30 to-transparent"></div>
+        @endif
         <div class="aurora absolute -left-32 top-10 h-[26rem] w-[26rem] rounded-full bg-sky-500/25 blur-[120px]"></div>
     </div>
 
