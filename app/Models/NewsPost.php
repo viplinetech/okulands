@@ -31,7 +31,7 @@ class NewsPost extends Model
 
     public function coverUrl(): string
     {
-        return SiteSetting::media($this->cover_image, \App\Support\Placeholder::url('Blog · Article cover'));
+        return SiteSetting::media($this->cover_image, \App\Support\Placeholder::url('Blog · Article cover', (string) ($this->slug ?? $this->id)));
     }
 
     /** Admin-written excerpt, or the start of the body. */
