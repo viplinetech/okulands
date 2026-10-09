@@ -52,22 +52,6 @@ class AiGenerateTest extends TestCase
             && str_contains(json_encode($request->data()), 'Prime Residential Plot'));
     }
 
-    public function test_it_generates_a_blog_post_from_a_title(): void
-    {
-        config(['services.gemini.key' => 'test-key']);
-
-        Http::fake([
-            'generativelanguage.googleapis.com/*' => Http::response([
-                'candidates' => [['content' => ['parts' => [['text' => '<p>Buying land safely starts with checking the title.</p>']]]]],
-            ], 200),
-        ]);
-
-        $this->actingAs($this->admin())->withSession(['two_factor_passed' => true])
-            ->postJson(route('admin.ai.blog-post'), ['title' => 'How to verify a land title in Anambra'])
-            ->assertOk()
-            ->assertJsonFragment(['html' => '<p>Buying land safely starts with checking the title.</p>']);
-    }
-
     public function test_a_plain_text_ai_reply_is_wrapped_into_paragraphs(): void
     {
         config(['services.gemini.key' => 'test-key']);
@@ -114,70 +98,9 @@ class AiGenerateTest extends TestCase
     public function test_the_title_is_required(): void
     {
         $this->actingAs($this->admin())->withSession(['two_factor_passed' => true])
-            ->postJson(route('admin.ai.blog-post'), [])
+            ->postJson(route('admin.ai.property-description'), [])
             ->assertStatus(422)
             ->assertJsonValidationErrors('title');
-    }
-
-    public function test_it_generates_a_complete_blog_post_with_nothing_typed_first(): void
-    {
-        config(['services.gemini.key' => 'test-key']);
-
-        Http::fake([
-            'generativelanguage.googleapis.com/*' => Http::response([
-                'candidates' => [['content' => ['parts' => [['text' => json_encode([
-                    'title' => 'Five Things to Check Before Buying Land in Anambra',
-                    'category' => 'Buying guide',
-                    'excerpt' => 'A quick checklist for first-time land buyers in Anambra.',
-                    'body' => '<p>Buying land is a big step.</p><h3>Check the title</h3><p>Always verify it first.</p>',
-                ])]]]]],
-            ], 200),
-        ]);
-
-        $response = $this->actingAs($this->admin())->withSession(['two_factor_passed' => true])
-            ->postJson(route('admin.ai.blog-post-full'))
-            ->assertOk();
-
-        $response->assertJson([
-            'title' => 'Five Things to Check Before Buying Land in Anambra',
-            'category' => 'Buying guide',
-            'excerpt' => 'A quick checklist for first-time land buyers in Anambra.',
-        ]);
-        $this->assertStringContainsString('Check the title', $response->json('body'));
-    }
-
-    public function test_an_unparseable_ai_reply_fails_gracefully(): void
-    {
-        config(['services.gemini.key' => 'test-key']);
-
-        Http::fake([
-            'generativelanguage.googleapis.com/*' => Http::response([
-                'candidates' => [['content' => ['parts' => [['text' => 'Sorry, I cannot help with that.']]]]],
-            ], 200),
-        ]);
-
-        $this->actingAs($this->admin())->withSession(['two_factor_passed' => true])
-            ->postJson(route('admin.ai.blog-post-full'))
-            ->assertStatus(422)
-            ->assertJsonStructure(['message']);
-    }
-
-    public function test_an_invalid_category_from_the_ai_falls_back_to_the_first_option(): void
-    {
-        config(['services.gemini.key' => 'test-key']);
-
-        Http::fake([
-            'generativelanguage.googleapis.com/*' => Http::response([
-                'candidates' => [['content' => ['parts' => [['text' => json_encode([
-                    'title' => 'A Title', 'category' => 'Not A Real Category', 'excerpt' => 'An excerpt.', 'body' => '<p>Body.</p>',
-                ])]]]]],
-            ], 200),
-        ]);
-
-        $this->actingAs($this->admin())->withSession(['two_factor_passed' => true])
-            ->postJson(route('admin.ai.blog-post-full'))
-            ->assertOk()
-            ->assertJson(['category' => 'Buying guide']);
     }
 
     public function test_a_realtor_cannot_reach_the_admin_ai_endpoints(): void
