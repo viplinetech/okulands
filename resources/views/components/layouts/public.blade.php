@@ -15,6 +15,10 @@
     $pageTitle = $title ? $title.' | '.$settings->site_name : ($settings->seo_meta_title ?: $settings->site_name.' | '.\App\Support\StaticText::tagline());
     $pageDesc = $description ?: ($settings->seo_meta_description ?: \App\Support\StaticText::tagline());
     $ogImage = $image ?: $settings->logoUrl();
+    // Already signed in (realtor or admin): the header/footer "Realtor Login" links become a
+    // straight shortcut to that account's own dashboard instead.
+    $authLink = auth()->check() ? route(auth()->user()->homeRoute()) : route('login');
+    $authLabel = auth()->check() ? 'Dashboard' : 'Realtor Login';
 @endphp
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
@@ -140,9 +144,13 @@
             <div class="flex items-center gap-1.5 sm:gap-2">
                 <x-theme-toggle />
                 {{-- Always visible, beside the theme toggle. "Realtor" is dropped only where space is tight (phones, and the narrow desktop band). --}}
-                <a href="{{ route('login') }}" class="pill-link !px-3.5 sm:!px-4" aria-label="Realtor Login">
+                <a href="{{ $authLink }}" class="pill-link !px-3.5 sm:!px-4" aria-label="{{ $authLabel }}">
                     <x-icon name="user" class="h-4 w-4" />
-                    <span><span class="hidden sm:inline lg:hidden xl:inline">Realtor </span>Login</span>
+                    @if (auth()->check())
+                        <span>{{ $authLabel }}</span>
+                    @else
+                        <span><span class="hidden sm:inline lg:hidden xl:inline">Realtor </span>Login</span>
+                    @endif
                 </a>
                 <a href="{{ route('contact', ['interest' => 'inspection']) }}" data-magnetic class="btn btn-primary hidden !px-6 !py-3 text-[0.82rem] xl:inline-flex">Book Inspection</a>
                 <button type="button" data-menu-toggle aria-expanded="false" aria-controls="menu" aria-label="Open menu" class="icon-btn relative lg:hidden">
@@ -172,7 +180,7 @@
         @endif
         <div class="menu-link mt-10 flex flex-col gap-3" style="--i: 7">
             <a href="{{ route('contact', ['interest' => 'inspection']) }}" class="btn btn-primary">Book Inspection</a>
-            <a href="{{ route('login') }}" class="btn btn-outline"><x-icon name="user" class="h-4 w-4" /> Realtor Login</a>
+            <a href="{{ $authLink }}" class="btn btn-outline"><x-icon name="user" class="h-4 w-4" /> {{ $authLabel }}</a>
         </div>
         @if ($settings->phone)
             <p class="menu-link mt-8 text-sm text-mute" style="--i: 8">Call us: <a href="tel:{{ preg_replace('/\s+/', '', $settings->phone) }}" class="font-semibold text-ink">{{ $settings->phone }}</a></p>
@@ -210,7 +218,7 @@
                     <h2 class="display mt-6 text-5xl sm:text-6xl">{{ ch('footer.title', 'italic text-white/50') }}</h2>
                     <div class="mt-9 flex flex-wrap gap-3">
                         <a href="{{ route('contact', ['interest' => 'inspection']) }}" class="btn btn-sky">Book a free inspection</a>
-                        <a href="{{ route('login') }}" class="btn btn-ghost">Realtor Login</a>
+                        <a href="{{ $authLink }}" class="btn btn-ghost">{{ $authLabel }}</a>
                     </div>
                 </div>
 
@@ -222,7 +230,7 @@
                                 <li><a href="{{ $href }}" class="transition hover:text-sky-300">{{ $label }}</a></li>
                             @endforeach
                             <li><a href="{{ route('faq') }}" class="transition hover:text-sky-300">FAQs &amp; Help</a></li>
-                            <li><a href="{{ route('login') }}" class="transition hover:text-sky-300">Realtor Login</a></li>
+                            <li><a href="{{ $authLink }}" class="transition hover:text-sky-300">{{ $authLabel }}</a></li>
                         </ul>
                     </div>
                     <div>
