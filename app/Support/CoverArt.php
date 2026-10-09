@@ -51,7 +51,7 @@ class CoverArt
   <rect width="1600" height="900" fill="url(#g)"/>
   {$shape}
   <rect x="100" y="100" width="56" height="6" fill="{$variant['accent']}"/>
-  <text x="100" y="80" font-family="Arial, sans-serif" font-size="30" font-weight="700" fill="{$variant['accent']}" letter-spacing="6">OKULANDS SMART AI</text>
+  <text x="100" y="80" font-family="Arial, sans-serif" font-size="30" font-weight="700" fill="{$variant['accent']}" letter-spacing="6">OKU LANDS &amp; PROPERTIES</text>
   {$titleBlock}
 </svg>
 SVG;
