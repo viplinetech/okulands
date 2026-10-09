@@ -336,7 +336,9 @@ function initAiFullGenerate() {
     const btn = document.querySelector('[data-ai-full]');
     if (!btn) return;
 
-    const form = document.querySelector('form');
+    // Not just the first <form> on the page: the admin sidebar/drawer each have their own
+    // sign-out form earlier in the document, which would otherwise be picked up instead.
+    const form = document.querySelector('#main form');
     const status = document.querySelector('[data-ai-full-status]');
     const label = btn.querySelector('[data-ai-full-label]');
     const originalLabel = label?.textContent;
