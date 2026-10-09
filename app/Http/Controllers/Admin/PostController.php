@@ -99,12 +99,14 @@ class PostController extends ResourceController
               Lands' own business. No slang, no exaggerated claims, no filler, and never use an em
               dash (—) anywhere.
             - SEO: naturally work in 2-4 relevant search phrases a Nigerian land/property buyer might
-              actually search for (e.g. a phrase combining what the article covers with "Anambra",
-              "Awka", "Enugu" or "Nigeria" where it genuinely fits). Never force a phrase in unnaturally.
+              actually search for. Keep the topic general (real estate, construction, land buying in
+              Nigeria broadly) rather than tied to any specific city or state. Only name Awka, Enugu
+              or Anambra if the topic itself genuinely calls for a local example; do not mention them
+              by default or force them in. Never force any phrase in unnaturally.
             - Proofread yourself before answering: the final text must have correct grammar, spelling,
               punctuation and natural sentence flow throughout, as if professionally edited. Do not
               submit a first draft.
-            - Do not invent specific prices, legal claims, or named locations beyond Awka/Enugu/Anambra.
+            - Do not invent specific prices, legal claims, or named locations.
             - The article body: 350-550 words. A short opening paragraph, 2-4 short sections (a short
               <h3> subheading each, if it helps), a brief closing paragraph. <ul>/<li> for any list of
               tips or steps. Only these HTML tags: <p>, <h3>, <ul>, <li>, <strong>, <em>. No markdown,
