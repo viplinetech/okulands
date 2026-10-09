@@ -17,11 +17,12 @@
         ]), JSON_UNESCAPED_SLASHES) !!}</script>
     </x-slot:head>
 
+    {{-- No cover photo here: it already shows once on the blog listing page, so repeating it
+         as the hero background here would be redundant for someone arriving from there. --}}
     <x-page-hero
         :eyebrow="$post->category ?: 'Article'"
         :title="$post->title"
         crumb="Article"
-        :image="$post->coverUrl()"
         :compact="true"
     >
         <p data-reveal data-delay="450" class="mt-6 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs font-semibold uppercase tracking-[0.16em] text-white/65">
