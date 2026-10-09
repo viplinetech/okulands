@@ -40,7 +40,7 @@ return [
     // Google Gemini (aistudio.google.com): powers "Generate using OkuLands Smart AI" in the admin.
     'gemini' => [
         'key' => env('GEMINI_API_KEY'),
-        'model' => env('GEMINI_MODEL', 'gemini-flash-latest'),
+        'model' => env('GEMINI_MODEL', 'gemini-flash-lite-latest'),
     ],
 
     'slack' => [
