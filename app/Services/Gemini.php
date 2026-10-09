@@ -28,7 +28,7 @@ class Gemini
             throw new \RuntimeException('AI writing is not set up yet. Add a Gemini API key to the server configuration.');
         }
 
-        $model = config('services.gemini.model', 'gemini-3.8-flash');
+        $model = config('services.gemini.model', 'gemini-flash-latest');
 
         try {
             $response = Http::timeout(15)
