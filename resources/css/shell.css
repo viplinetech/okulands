@@ -320,7 +320,7 @@ body.app-body {
 
     /* Status badges */
     .badge {
-        @apply inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[0.68rem] font-bold uppercase tracking-[0.08em];
+        @apply inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-2.5 py-1 text-[0.68rem] font-bold uppercase tracking-[0.08em];
     }
     .badge::before {
         content: '';
@@ -351,6 +351,17 @@ body.app-body {
     }
     .tbl td {
         @apply px-4 py-3.5 align-middle;
+    }
+    /* The main (title) column takes whatever space the other columns don't need, and its own
+       content truncates with an ellipsis instead of pushing badges/dates into a sliver so narrow
+       their text wraps letter by letter. max-width: 1px is intentional: it tells the browser's
+       table layout to treat this column as the flexible one, while width: 100% has it still
+       expand to fill the remaining row width. */
+    @media (min-width: 768px) {
+        .tbl td.cell-main {
+            max-width: 1px;
+            width: 100%;
+        }
     }
     .tbl tbody tr {
         @apply border-t border-ink/10 transition-colors;
