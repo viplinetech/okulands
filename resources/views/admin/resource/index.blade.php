@@ -1,5 +1,11 @@
 <x-layouts.admin :title="$c['title']">
     <x-app.page-header :title="$c['title']" kicker="Website content" :subtitle="$c['subtitle'] ?? null">
+        @if (! empty($c['generateAi']))
+            <form method="POST" action="{{ route($c['generateAi']['route']) }}" data-confirm="OkuLands Smart AI will write, design a cover for, and publish a complete post immediately, with no review step. Continue?" data-confirm-yes="Generate &amp; publish">
+                @csrf
+                <button type="submit" class="btn btn-outline btn-sm"><x-icon name="sparkle" class="h-4 w-4" /> {{ $c['generateAi']['label'] }}</button>
+            </form>
+        @endif
         <a href="{{ route($c['route'].'.create') }}" class="btn btn-primary btn-sm"><x-icon name="plus" class="h-4 w-4" /> Add {{ $c['singular'] }}</a>
     </x-app.page-header>
 

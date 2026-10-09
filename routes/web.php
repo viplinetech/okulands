@@ -155,6 +155,7 @@ Route::middleware(['auth', 'active', 'twofactor', 'nostore'])->group(function ()
         Route::resource('services', Admin\ServiceController::class)->except('show');
         Route::post('gallery/bulk', [Admin\GalleryController::class, 'bulk'])->name('gallery.bulk');
         Route::resource('gallery', Admin\GalleryController::class)->except('show')->parameters(['gallery' => 'item']);
+        Route::post('posts/generate-ai', [Admin\PostController::class, 'generateAi'])->middleware('throttle:20,1')->name('posts.generate-ai');
         Route::resource('posts', Admin\PostController::class)->except('show');
         Route::resource('faqs', Admin\FaqController::class)->except('show');
         Route::get('testimonials', [Admin\TestimonialController::class, 'index'])->name('testimonials.index');
@@ -163,8 +164,6 @@ Route::middleware(['auth', 'active', 'twofactor', 'nostore'])->group(function ()
         Route::delete('testimonials/{testimonial}', [Admin\TestimonialController::class, 'destroy'])->name('testimonials.destroy');
 
         Route::post('ai/property-description', [Admin\AiController::class, 'propertyDescription'])->middleware('throttle:20,1')->name('ai.property-description');
-        Route::post('ai/blog-post', [Admin\AiController::class, 'blogPost'])->middleware('throttle:20,1')->name('ai.blog-post');
-        Route::post('ai/blog-post-full', [Admin\AiController::class, 'blogPostFull'])->middleware('throttle:20,1')->name('ai.blog-post-full');
 
 
         Route::get('settings', [Admin\SettingsController::class, 'edit'])->name('settings');

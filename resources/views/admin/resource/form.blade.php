@@ -1,16 +1,7 @@
 <x-layouts.admin :title="($creating ? 'New ' : 'Edit ').$c['singular']">
     <x-app.page-header :title="($creating ? 'New ' : 'Edit ').$c['singular']" kicker="Website content">
-        @if ($creating && ! empty($c['fullAi']))
-            <button type="button" class="btn btn-primary btn-sm" data-ai-full data-url="{{ route($c['fullAi']['route']) }}">
-                <x-icon name="sparkle" class="h-4 w-4" /> <span data-ai-full-label>{{ $c['fullAi']['label'] }}</span>
-            </button>
-        @endif
         <a href="{{ route($c['route'].'.index') }}" class="btn btn-outline btn-sm"><x-icon name="arrow" class="h-4 w-4 rotate-180" /> Back</a>
     </x-app.page-header>
-
-    @if ($creating && ! empty($c['fullAi']))
-        <p class="-mt-3 mb-4 text-xs text-mute" data-ai-full-status></p>
-    @endif
 
     @error('upload')<div class="flash flash-error"><x-icon name="alert" class="mt-px h-5 w-5 shrink-0" /><span>{{ $message }}</span></div>@enderror
 
