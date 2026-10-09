@@ -138,11 +138,15 @@ class PostController extends ResourceController
             'body' => $this->toParagraphs((string) ($parsed['body'] ?? '')),
             'cover_image' => \App\Support\CoverArt::generateFor($title, $slug),
             'author_id' => $request->user()->id,
-            'published_at' => now(),
+            // A few seconds in the past, not exactly now: avoids any clock/precision edge case
+            // where the "published_at <= now()" check a moment later (on the very next request,
+            // the redirect to the live page) could miss by a hair.
+            'published_at' => now()->subSeconds(5),
         ]);
 
-        return redirect()->route('admin.posts.edit', $post)
-            ->with('success', 'Published automatically by OkuLands Smart AI. You can still edit it, change the cover photo, or unpublish it from here.');
+        // Published immediately, so take the admin straight to the live article, not the edit
+        // screen (they didn't ask to review it; they can still open it from the list to edit).
+        return redirect()->route('blog.show', $post->slug);
     }
 
     /** @return array<string, mixed> */
