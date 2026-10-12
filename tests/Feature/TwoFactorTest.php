@@ -125,15 +125,15 @@ class TwoFactorTest extends TestCase
         $this->assertFalse($user->fresh()->hasTwoFactorEnabled());
     }
 
-    public function test_an_admin_can_never_disable_two_factor(): void
+    public function test_an_admin_can_disable_two_factor_just_like_a_realtor(): void
     {
         [$admin, $secret] = $this->enabledUser('admin');
-        $this->actingAs($admin)->withSession(['two_factor_passed' => true]);
+        $this->actingAs($admin, 'admin')->withSession(['two_factor_passed' => true]);
 
         $this->delete(route('two-factor.disable'), ['password' => 'password', 'code' => (new Google2FA)->getCurrentOtp($secret)])
-            ->assertSessionHas('error');
+            ->assertRedirect(route('admin.security'));
 
-        $this->assertTrue($admin->fresh()->hasTwoFactorEnabled());
+        $this->assertFalse($admin->fresh()->hasTwoFactorEnabled());
     }
 
     public function test_changing_password_needs_the_current_one_and_a_strong_new_one(): void

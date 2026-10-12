@@ -42,7 +42,7 @@
                     <p class="truncate text-sm font-bold text-ink">{{ $user->name }}</p>
                     <p class="truncate text-xs text-mute">Administrator</p>
                 </div>
-                <form method="POST" action="{{ route('logout') }}">@csrf
+                <form method="POST" action="{{ route('logout') }}">@csrf<input type="hidden" name="area" value="admin">
                     <button type="submit" class="shrink-0 rounded-full px-3 py-1.5 text-xs font-bold text-mute transition hover:bg-soft hover:text-ink">Sign out</button>
                 </form>
             </div>
@@ -103,7 +103,7 @@
                 <p class="truncate text-sm font-bold text-ink">{{ $user->name }}</p>
                 <p class="truncate text-xs text-mute">Administrator</p>
             </div>
-            <form method="POST" action="{{ route('logout') }}">@csrf
+            <form method="POST" action="{{ route('logout') }}">@csrf<input type="hidden" name="area" value="admin">
                 <button type="submit" class="shrink-0 rounded-full px-3 py-1.5 text-xs font-bold text-mute transition hover:bg-soft hover:text-ink">Sign out</button>
             </form>
         </div>

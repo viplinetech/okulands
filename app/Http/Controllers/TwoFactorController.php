@@ -9,23 +9,36 @@ namespace App\Http\Controllers;
 use App\Http\Middleware\EnforceTwoFactor;
 use App\Services\TwoFactorService;
 use App\Support\Audit;
+use App\Support\AuthGuards;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
-/** Enable, confirm, regenerate and disable two-factor authentication from the security pages. */
+/**
+ * Enable, confirm, regenerate and disable two-factor authentication from the security pages.
+ * Shared by both the admin and realtor security pages under one /account/two-factor/* URL, which
+ * can't say by itself which area a request is for when both are signed in at once in one browser
+ * (see AuthGuards) — every form here carries an explicit "area" hint instead of relying on
+ * $request->user().
+ */
 class TwoFactorController extends Controller
 {
     public function __construct(private TwoFactorService $twoFactor) {}
 
+    private function user(Request $request): \App\Models\User
+    {
+        return Auth::guard(AuthGuards::fromHint($request))->user();
+    }
+
     private function home(Request $request): string
     {
-        return $request->user()->isAdmin() ? route('admin.security') : route('realtor.security');
+        return $this->user($request)->isAdmin() ? route('admin.security') : route('realtor.security');
     }
 
     /** Step 1: create a secret and show its QR code (kept only in the session until confirmed). */
     public function start(Request $request): RedirectResponse
     {
-        if ($request->user()->hasTwoFactorEnabled()) {
+        if ($this->user($request)->hasTwoFactorEnabled()) {
             return redirect($this->home($request));
         }
 
@@ -38,7 +51,7 @@ class TwoFactorController extends Controller
     public function confirm(Request $request): RedirectResponse
     {
         $data = $request->validate(['code' => ['required', 'string', 'max:12']]);
-        $user = $request->user();
+        $user = $this->user($request);
         $secret = $request->session()->get('two_factor_pending_secret');
 
         if (! $secret) {
@@ -67,8 +80,8 @@ class TwoFactorController extends Controller
 
     public function regenerate(Request $request): RedirectResponse
     {
-        $request->validate(['password' => ['required', 'current_password']], ['password.current_password' => 'Your password is not correct.']);
-        $user = $request->user();
+        $request->validate(['password' => ['required', 'current_password:'.AuthGuards::fromHint($request)]], ['password.current_password' => 'Your password is not correct.']);
+        $user = $this->user($request);
 
         if (! $user->hasTwoFactorEnabled()) {
             return redirect($this->home($request));
@@ -83,15 +96,10 @@ class TwoFactorController extends Controller
 
     public function disable(Request $request): RedirectResponse
     {
-        $user = $request->user();
-
-        // Admins must keep two-factor on; it cannot be switched off.
-        if ($user->isAdmin()) {
-            return redirect($this->home($request))->with('error', 'Two-factor authentication is required for administrators.');
-        }
+        $user = $this->user($request);
 
         $data = $request->validate([
-            'password' => ['required', 'current_password'],
+            'password' => ['required', 'current_password:'.AuthGuards::fromHint($request)],
             'code' => ['required', 'string', 'max:12'],
         ], ['password.current_password' => 'Your password is not correct.']);
 

@@ -59,7 +59,7 @@ class LoginForm extends Form
             ]);
         }
 
-        Auth::guard('web')->login($user, $this->remember);
+        Auth::guard($area === 'admin' ? 'admin' : 'web')->login($user, $this->remember);
         RateLimiter::clear($this->throttleKey());
     }
 

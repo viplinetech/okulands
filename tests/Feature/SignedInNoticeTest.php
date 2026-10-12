@@ -25,7 +25,7 @@ class SignedInNoticeTest extends TestCase
     {
         $admin = User::factory()->admin()->create();
 
-        $this->actingAs($admin)->get('/adminbackend')->assertOk()->assertSee('You are signed in as');
+        $this->actingAs($admin, 'admin')->get('/adminbackend')->assertOk()->assertSee('You are signed in as');
     }
 
     public function test_guests_still_see_the_sign_in_form(): void

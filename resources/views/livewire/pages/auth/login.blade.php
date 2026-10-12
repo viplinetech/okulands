@@ -29,10 +29,9 @@ new #[Layout('layouts.guest')] class extends Component
         <div class="surface p-6 sm:p-8">
             <p class="eyebrow text-brand">Already signed in</p>
             <h2 class="display mt-3 text-3xl text-ink">You are signed in as {{ auth()->user()->name }}.</h2>
-            <p class="mt-3 text-sm leading-relaxed text-mute">Realtor sign-in needs a separate session. Sign out first, then sign in with the account you want to use.</p>
             <div class="mt-6 flex flex-col gap-3 sm:flex-row">
                 <a href="{{ route('dashboard') }}" class="btn btn-primary">Go to my dashboard</a>
-                <form method="POST" action="{{ route('logout') }}">@csrf<button type="submit" class="btn btn-outline w-full sm:w-auto">Sign out</button></form>
+                <form method="POST" action="{{ route('logout') }}">@csrf<input type="hidden" name="area" value="web"><button type="submit" class="btn btn-outline w-full sm:w-auto">Sign out</button></form>
             </div>
         </div>
     @else

@@ -62,7 +62,7 @@
                     <p class="truncate text-sm font-bold text-ink">{{ $user->name }}</p>
                     <p class="truncate text-xs text-mute">{{ $user->email }}</p>
                 </div>
-                <form method="POST" action="{{ route('logout') }}">@csrf
+                <form method="POST" action="{{ route('logout') }}">@csrf<input type="hidden" name="area" value="web">
                     <button type="submit" class="shrink-0 rounded-full px-3 py-1.5 text-xs font-bold text-mute transition hover:bg-soft hover:text-ink">Sign out</button>
                 </form>
             </div>
@@ -168,7 +168,7 @@
             <span class="flex items-center gap-2.5 text-sm font-bold text-ink"><x-icon name="sun" class="h-[1.1rem] w-[1.1rem] text-brand" /> Appearance</span>
             <x-theme-toggle class="text-ink" />
         </div>
-        <form method="POST" action="{{ route('logout') }}">@csrf
+        <form method="POST" action="{{ route('logout') }}">@csrf<input type="hidden" name="area" value="web">
             <button type="submit" class="flex w-full items-center justify-center rounded-2xl border border-flag-500/30 bg-flag-500/5 px-4 py-3.5 text-sm font-bold text-flag-500 transition active:scale-[0.98]">
                 Sign out
             </button>

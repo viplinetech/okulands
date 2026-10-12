@@ -87,7 +87,7 @@ new #[Layout('layouts.guest')] class extends Component
         <button type="button" wire:click="$toggle('recovery')" class="font-semibold text-brand hover:underline">
             {{ $recovery ? 'Use my authenticator app instead' : 'Lost your phone? Use a recovery code' }}
         </button>
-        <form method="POST" action="{{ route('logout') }}">@csrf
+        <form method="POST" action="{{ route('logout') }}">@csrf<input type="hidden" name="area" value="{{ auth('admin')->check() ? 'admin' : 'web' }}">
             <button type="submit" class="text-mute hover:text-ink">Cancel and sign out</button>
         </form>
     </div>

@@ -42,6 +42,14 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+        // Admins get their own guard, so signing into /adminbackend never shares a login with
+        // (or signs out) a realtor session in the same browser, and vice versa. Same session
+        // cookie, same "users" table; Laravel's session guard keeps each guard's login under its
+        // own key within that one session, so both can be signed in at once.
+        'admin' => [
+            'driver' => 'session',
+            'provider' => 'users',
+        ],
     ],
 
     /*

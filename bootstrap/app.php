@@ -5,6 +5,7 @@ use App\Http\Middleware\EnsureAccountActive;
 use App\Http\Middleware\EnsureRole;
 use App\Http\Middleware\IdleTimeout;
 use App\Http\Middleware\NoStore;
+use App\Http\Middleware\ResolveActiveGuard;
 use App\Http\Middleware\SecurityHeaders;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -28,6 +29,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->redirectGuestsTo(fn (Request $request) => $request->is('adminbackend*') ? route('admin.login') : route('login'));
 
         $middleware->alias([
+            'guard' => ResolveActiveGuard::class,
             'role' => EnsureRole::class,
             'active' => EnsureAccountActive::class,
             'twofactor' => EnforceTwoFactor::class,

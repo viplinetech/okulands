@@ -83,7 +83,29 @@ class AuthenticationTest extends TestCase
         $component->call('login');
 
         $component->assertHasNoErrors()->assertRedirect(route('admin.dashboard', absolute: false));
-        $this->assertAuthenticatedAs($admin);
+        $this->assertAuthenticatedAs($admin, 'admin');
+        $this->assertGuest('web'); // signed in on the admin guard only, not the realtor one
+    }
+
+    public function test_an_admin_and_a_realtor_can_both_be_signed_in_at_once_in_one_browser(): void
+    {
+        $admin = User::factory()->admin()->create();
+        $realtor = User::factory()->create();
+
+        // Sign into the admin door first, through the real component, exactly as a browser would.
+        Volt::test('pages.auth.admin-login')->set('form.email', $admin->email)->set('form.password', 'password')->call('login');
+        $this->assertAuthenticatedAs($admin, 'admin');
+
+        // Now, in the same test session (same "browser"), sign into the realtor door too.
+        Volt::test('pages.auth.login')->set('form.email', $realtor->email)->set('form.password', 'password')->call('login');
+
+        // Both logins survive at once: neither signing in, nor being on the other guard, evicted the other.
+        $this->assertAuthenticatedAs($admin, 'admin');
+        $this->assertAuthenticatedAs($realtor, 'web');
+
+        // And each can actually reach their own area.
+        $this->get('/adminbackend/dashboard')->assertOk();
+        $this->get('/realtor')->assertOk();
     }
 
     public function test_a_realtor_cannot_use_the_admin_door(): void
@@ -128,11 +150,26 @@ class AuthenticationTest extends TestCase
 
     public function test_admin_logout_returns_to_the_admin_door(): void
     {
-        $this->actingAs(User::factory()->admin()->create());
+        $this->actingAs(User::factory()->admin()->create(), 'admin');
 
         $this->post('/logout')->assertRedirect(route('admin.login'));
 
-        $this->assertGuest();
+        $this->assertGuest('admin');
+    }
+
+    public function test_logging_out_of_one_area_does_not_sign_out_the_other_in_the_same_browser(): void
+    {
+        $admin = User::factory()->admin()->create();
+        $realtor = User::factory()->create();
+
+        $this->actingAs($admin, 'admin')->actingAs($realtor, 'web');
+
+        // Exactly like clicking "Sign out" in the realtor sidebar: its form says which door it's
+        // the sign-out for (see the hidden "area" input added to every sign-out form).
+        $this->post('/logout', ['area' => 'web'])->assertRedirect(route('home'));
+
+        $this->assertGuest('web');
+        $this->assertAuthenticatedAs($admin, 'admin'); // untouched
     }
 
     public function test_users_can_logout(): void

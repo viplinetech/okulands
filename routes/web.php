@@ -62,14 +62,14 @@ Route::get('/ref/{code}', [ReferralController::class, 'track'])->where('code', '
 // The private admin sign-in. Not linked anywhere on the public site; only admins can pass it.
 Volt::route('adminbackend', 'pages.auth.admin-login')->middleware(['nostore'])->name('admin.login');
 
-Route::middleware(['auth', 'active', 'nostore'])->group(function () {
+Route::middleware(['auth:web,admin', 'guard', 'active', 'nostore'])->group(function () {
     Route::post('logout', LogoutController::class)->name('logout');
 
     // Second step of sign-in for accounts with two-factor enabled (a Volt page, styled like the sign-in screen).
     Volt::route('two-factor-challenge', 'pages.auth.two-factor-challenge')->name('two-factor.challenge');
 });
 
-Route::middleware(['auth', 'active', 'twofactor', 'nostore'])->group(function () {
+Route::middleware(['auth:web,admin', 'guard', 'active', 'twofactor', 'nostore'])->group(function () {
     // Shared account actions (used by both the realtor and admin security pages)
     Route::post('account/password', [PasswordController::class, 'update'])->middleware('throttle:6,1')->name('account.password');
     Route::post('account/two-factor/start', [TwoFactorController::class, 'start'])->name('two-factor.start');

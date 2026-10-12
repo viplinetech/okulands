@@ -24,7 +24,7 @@
         <div class="flex items-center gap-2">
             <x-theme-toggle class="text-ink" />
             @auth
-                <form method="POST" action="{{ route('logout') }}">@csrf
+                <form method="POST" action="{{ route('logout') }}">@csrf<input type="hidden" name="area" value="web">
                     <button type="submit" class="text-xs font-semibold text-mute underline-offset-2 hover:text-ink hover:underline">Sign out</button>
                 </form>
             @endauth

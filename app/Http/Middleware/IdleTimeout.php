@@ -6,9 +6,9 @@
 
 namespace App\Http\Middleware;
 
+use App\Support\AuthGuards;
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
 /** Signs the user out after N idle minutes (admin area uses a short window). */
@@ -19,9 +19,7 @@ class IdleTimeout
         $last = $request->session()->get('last_activity');
 
         if ($request->user() && $last && now()->timestamp - $last > $minutes * 60) {
-            Auth::logout();
-            $request->session()->invalidate();
-            $request->session()->regenerateToken();
+            AuthGuards::logout($request, AuthGuards::active($request));
 
             return redirect()->route($request->is('adminbackend*') ? 'admin.login' : 'login')->withErrors(['email' => 'You were signed out after a period of inactivity.']);
         }

@@ -1,9 +1,10 @@
 {{--
     Crafted & Developed by Vipline Technologies Limited - ViplineTech (www.viplinetech.com)
     Password, two-factor and sign-in details. Shared by the realtor and admin security pages.
+    Two-factor is entirely optional for every account, admins included: nobody is forced into
+    setting it up, and anyone who has it on can turn it back off themselves at any time.
     Expects: $user, $pendingSecret, $qr
 --}}
-@php $mandatory = $user->isAdmin(); @endphp
 
 {{-- One-time recovery codes (shown right after enabling / regenerating) --}}
 @if (session('recovery_codes'))
@@ -44,24 +45,22 @@
 
             <form method="POST" action="{{ route('two-factor.recovery') }}" class="mt-5 space-y-3">
                 @csrf
+                <input type="hidden" name="area" value="{{ $user->isAdmin() ? 'admin' : 'web' }}">
                 <label for="rc-password" class="field-label">Confirm password to make new recovery codes</label>
                 <input id="rc-password" type="password" name="password" required autocomplete="current-password" class="field">
                 @error('password')<p class="err">{{ $message }}</p>@enderror
                 <button type="submit" class="btn btn-outline btn-sm w-full sm:w-auto">Generate new recovery codes</button>
             </form>
 
-            @unless ($mandatory)
-                <form method="POST" action="{{ route('two-factor.disable') }}" data-confirm="Turn off two-factor authentication? Your account will be less protected." data-confirm-yes="Turn off" class="mt-6 space-y-3 border-t border-ink/10 pt-5">
-                    @csrf @method('DELETE')
-                    <p class="text-sm font-bold text-ink">Turn off two-factor</p>
-                    <input type="password" name="password" required autocomplete="current-password" placeholder="Your password" class="field">
-                    <input type="text" name="code" required inputmode="numeric" autocomplete="one-time-code" placeholder="6-digit code" class="field font-mono">
-                    @error('code')<p class="err">{{ $message }}</p>@enderror
-                    <button type="submit" class="btn btn-danger btn-sm">Turn off</button>
-                </form>
-            @else
-                <p class="mt-5 rounded-2xl bg-soft px-4 py-3 text-xs text-mute">Two-factor is required for administrators and cannot be turned off.</p>
-            @endunless
+            <form method="POST" action="{{ route('two-factor.disable') }}" data-confirm="Turn off two-factor authentication? Your account will be less protected." data-confirm-yes="Turn off" class="mt-6 space-y-3 border-t border-ink/10 pt-5">
+                @csrf @method('DELETE')
+                <input type="hidden" name="area" value="{{ $user->isAdmin() ? 'admin' : 'web' }}">
+                <p class="text-sm font-bold text-ink">Turn off two-factor</p>
+                <input type="password" name="password" required autocomplete="current-password" placeholder="Your password" class="field">
+                <input type="text" name="code" required inputmode="numeric" autocomplete="one-time-code" placeholder="6-digit code" class="field font-mono">
+                @error('code')<p class="err">{{ $message }}</p>@enderror
+                <button type="submit" class="btn btn-danger btn-sm">Turn off</button>
+            </form>
 
         @elseif ($pendingSecret)
             <ol class="mt-5 space-y-5 text-sm text-mute">
@@ -75,6 +74,7 @@
                 <li>
                     <form method="POST" action="{{ route('two-factor.confirm') }}" class="space-y-3">
                         @csrf
+                        <input type="hidden" name="area" value="{{ $user->isAdmin() ? 'admin' : 'web' }}">
                         <label for="code" class="font-bold text-ink">2. Enter the 6-digit code</label>
                         <input id="code" name="code" required inputmode="numeric" autocomplete="one-time-code" placeholder="123456" class="field text-center font-mono text-xl tracking-[0.3em]">
                         @error('code')<p class="err">{{ $message }}</p>@enderror
@@ -84,9 +84,8 @@
             </ol>
         @else
             <p class="mt-4 text-sm leading-relaxed text-mute">
-                @if ($mandatory) <strong class="text-ink">Required for admins.</strong> @endif
-                Even if someone learns your password, they cannot sign in without your phone.
-                @if ($mandatory) Admins can see realtors&rsquo; bank details and approve payments, so this protects the whole business. @endif
+                Completely optional, on your own terms. Even if someone learns your password, they
+                cannot sign in without your phone too, once you turn this on.
             </p>
 
             <div class="mt-5 rounded-2xl bg-soft p-4 text-sm">
@@ -99,7 +98,7 @@
                 <p class="mt-3 text-xs text-mute">From then on, signing in asks for the 6-digit number from the app. On your own computer you can tick &ldquo;Trust this device&rdquo; so you are asked only once a month. If you lose your phone, use a recovery code, or ask the site developer to reset it.</p>
             </div>
 
-            <form method="POST" action="{{ route('two-factor.start') }}" class="mt-5">@csrf
+            <form method="POST" action="{{ route('two-factor.start') }}" class="mt-5">@csrf<input type="hidden" name="area" value="{{ $user->isAdmin() ? 'admin' : 'web' }}">
                 <button type="submit" class="btn btn-primary btn-sm"><x-icon name="lock" class="h-4 w-4" /> Set up two-factor</button>
             </form>
         @endif
@@ -116,6 +115,7 @@
         </div>
         <form method="POST" action="{{ route('account.password') }}" class="mt-5 space-y-4">
             @csrf
+            <input type="hidden" name="area" value="{{ $user->isAdmin() ? 'admin' : 'web' }}">
             <div>
                 <label for="current_password" class="field-label">Current password</label>
                 <input id="current_password" type="password" name="current_password" required autocomplete="current-password" class="field">
