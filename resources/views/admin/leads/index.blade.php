@@ -38,8 +38,8 @@
                                 <div class="min-w-0"><p class="truncate font-bold text-ink">{{ $lead->name }}</p><p class="truncate text-xs font-normal text-mute">{{ $lead->phone ?: $lead->email }}</p></div>
                             </a>
                         </td>
-                        <td data-label="Interested in" class="max-w-[14rem]"><span class="line-clamp-2">{{ $lead->property?->title ?? ucfirst($lead->type) }}</span></td>
-                        <td data-label="Referred by">{{ $lead->referrer?->name ?? 'Direct' }}</td>
+                        <td data-label="Interested in" class="max-w-[14rem]"><span class="line-clamp-2" title="{{ $lead->property?->title ?? ucfirst($lead->type) }}">{{ $lead->property?->title ?? ucfirst($lead->type) }}</span></td>
+                        <td data-label="Referred by" class="whitespace-nowrap"><span class="block max-w-[10rem] truncate" title="{{ $lead->referrer?->name ?? 'Direct' }}">{{ $lead->referrer?->name ?? 'Direct' }}</span></td>
                         <td data-label="Status"><x-app.badge :status="$lead->status" /></td>
                         <td data-label="Received" class="whitespace-nowrap text-mute">{{ $lead->created_at->format('M j, g:ia') }}</td>
                         <td class="cell-actions">

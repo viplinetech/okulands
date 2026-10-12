@@ -35,7 +35,7 @@
     <div class="card-flush mt-4">
         @if ($members->count())
             <table class="tbl">
-                <thead><tr><th>Member</th><th>Joined</th><th>Their line&rsquo;s sales</th><th>You earned from their line</th><th>Their recruits</th><th>Status</th></tr></thead>
+                <thead><tr><th>Member</th><th>Joined</th><th>Line Sales</th><th>You Earned</th><th>Recruits</th><th>Status</th></tr></thead>
                 <tbody>
                 @foreach ($members as $m)
                     <tr>
@@ -46,9 +46,9 @@
                             </div>
                         </td>
                         <td data-label="Joined" class="whitespace-nowrap text-mute">{{ $m->created_at->format('M j, Y') }}</td>
-                        <td data-label="Their line's sales" class="font-bold">{{ $teamSales[$m->id] ?? 0 }}</td>
-                        <td data-label="You earned" class="font-bold text-brand">₦{{ number_format($earned[$m->id] ?? 0) }}</td>
-                        <td data-label="Their recruits">{{ $m->downlines_count }}</td>
+                        <td data-label="Line Sales" class="font-bold">{{ $teamSales[$m->id] ?? 0 }}</td>
+                        <td data-label="You Earned" class="font-bold text-brand">₦{{ number_format($earned[$m->id] ?? 0) }}</td>
+                        <td data-label="Recruits">{{ $m->downlines_count }}</td>
                         <td data-label="Status"><x-app.badge :status="$m->status" /></td>
                     </tr>
                 @endforeach

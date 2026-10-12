@@ -68,7 +68,7 @@
                 <tbody>
                 @foreach ($commissions as $c)
                     <tr>
-                        <td class="cell-main">{{ $c->sale?->property?->title ?? 'Sale #'.$c->sale_id }}</td>
+                        <td class="cell-main"><p class="truncate font-bold text-ink" title="{{ $c->sale?->property?->title ?? 'Sale #'.$c->sale_id }}">{{ $c->sale?->property?->title ?? 'Sale #'.$c->sale_id }}</p></td>
                         <td data-label="Type">{{ $c->tier === 1 ? 'Your sale' : 'Team · tier '.$c->tier }}</td>
                         <td data-label="Rate">{{ rtrim(rtrim(number_format($c->rate, 2), '0'), '.') }}%</td>
                         <td data-label="Amount" class="font-bold text-ink">₦{{ number_format($c->amount) }}</td>

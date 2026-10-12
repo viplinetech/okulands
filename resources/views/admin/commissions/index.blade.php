@@ -30,12 +30,17 @@
                 <tbody>
                 @foreach ($commissions as $c)
                     <tr>
-                        <td class="cell-main">{{ $c->user?->name }}</td>
+                        <td class="cell-main"><p class="truncate font-bold text-ink" title="{{ $c->user?->name }}">{{ $c->user?->name }}</p></td>
                         <td data-label="Property" class="max-w-[12rem]"><span class="line-clamp-2">{{ $c->sale?->property?->title }}</span></td>
                         <td data-label="Tier">{{ $c->tier }} · {{ rtrim(rtrim(number_format($c->rate, 2), '0'), '.') }}%</td>
                         <td data-label="Amount" class="font-bold text-ink">₦{{ number_format($c->amount) }}</td>
-                        <td data-label="Payout account" class="text-xs">
-                            @if ($c->user?->bank_name)<span class="font-bold text-ink">{{ $c->user->bank_name }}</span><br>{{ $c->user->account_name }} · {{ $c->user->account_number }}@else<span class="text-flag-500">No bank details</span>@endif
+                        <td data-label="Payout account" class="whitespace-nowrap text-xs">
+                            @if ($c->user?->bank_name)
+                                <span class="font-semibold text-ink">{{ $c->user->bank_name }}</span>
+                                <span class="block text-mute" title="{{ $c->user->account_name }}">{{ $c->user->account_number }}</span>
+                            @else
+                                <span class="text-flag-500">No bank</span>
+                            @endif
                         </td>
                         <td data-label="Status"><x-app.badge :status="$c->status" /></td>
                         <td class="cell-actions">

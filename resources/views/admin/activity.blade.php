@@ -25,7 +25,7 @@
                         <td class="cell-main whitespace-nowrap"><span class="text-left">{{ $log->created_at->format('M j, g:i:sa') }}</span></td>
                         <td data-label="Who">{{ $log->user?->name ?? 'System / visitor' }}</td>
                         <td data-label="Action"><span class="badge {{ $bad ? 'badge-red' : 'badge-slate' }}">{{ $log->action }}</span></td>
-                        <td data-label="Details" class="max-w-[22rem] text-mute">{{ $log->description }}</td>
+                        <td data-label="Details" class="text-mute"><span class="block max-w-[18rem] truncate" title="{{ $log->description }}">{{ $log->description }}</span></td>
                         <td data-label="IP" class="font-mono text-xs text-mute">{{ $log->ip_address }}</td>
                     </tr>
                 @endforeach

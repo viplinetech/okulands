@@ -348,6 +348,7 @@ body.app-body {
     }
     .tbl th {
         @apply px-4 py-3 text-left text-[0.66rem] font-bold uppercase tracking-[0.16em] text-mute;
+        white-space: nowrap;
     }
     .tbl td {
         @apply px-4 py-3.5 align-middle;

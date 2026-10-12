@@ -29,8 +29,8 @@
                 @foreach ($sales as $sale)
                     <tr>
                         <td class="cell-main"><a href="{{ route('admin.sales.show', $sale) }}" class="block text-left"><p class="truncate font-bold text-ink">{{ $sale->buyer_name }}</p><p class="truncate text-xs font-normal text-mute">{{ $sale->reference ?: 'No reference' }}</p></a></td>
-                        <td data-label="Property" class="max-w-[14rem]"><span class="line-clamp-2">{{ $sale->property?->title }}</span></td>
-                        <td data-label="Realtor">{{ $sale->realtor?->name }}</td>
+                        <td data-label="Property" class="max-w-[14rem]"><span class="line-clamp-2" title="{{ $sale->property?->title }}">{{ $sale->property?->title }}</span></td>
+                        <td data-label="Realtor" class="whitespace-nowrap"><span class="block max-w-[10rem] truncate" title="{{ $sale->realtor?->name }}">{{ $sale->realtor?->name ?? '—' }}</span></td>
                         <td data-label="Amount" class="font-bold text-ink">₦{{ number_format($sale->amount) }}</td>
                         <td data-label="Status"><x-app.badge :status="$sale->status" /></td>
                         <td data-label="Date" class="whitespace-nowrap text-mute">{{ $sale->created_at->format('M j, Y') }}</td>

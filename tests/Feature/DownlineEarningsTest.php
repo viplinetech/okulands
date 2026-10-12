@@ -40,7 +40,7 @@ class DownlineEarningsTest extends TestCase
             ->assertOk()
             ->assertSee('Bola Middle')
             ->assertSee("₦10,000")
-            ->assertSee('Their line');
+            ->assertSee('Line Sales');
 
         // B sees C's line.
         $this->actingAs($b)->get('/realtor/team')->assertSee('Chidi Closer')->assertSee('₦30,000');

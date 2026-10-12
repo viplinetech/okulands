@@ -20,10 +20,15 @@
                 <tbody>
                 @foreach ($withdrawals as $w)
                     <tr>
-                        <td class="cell-main">{{ $w->user?->name }}</td>
+                        <td class="cell-main"><p class="truncate font-bold text-ink" title="{{ $w->user?->name }}">{{ $w->user?->name }}</p></td>
                         <td data-label="Amount" class="font-bold text-ink">₦{{ number_format($w->amount) }}</td>
-                        <td data-label="Payout account" class="text-xs">
-                            @if ($w->bank_name)<span class="font-bold text-ink">{{ $w->bank_name }}</span><br>{{ $w->account_name }} · {{ $w->maskedAccountNumber() }}@else<span class="text-flag-500">No bank details</span>@endif
+                        <td data-label="Payout account" class="whitespace-nowrap text-xs">
+                            @if ($w->bank_name)
+                                <span class="font-semibold text-ink">{{ $w->bank_name }}</span>
+                                <span class="block text-mute" title="{{ $w->account_name }}">{{ $w->maskedAccountNumber() }}</span>
+                            @else
+                                <span class="text-flag-500">No bank</span>
+                            @endif
                         </td>
                         <td data-label="Status">
                             <x-app.badge :status="$w->status" />
