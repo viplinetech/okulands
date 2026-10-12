@@ -30,10 +30,21 @@
                 </div>
                 <div>
                     <label for="realtor_id" class="field-label">Realtor credited <span class="text-flag-500">*</span></label>
-                    <select id="realtor_id" name="realtor_id" required class="field">
-                        <option value="">Select a realtor</option>
-                        @foreach ($realtors as $r)<option value="{{ $r->id }}" @selected(old('realtor_id', $preLead?->referrer_id) == $r->id)>{{ $r->name }}</option>@endforeach
-                    </select>
+                    @if ($preLead?->referrer_id && ($lockedRealtor = $realtors->firstWhere('id', $preLead->referrer_id)))
+                        {{-- Referred lead: lock the realtor so credit cannot be reassigned --}}
+                        <input type="hidden" name="realtor_id" value="{{ $lockedRealtor->id }}">
+                        <div class="field flex items-center gap-3 bg-soft !cursor-default select-none">
+                            <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-brand/15 font-bold text-brand text-xs">{{ mb_substr($lockedRealtor->name, 0, 1) }}</span>
+                            <span class="font-semibold text-ink">{{ $lockedRealtor->name }}</span>
+                            <span class="ml-auto text-[0.65rem] font-semibold uppercase tracking-[0.15em] text-mute">Referred this lead</span>
+                        </div>
+                        <p class="hint">Locked — this realtor referred the lead and automatically earns the commission.</p>
+                    @else
+                        <select id="realtor_id" name="realtor_id" required class="field">
+                            <option value="">Select a realtor</option>
+                            @foreach ($realtors as $r)<option value="{{ $r->id }}" @selected(old('realtor_id') == $r->id)>{{ $r->name }}</option>@endforeach
+                        </select>
+                    @endif
                     @error('realtor_id')<p class="err">{{ $message }}</p>@enderror
                 </div>
                 <div data-units-field hidden>
