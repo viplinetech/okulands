@@ -61,7 +61,15 @@
                 <div data-reveal class="mt-10 flex flex-wrap items-end justify-between gap-4 border-b border-ink/10 pb-8">
                     <div>
                         <p class="text-[0.68rem] font-semibold uppercase tracking-[0.22em] text-mute">{{ $sold ? 'Sold at' : ($property->isMultiUnit() ? 'Price per unit' : 'Price') }}</p>
-                        <p class="display mt-2 text-5xl text-ink sm:text-6xl">&#8358;{{ number_format($property->price) }}</p>
+                        @if (! $sold && $property->hasDiscount())
+                            <p class="mt-2 text-lg font-medium text-mute/70 line-through">&#8358;{{ number_format((float) $property->price) }}</p>
+                            <p class="display text-5xl text-emerald-600 sm:text-6xl">&#8358;{{ $property->displayPrice() }}</p>
+                            <p class="mt-2 inline-flex items-center gap-1.5 rounded-full bg-emerald-100 px-3 py-1 text-xs font-bold text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400">
+                                <x-icon name="tag" class="h-3.5 w-3.5" /> Save &#8358;{{ $property->savings() }}
+                            </p>
+                        @else
+                            <p class="display mt-2 text-5xl text-ink sm:text-6xl">&#8358;{{ number_format((float) $property->price) }}</p>
+                        @endif
                         @if (! $sold && $property->isMultiUnit())
                             <p class="mt-2 text-sm font-semibold text-brand">{{ $property->unitsRemaining() }} of {{ $property->units_total }} units left</p>
                         @endif
@@ -148,7 +156,12 @@
     <div class="safe-bottom fixed inset-x-0 bottom-0 z-40 flex items-center gap-3 border-t border-ink/10 bg-card/95 px-4 pt-3 backdrop-blur-xl lg:hidden">
         <div class="min-w-0 flex-1">
             <p class="text-[0.6rem] font-semibold uppercase tracking-[0.2em] text-mute">{{ $sold ? 'Sold' : 'Price' }}</p>
-            <p class="truncate font-serif text-2xl leading-none text-ink">&#8358;{{ number_format($property->price) }}</p>
+            @if (! $sold && $property->hasDiscount())
+                <p class="text-[0.65rem] font-medium text-mute/60 line-through">&#8358;{{ number_format((float) $property->price) }}</p>
+                <p class="truncate font-serif text-2xl leading-none text-emerald-600">&#8358;{{ $property->displayPrice() }}</p>
+            @else
+                <p class="truncate font-serif text-2xl leading-none text-ink">&#8358;{{ number_format((float) $property->price) }}</p>
+            @endif
         </div>
         @if ($settings->whatsapp)
             <a href="{{ $settings->whatsappUrl($waText) }}" target="_blank" rel="noopener" aria-label="Chat on WhatsApp" class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-ink/15 text-[#25D366]"><x-icon name="whatsapp" class="h-6 w-6" /></a>

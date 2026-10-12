@@ -30,7 +30,12 @@
         </div>
 
         <div class="absolute inset-x-5 bottom-5 text-white">
-            <p class="font-serif text-3xl leading-none sm:text-[2rem]">&#8358;{{ number_format($property->price) }}</p>
+            @if ($property->hasDiscount())
+                <p class="text-xs font-medium text-white/60 line-through">&#8358;{{ number_format((float) $property->price) }}</p>
+                <p class="font-serif text-3xl leading-none text-emerald-300 sm:text-[2rem]">&#8358;{{ $property->displayPrice() }}</p>
+            @else
+                <p class="font-serif text-3xl leading-none sm:text-[2rem]">&#8358;{{ number_format((float) $property->price) }}</p>
+            @endif
             <div class="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs font-medium text-white/75">
                 @if ($property->size)
                     <span class="inline-flex items-center gap-1.5"><x-icon name="ruler" class="h-3.5 w-3.5" />{{ $property->size }} sqm</span>

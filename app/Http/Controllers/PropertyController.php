@@ -24,7 +24,7 @@ class PropertyController extends Controller
     {
         $filters = $request->validate([
             'q' => ['nullable', 'string', 'max:100'],
-            'sector' => ['nullable', 'in:'.implode(',', array_keys(Property::SECTORS))],
+            'sector' => ['nullable', 'string', 'max:100'],
             'status' => ['nullable', 'in:available,reserved,sold'],
             'budget' => ['nullable', 'in:'.implode(',', array_keys(self::BUDGETS))],
             'sort' => ['nullable', 'in:latest,price_asc,price_desc'],

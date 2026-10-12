@@ -14,7 +14,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Property extends Model
 {
     protected $fillable = [
-        'title', 'slug', 'sector', 'type', 'description', 'price', 'units_total',
+        'title', 'slug', 'sector', 'type', 'description', 'price', 'discounted_price', 'units_total',
         'location', 'bedrooms', 'bathrooms', 'size', 'images',
         'status', 'featured', 'created_by',
     ];
@@ -24,9 +24,28 @@ class Property extends Model
         return [
             'images' => 'array',
             'price' => 'decimal:2',
+            'discounted_price' => 'decimal:2',
             'units_total' => 'integer',
             'featured' => 'boolean',
         ];
+    }
+
+    /** True when a discounted price is set and lower than the regular price. */
+    public function hasDiscount(): bool
+    {
+        return filled($this->discounted_price) && (float) $this->discounted_price < (float) $this->price;
+    }
+
+    /** The price to show to visitors: discounted if one is set, otherwise full price. */
+    public function displayPrice(): string
+    {
+        return number_format((float) ($this->hasDiscount() ? $this->discounted_price : $this->price));
+    }
+
+    /** Savings amount when a discount is active. */
+    public function savings(): string
+    {
+        return $this->hasDiscount() ? number_format((float) $this->price - (float) $this->discounted_price) : '0';
     }
 
     /** Whether this listing is sold off in multiple units/plots rather than as one whole. */
@@ -52,18 +71,23 @@ class Property extends Model
         return $this->isMultiUnit() && $this->unitsRemaining() <= 0;
     }
 
+    /** Legacy sector → label map; kept so old property records with underscore keys still display correctly. */
     public const SECTORS = [
         'real_estate' => 'Real Estate',
         'construction' => 'Construction',
         'agriculture' => 'Agriculture',
     ];
 
-    /** The property types offered in search: only those whose service is currently active. */
+    /** Service slug → title map from the live services table, for the property form and filters. */
+    public static function serviceOptions(): array
+    {
+        return \App\Models\Service::visible()->orderBy('sort_order')->pluck('title', 'slug')->all();
+    }
+
+    /** For the public search filter: active services from the DB, keyed by their slug. */
     public static function activeSectors(): array
     {
-        $active = \App\Models\Service::visible()->pluck('sector')->unique()->all();
-
-        return array_intersect_key(self::SECTORS, array_flip($active));
+        return \App\Models\Service::visible()->orderBy('sort_order')->pluck('title', 'slug')->all();
     }
 
     /** Distinct listing locations, used for search autocomplete. */
@@ -72,9 +96,14 @@ class Property extends Model
         return static::query()->whereNotNull('location')->distinct()->orderBy('location')->limit(40)->pluck('location')->all();
     }
 
+    /** Human-readable service label: tries the live services table first, then the legacy constant. */
     public function sectorLabel(): string
     {
-        return self::SECTORS[$this->sector] ?? ucwords(str_replace('_', ' ', $this->sector));
+        static $map = null;
+        $map ??= \App\Models\Service::query()->pluck('title', 'slug')->all();
+        return $map[$this->sector]
+            ?? self::SECTORS[$this->sector]
+            ?? ucwords(str_replace(['_', '-'], ' ', $this->sector));
     }
 
     /** All uploaded image URLs (paths or full URLs), in the admin's order. */

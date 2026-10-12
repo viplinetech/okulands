@@ -60,6 +60,6 @@ class ActiveServicesTest extends TestCase
         $this->service('Bulk Lands', 'real_estate');
         $this->service('Agriculture', 'agriculture', false);
 
-        $this->get('/properties')->assertSee('Real Estate')->assertDontSee('value="agriculture"', false);
+        $this->get('/properties')->assertSee('Bulk Lands')->assertDontSee('value="agriculture"', false);
     }
 }
