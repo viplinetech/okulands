@@ -64,7 +64,7 @@ class MakeAdmin extends Command
             }
         }
 
-        $check = Validator::make(['password' => $password], ['password' => [Password::min(8)->mixedCase()->numbers()]]);
+        $check = Validator::make(['password' => $password], ['password' => [Password::min(8)->mixedCase()]]);
         if ($check->fails()) {
             $this->error($check->errors()->first('password'));
 

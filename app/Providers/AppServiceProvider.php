@@ -45,11 +45,10 @@ class AppServiceProvider extends ServiceProvider
             fn ($view) => $view->with('settings', SiteSetting::current())
         );
 
-        // Password rules for every account: 8+ characters, mixed case, a number; in production
-        // also checked against known data breaches.
+        // Password rules: 8+ characters, mixed case; in production also checked against known breaches.
         Password::defaults(fn () => app()->isProduction()
-            ? Password::min(8)->mixedCase()->numbers()->uncompromised()
-            : Password::min(8)->mixedCase()->numbers());
+            ? Password::min(8)->mixedCase()->uncompromised()
+            : Password::min(8)->mixedCase());
 
         $this->registerAuthAuditing();
     }
