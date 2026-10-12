@@ -62,6 +62,17 @@
             @error('message') <p class="mt-1.5 text-xs font-medium text-flag-500">{{ $message }}</p> @enderror
         </div>
 
+        @if (app(\App\Services\Turnstile::class)->enabled())
+        <div class="{{ $compact ? '' : 'sm:col-span-2' }}">
+            <div class="cf-turnstile"
+                 data-sitekey="{{ app(\App\Services\Turnstile::class)->siteKey() }}"
+                 data-callback="okuEnquiryTurnstile{{ $idp }}"
+                 data-theme="auto"></div>
+            <input type="hidden" name="cf_turnstile_response" id="cf-token-{{ $idp }}">
+            @error('cf_turnstile_response') <p class="mt-1.5 text-xs font-medium text-flag-500">{{ $message }}</p> @enderror
+        </div>
+        @endif
+
         <div class="{{ $compact ? '' : 'sm:col-span-2' }}">
             <button type="submit" data-magnetic class="btn btn-primary w-full sm:w-auto {{ $compact ? 'sm:w-full' : '' }}">
                 {{ $button }}
@@ -70,4 +81,18 @@
             <p class="mt-3 text-xs leading-relaxed text-mute">Your details are used only to reply to you. See our <a href="{{ route('legal', 'privacy-policy') }}" class="font-semibold text-brand hover:underline">Privacy Policy</a>.</p>
         </div>
     </form>
+
+    @if (app(\App\Services\Turnstile::class)->enabled())
+    <script>
+        function okuEnquiryTurnstile{{ $idp }}(token) {
+            document.getElementById('cf-token-{{ $idp }}').value = token;
+        }
+        if (!document.querySelector('script[data-turnstile]')) {
+            var s = document.createElement('script');
+            s.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js';
+            s.async = true; s.defer = true; s.dataset.turnstile = '1';
+            document.head.appendChild(s);
+        }
+    </script>
+    @endif
 </div>

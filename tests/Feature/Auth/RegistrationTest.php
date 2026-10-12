@@ -157,6 +157,9 @@ class RegistrationTest extends TestCase
 
     public function test_the_turnstile_check_blocks_failed_and_missing_tokens_when_enabled(): void
     {
+        \App\Services\Turnstile::$bypassInTests = false;
+
+        try {
         config(['services.turnstile.site_key' => 'site', 'services.turnstile.secret' => 'secret']);
 
         // No token at all.
@@ -170,6 +173,9 @@ class RegistrationTest extends TestCase
         // Cloudflare accepts it.
         $this->fill(Volt::test('pages.auth.register'), ['cfToken' => 'good'])->call('register')->assertHasNoErrors();
         $this->assertDatabaseCount('users', 1);
+        } finally {
+            \App\Services\Turnstile::$bypassInTests = true;
+        }
     }
 
     public function test_gender_is_required_for_realtor_sign_up(): void

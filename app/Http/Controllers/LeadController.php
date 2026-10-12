@@ -13,6 +13,7 @@ use App\Models\User;
 use App\Notifications\InspectionBooked;
 use App\Notifications\NewLeadAlert;
 use App\Notifications\NewReferralLead;
+use App\Services\Turnstile;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Notification;
@@ -40,7 +41,7 @@ class LeadController extends Controller
         ];
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request, Turnstile $turnstile): RedirectResponse
     {
         $thanks = 'Thank you! Your message has been received. Our team will reach out shortly.';
         $back = url()->previous(url('/contact')).'#enquire';
@@ -48,6 +49,10 @@ class LeadController extends Controller
         // Honeypot: real visitors never see or fill this field; bots do.
         if ($request->filled('website')) {
             return redirect($back)->with('status', $thanks);
+        }
+
+        if (! $turnstile->passes($request->input('cf_turnstile_response'), $request->ip())) {
+            return back()->withErrors(['cf_turnstile_response' => 'Security check failed. Please try again.'])->withInput();
         }
 
         $data = $request->validate([

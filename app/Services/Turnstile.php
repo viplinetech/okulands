@@ -25,10 +25,13 @@ class Turnstile
         return config('services.turnstile.site_key');
     }
 
+    /** Set to false in a specific test to exercise the real Turnstile verification path. */
+    public static bool $bypassInTests = true;
+
     /** Fails closed: a missing token, a network error or a rejected token all count as "not human". */
     public function passes(?string $token, ?string $ip = null): bool
     {
-        if (! $this->enabled()) {
+        if (! $this->enabled() || (app()->runningUnitTests() && static::$bypassInTests)) {
             return true;
         }
 
