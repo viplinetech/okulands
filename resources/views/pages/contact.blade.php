@@ -6,10 +6,22 @@
     $tel = $settings->phone ? preg_replace('/\s+/', '', $settings->phone) : null;
     $mapsSearch = $settings->address ? 'https://www.google.com/maps/search/?api=1&query='.urlencode($settings->address) : null;
     $embed = $settings->map_embed_url && str_starts_with($settings->map_embed_url, 'https://') ? $settings->map_embed_url : null;
+
+    $contactRefName = null;
+    $contactRefToken = request()->cookie(\App\Http\Controllers\ReferralController::COOKIE);
+    if ($contactRefToken) {
+        $contactRefVisit = \App\Models\ReferralVisit::with('referrer:id,name')
+            ->where('visitor_token', $contactRefToken)->first();
+        $contactRefName = $contactRefVisit?->referrer?->name;
+    }
+    $contactWaText = $contactRefName
+        ? "Hello Oku Lands, I would like to make an enquiry.\n\n[Referred by: {$contactRefName}]"
+        : 'Hello Oku Lands, I would like to make an enquiry.';
+
     $cards = array_filter([
         $tel ? ['phone', 'Call us', $settings->phone, 'tel:'.$tel] : null,
-        $settings->whatsapp ? ['whatsapp', 'WhatsApp', 'Chat with our team', $settings->whatsappUrl('Hello Oku Lands, I would like to make an enquiry.')] : null,
-        $settings->email ? ['mail', 'Email', $settings->email, 'mailto:'.$settings->email] : null,
+        $settings->whatsapp ? ['whatsapp', 'WhatsApp', 'Chat with our team', $settings->whatsappUrl($contactWaText)] : null,
+        $settings->email ? ['mail', 'Email', $settings->email, null] : null,
         $settings->office_hours ? ['clock', 'Office hours', $settings->office_hours, null] : null,
     ]);
 @endphp

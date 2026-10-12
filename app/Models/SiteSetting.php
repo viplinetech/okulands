@@ -170,13 +170,24 @@ class SiteSetting extends Model
     /**
      * Every counter shown on the home and About pages. The realtor figure is worked out by the system
      * (verified realtors + any existing realtors the admin adds) and always sits third.
+     *
+     * Certain label keywords trigger live DB counts so the numbers stay accurate automatically:
+     *   "service"  → active services   "sold"/"sale" → approved/paid sales
+     *   "propert"  → available listings "client"/"enquir"/"customer" → all leads received
      */
     public function statItems(): array
     {
-        // The services counter is always the number of ACTIVE services, so it can't drift from the Services list.
         $items = collect($this->manualStats())->map(function ($item) {
-            if (str_contains(strtolower((string) ($item['label'] ?? '')), 'service')) {
+            $l = strtolower((string) ($item['label'] ?? ''));
+
+            if (str_contains($l, 'service')) {
                 $item['value'] = \App\Models\Service::visible()->count();
+            } elseif (str_contains($l, 'sold') || str_contains($l, 'sale')) {
+                $item['value'] = \App\Models\Sale::whereIn('status', ['approved', 'paid'])->count();
+            } elseif (str_contains($l, 'propert')) {
+                $item['value'] = \App\Models\Property::where('status', 'available')->count();
+            } elseif (str_contains($l, 'client') || str_contains($l, 'enquir') || str_contains($l, 'customer')) {
+                $item['value'] = \App\Models\Lead::count();
             }
 
             return $item;

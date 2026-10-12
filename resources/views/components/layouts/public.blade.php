@@ -19,6 +19,20 @@
     // straight shortcut to that account's own dashboard instead.
     $authLink = auth()->check() ? route(auth()->user()->homeRoute()) : route('login');
     $authLabel = auth()->check() ? 'Dashboard' : 'Realtor Login';
+
+    // If the visitor arrived via a referral link, find the referrer's name so we can include it
+    // in the WhatsApp pre-filled message — the realtor gets credited even on direct WhatsApp contact.
+    $referrerName = null;
+    $refToken = request()->cookie(\App\Http\Controllers\ReferralController::COOKIE);
+    if ($refToken) {
+        $refVisit = \App\Models\ReferralVisit::with('referrer:id,name')
+            ->where('visitor_token', $refToken)->first();
+        $referrerName = $refVisit?->referrer?->name;
+    }
+
+    $waText = $referrerName
+        ? "Hello Oku Lands, I would like to make an enquiry.\n\n[Referred by: {$referrerName}]"
+        : 'Hello Oku Lands, I would like to make an enquiry.';
 @endphp
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
@@ -203,7 +217,7 @@
 
     {{-- WhatsApp shortcut --}}
     @if ($settings->whatsapp && ! $hideFab)
-        <a href="{{ $settings->whatsappUrl('Hello Oku Lands, I would like to make an enquiry.') }}" target="_blank" rel="noopener" aria-label="Chat with us on WhatsApp"
+        <a href="{{ $settings->whatsappUrl($waText) }}" target="_blank" rel="noopener" aria-label="Chat with us on WhatsApp"
            class="fab fixed bottom-4 right-4 z-[60] flex h-[3.4rem] w-[3.4rem] items-center justify-center rounded-full bg-[#25D366] text-white shadow-lg shadow-black/20 transition duration-300 hover:scale-105 sm:bottom-6 sm:right-6">
             <x-icon name="whatsapp" class="h-7 w-7" />
         </a>
@@ -248,7 +262,7 @@
                                 <li><a href="tel:{{ preg_replace('/\s+/', '', $settings->phone) }}" class="font-semibold text-white transition hover:text-sky-300">{{ $settings->phone }}</a></li>
                             @endif
                             @if ($settings->email)
-                                <li><a href="mailto:{{ $settings->email }}" class="[overflow-wrap:anywhere] transition hover:text-sky-300">{{ $settings->email }}</a></li>
+                                <li class="[overflow-wrap:anywhere] text-white/50">{{ $settings->email }}</li>
                             @endif
                             @if ($settings->address)
                                 <li class="leading-relaxed text-white/50">{{ $settings->address }}</li>

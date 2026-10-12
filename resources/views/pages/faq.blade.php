@@ -5,6 +5,16 @@
 @php
     $suggestions = ['payment plans', 'inspection', 'title', 'commission', 'construction'];
     $tel = $settings->phone ? preg_replace('/\s+/', '', $settings->phone) : null;
+    $faqRefName = null;
+    $faqRefToken = request()->cookie(\App\Http\Controllers\ReferralController::COOKIE);
+    if ($faqRefToken) {
+        $faqRefVisit = \App\Models\ReferralVisit::with('referrer:id,name')
+            ->where('visitor_token', $faqRefToken)->first();
+        $faqRefName = $faqRefVisit?->referrer?->name;
+    }
+    $faqWaText = $faqRefName
+        ? "Hello Oku Lands, I have a question.\n\n[Referred by: {$faqRefName}]"
+        : 'Hello Oku Lands, I have a question.';
     $schema = [
         '@context' => 'https://schema.org',
         '@type' => 'FAQPage',
@@ -129,7 +139,7 @@
                             <div class="mt-7 flex flex-col justify-center gap-3 sm:flex-row">
                                 <a href="{{ route('contact') }}" class="btn btn-outline">Ask our team</a>
                                 @if ($settings->whatsapp)
-                                    <a href="{{ $settings->whatsappUrl('Hello Oku Lands, I have a question.') }}" target="_blank" rel="noopener" class="btn btn-outline"><x-icon name="whatsapp" class="h-5 w-5 text-[#25D366]" /> WhatsApp us</a>
+                                    <a href="{{ $settings->whatsappUrl($faqWaText) }}" target="_blank" rel="noopener" class="btn btn-outline"><x-icon name="whatsapp" class="h-5 w-5 text-[#25D366]" /> WhatsApp us</a>
                                 @endif
                             </div>
                         </div>
@@ -154,7 +164,7 @@
             </div>
             <div class="mt-8 grid gap-4 sm:grid-cols-3">
                 @foreach (array_filter([
-                    $settings->whatsapp ? ['whatsapp', 'WhatsApp', 'Chat with our team', $settings->whatsappUrl('Hello Oku Lands, I have a question.')] : null,
+                    $settings->whatsapp ? ['whatsapp', 'WhatsApp', 'Chat with our team', $settings->whatsappUrl($faqWaText)] : null,
                     $tel ? ['phone', 'Call us', $settings->phone, 'tel:'.$tel] : null,
                     ['mail', 'Send a message', 'We reply the same day', route('contact')],
                 ]) as $i => [$icon, $label, $value, $href])

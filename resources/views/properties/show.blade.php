@@ -6,7 +6,15 @@
     $count = count($images);
     $shown = min($count, 5);
     $sold = $property->status === 'sold';
-    $waText = "Hello Oku Lands, I'm interested in \"{$property->title}\" ({$property->location}). Please share more details.";
+    $propRefName = null;
+    $propRefToken = request()->cookie(\App\Http\Controllers\ReferralController::COOKIE);
+    if ($propRefToken) {
+        $propRefVisit = \App\Models\ReferralVisit::with('referrer:id,name')
+            ->where('visitor_token', $propRefToken)->first();
+        $propRefName = $propRefVisit?->referrer?->name;
+    }
+    $waText = "Hello Oku Lands, I'm interested in \"{$property->title}\" ({$property->location}). Please share more details."
+        .($propRefName ? "\n\n[Referred by: {$propRefName}]" : '');
     $specs = array_filter([
         ['tag', 'Type', $property->type],
         ['ruler', 'Size', $property->size ? $property->size.' sqm' : null],
