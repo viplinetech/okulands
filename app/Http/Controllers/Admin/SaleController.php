@@ -58,7 +58,8 @@ class SaleController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $data = $request->validate([
-            'property_id' => ['required', 'exists:properties,id'],
+            'property_id' => ['nullable', 'exists:properties,id'],
+            'description' => ['nullable', 'string', 'max:200'],
             'realtor_id' => ['required', Rule::exists('users', 'id')->whereIn('role', User::AFFILIATE_ROLES)],
             'lead_id' => ['nullable', 'exists:leads,id'],
             'buyer_name' => ['required', 'string', 'max:160'],
@@ -68,7 +69,13 @@ class SaleController extends Controller
             'amount' => ['required', 'numeric', 'min:1', 'max:999999999999'],
             'reference' => ['nullable', 'string', 'max:80'],
             'notes' => ['nullable', 'string', 'max:2000'],
+        ], [
+            'property_id.exists' => 'The selected property does not exist.',
         ]);
+
+        if (empty($data['property_id']) && empty($data['description'])) {
+            return back()->withInput()->withErrors(['description' => 'Enter a description of what was sold when no property is selected.']);
+        }
 
         $data['quantity'] = $data['quantity'] ?? 1;
 

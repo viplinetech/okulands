@@ -13,9 +13,15 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Sale extends Model
 {
     protected $fillable = [
-        'property_id', 'realtor_id', 'lead_id', 'buyer_name', 'buyer_email',
+        'property_id', 'description', 'realtor_id', 'lead_id', 'buyer_name', 'buyer_email',
         'buyer_phone', 'amount', 'quantity', 'status', 'approved_by', 'approved_at', 'reference', 'notes',
     ];
+
+    /** Human-readable label: property title if linked, otherwise the free-text description. */
+    public function label(): string
+    {
+        return $this->property?->title ?? $this->description ?? 'General sale';
+    }
 
     protected function casts(): array
     {

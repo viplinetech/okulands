@@ -1,5 +1,5 @@
 <x-layouts.admin title="Sale">
-    <x-app.page-header :title="$sale->buyer_name" kicker="Sale" :subtitle="$sale->property?->title">
+    <x-app.page-header :title="$sale->buyer_name" kicker="Sale" :subtitle="$sale->label()">
         <a href="{{ route('admin.sales.index') }}" class="btn btn-outline btn-sm"><x-icon name="arrow" class="h-4 w-4 rotate-180" /> Back</a>
         @if ($sale->status === 'pending')
             <form method="POST" action="{{ route('admin.sales.approve', $sale) }}" data-confirm="Approve this sale? The property will be marked sold and commissions created for the realtor and their upline." data-confirm-yes="Approve sale">@csrf
@@ -24,7 +24,7 @@
         <section class="card lg:col-span-2">
             <h2 class="card-title">Details</h2>
             <dl class="mt-5 grid gap-4 text-sm sm:grid-cols-2">
-                <div><dt class="field-label !mb-1">Property</dt><dd class="font-bold text-ink">{{ $sale->property?->title }}</dd></div>
+                <div><dt class="field-label !mb-1">{{ $sale->property ? 'Property' : 'Service / description' }}</dt><dd class="font-bold text-ink">{{ $sale->label() }}</dd></div>
                 @if ($sale->property?->isMultiUnit())
                     <div><dt class="field-label !mb-1">Quantity sold</dt><dd class="font-bold text-ink">{{ $sale->quantity }} unit(s) <span class="font-normal text-mute">· {{ $sale->property->unitsRemaining() }} of {{ $sale->property->units_total }} remaining overall</span></dd></div>
                 @endif

@@ -12,9 +12,9 @@
             <h2 class="card-title">Sale</h2>
             <div class="form-grid mt-5">
                 <div class="form-full">
-                    <label for="property_id" class="field-label">Property <span class="text-flag-500">*</span></label>
-                    <select id="property_id" name="property_id" required class="field" data-price-source>
-                        <option value="">Select a property</option>
+                    <label for="property_id" class="field-label">Property <span class="font-normal normal-case tracking-normal text-mute">(leave blank for a service sale)</span></label>
+                    <select id="property_id" name="property_id" class="field" data-price-source>
+                        <option value="">— No property / service sale —</option>
                         @foreach ($properties as $p)
                             <option value="{{ $p->id }}"
                                 data-price="{{ (int) $p->price }}"
@@ -27,6 +27,12 @@
                     </select>
                     <p class="hint" data-units-hint hidden></p>
                     @error('property_id')<p class="err">{{ $message }}</p>@enderror
+                </div>
+                <div class="form-full" id="description-field" @if(old('property_id', $preLead?->property_id)) style="display:none" @endif>
+                    <label for="description" class="field-label">What was sold <span class="text-flag-500" data-desc-required>*</span></label>
+                    <input id="description" name="description" value="{{ old('description') }}" placeholder="e.g. Caterpillar hire – Awka, Block supply – 1000 units, Title verification" class="field">
+                    <p class="hint">Required when no property is selected. Describe the service or item sold.</p>
+                    @error('description')<p class="err">{{ $message }}</p>@enderror
                 </div>
                 <div>
                     <label for="realtor_id" class="field-label">Realtor credited <span class="text-flag-500">*</span></label>
@@ -96,14 +102,13 @@
     </form>
 
     <script>
-        // Pre-fill the amount from the chosen property's price × quantity (only while untouched by the admin),
-        // show/hide the Quantity field for multi-unit listings, and warn when more is requested than remains.
         (function () {
             var sel = document.querySelector('[data-price-source]');
             var amt = document.querySelector('[data-price-target]');
             var qtyField = document.querySelector('[data-units-field]');
             var qty = document.querySelector('[data-quantity-input]');
             var hint = document.querySelector('[data-units-hint]');
+            var descField = document.getElementById('description-field');
             if (!sel || !amt || !qty) return;
 
             var touched = amt.value !== '';
@@ -111,15 +116,20 @@
 
             function recalc() {
                 var o = sel.options[sel.selectedIndex];
+                var hasProperty = o && o.value !== '';
                 var price = o && o.dataset.price ? parseFloat(o.dataset.price) : null;
                 var remaining = o && o.dataset.unitsRemaining !== '' ? parseInt(o.dataset.unitsRemaining, 10) : null;
                 var isMultiUnit = remaining !== null && !isNaN(remaining);
+
+                // Show/hide description field (required when no property selected).
+                if (descField) descField.style.display = hasProperty ? 'none' : '';
 
                 qtyField.hidden = !isMultiUnit;
                 if (!isMultiUnit) qty.value = 1;
 
                 var q = Math.max(1, parseInt(qty.value, 10) || 1);
                 if (!touched && price !== null) amt.value = Math.round(price * q);
+                if (!touched && !hasProperty) amt.value = '';
 
                 if (isMultiUnit) {
                     qty.max = remaining;
