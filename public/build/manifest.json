@@ -1,0 +1,107 @@
+{
+  "node_modules/@fontsource/instrument-serif/files/instrument-serif-latin-400-italic.woff": {
+    "file": "assets/instrument-serif-latin-400-italic-u__WvvIK.woff",
+    "src": "node_modules/@fontsource/instrument-serif/files/instrument-serif-latin-400-italic.woff"
+  },
+  "node_modules/@fontsource/instrument-serif/files/instrument-serif-latin-400-italic.woff2": {
+    "file": "assets/instrument-serif-latin-400-italic-DKMiL14s.woff2",
+    "src": "node_modules/@fontsource/instrument-serif/files/instrument-serif-latin-400-italic.woff2"
+  },
+  "node_modules/@fontsource/instrument-serif/files/instrument-serif-latin-400-normal.woff": {
+    "file": "assets/instrument-serif-latin-400-normal-BVbkICAY.woff",
+    "src": "node_modules/@fontsource/instrument-serif/files/instrument-serif-latin-400-normal.woff"
+  },
+  "node_modules/@fontsource/instrument-serif/files/instrument-serif-latin-400-normal.woff2": {
+    "file": "assets/instrument-serif-latin-400-normal-DnYpCC2O.woff2",
+    "src": "node_modules/@fontsource/instrument-serif/files/instrument-serif-latin-400-normal.woff2"
+  },
+  "node_modules/@fontsource/manrope/files/manrope-latin-400-normal.woff": {
+    "file": "assets/manrope-latin-400-normal-8tf8FM3T.woff",
+    "src": "node_modules/@fontsource/manrope/files/manrope-latin-400-normal.woff"
+  },
+  "node_modules/@fontsource/manrope/files/manrope-latin-400-normal.woff2": {
+    "file": "assets/manrope-latin-400-normal-PaqtzbVb.woff2",
+    "src": "node_modules/@fontsource/manrope/files/manrope-latin-400-normal.woff2"
+  },
+  "node_modules/@fontsource/manrope/files/manrope-latin-500-normal.woff": {
+    "file": "assets/manrope-latin-500-normal-DMZssgOp.woff",
+    "src": "node_modules/@fontsource/manrope/files/manrope-latin-500-normal.woff"
+  },
+  "node_modules/@fontsource/manrope/files/manrope-latin-500-normal.woff2": {
+    "file": "assets/manrope-latin-500-normal-BYYD-dBL.woff2",
+    "src": "node_modules/@fontsource/manrope/files/manrope-latin-500-normal.woff2"
+  },
+  "node_modules/@fontsource/manrope/files/manrope-latin-600-normal.woff": {
+    "file": "assets/manrope-latin-600-normal-BqgrALkZ.woff",
+    "src": "node_modules/@fontsource/manrope/files/manrope-latin-600-normal.woff"
+  },
+  "node_modules/@fontsource/manrope/files/manrope-latin-600-normal.woff2": {
+    "file": "assets/manrope-latin-600-normal-4f0koTD-.woff2",
+    "src": "node_modules/@fontsource/manrope/files/manrope-latin-600-normal.woff2"
+  },
+  "node_modules/@fontsource/manrope/files/manrope-latin-700-normal.woff": {
+    "file": "assets/manrope-latin-700-normal-DGRFkw-m.woff",
+    "src": "node_modules/@fontsource/manrope/files/manrope-latin-700-normal.woff"
+  },
+  "node_modules/@fontsource/manrope/files/manrope-latin-700-normal.woff2": {
+    "file": "assets/manrope-latin-700-normal-BZp_XxE4.woff2",
+    "src": "node_modules/@fontsource/manrope/files/manrope-latin-700-normal.woff2"
+  },
+  "node_modules/@fontsource/manrope/files/manrope-latin-800-normal.woff": {
+    "file": "assets/manrope-latin-800-normal-uHUdIJgA.woff",
+    "src": "node_modules/@fontsource/manrope/files/manrope-latin-800-normal.woff"
+  },
+  "node_modules/@fontsource/manrope/files/manrope-latin-800-normal.woff2": {
+    "file": "assets/manrope-latin-800-normal-BfWYOv1c.woff2",
+    "src": "node_modules/@fontsource/manrope/files/manrope-latin-800-normal.woff2"
+  },
+  "resources/css/app.css": {
+    "file": "assets/app-B656vyQD.css",
+    "name": "app",
+    "names": [
+      "app.css"
+    ],
+    "src": "resources/css/app.css",
+    "isEntry": true,
+    "assets": [
+      "assets/manrope-latin-400-normal-PaqtzbVb.woff2",
+      "assets/manrope-latin-400-normal-8tf8FM3T.woff",
+      "assets/manrope-latin-500-normal-BYYD-dBL.woff2",
+      "assets/manrope-latin-500-normal-DMZssgOp.woff",
+      "assets/manrope-latin-600-normal-4f0koTD-.woff2",
+      "assets/manrope-latin-600-normal-BqgrALkZ.woff",
+      "assets/manrope-latin-700-normal-BZp_XxE4.woff2",
+      "assets/manrope-latin-700-normal-DGRFkw-m.woff",
+      "assets/manrope-latin-800-normal-BfWYOv1c.woff2",
+      "assets/manrope-latin-800-normal-uHUdIJgA.woff",
+      "assets/instrument-serif-latin-400-normal-DnYpCC2O.woff2",
+      "assets/instrument-serif-latin-400-normal-BVbkICAY.woff",
+      "assets/instrument-serif-latin-400-italic-DKMiL14s.woff2",
+      "assets/instrument-serif-latin-400-italic-u__WvvIK.woff"
+    ]
+  },
+  "resources/js/app.js": {
+    "file": "assets/app-D-tcNG3l.js",
+    "name": "app",
+    "src": "resources/js/app.js",
+    "isEntry": true
+  },
+  "resources/js/editor.js": {
+    "file": "assets/editor-yoLsUar7.js",
+    "name": "editor",
+    "src": "resources/js/editor.js",
+    "isDynamicEntry": true,
+    "css": [
+      "assets/editor-CzwWqy_5.css"
+    ]
+  },
+  "resources/js/shell.js": {
+    "file": "assets/shell-OZXUCOG6.js",
+    "name": "shell",
+    "src": "resources/js/shell.js",
+    "isEntry": true,
+    "dynamicImports": [
+      "resources/js/editor.js"
+    ]
+  }
+}
