@@ -19,7 +19,17 @@ return new class extends Migration
 
         if ($driver === 'mysql') {
             // MySQL requires dropping the FK before changing the column.
-            DB::statement('ALTER TABLE sales DROP FOREIGN KEY sales_property_id_foreign');
+            // Discover the actual FK name in case it differs across environments.
+            $fkName = DB::table('information_schema.KEY_COLUMN_USAGE')
+                ->where('TABLE_SCHEMA', DB::connection()->getDatabaseName())
+                ->where('TABLE_NAME', 'sales')
+                ->where('COLUMN_NAME', 'property_id')
+                ->whereNotNull('REFERENCED_TABLE_NAME')
+                ->value('CONSTRAINT_NAME');
+
+            if ($fkName) {
+                DB::statement('ALTER TABLE sales DROP FOREIGN KEY '.$fkName);
+            }
             DB::statement('ALTER TABLE sales MODIFY COLUMN property_id BIGINT UNSIGNED NULL');
             DB::statement('ALTER TABLE sales ADD CONSTRAINT sales_property_id_foreign FOREIGN KEY (property_id) REFERENCES properties(id) ON DELETE CASCADE');
         } else {
