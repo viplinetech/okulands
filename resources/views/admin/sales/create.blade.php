@@ -1,5 +1,5 @@
 <x-layouts.admin title="Record sale">
-    @php $preLead = $lead; @endphp
+    @php $preLead = $lead; $preDesc = $leadDescription ?? null; @endphp
     <x-app.page-header title="Record a sale" kicker="Sales" subtitle="Pick the property and the realtor who earns the credit. Approve it next to create commissions.">
         <a href="{{ route('admin.sales.index') }}" class="btn btn-outline btn-sm"><x-icon name="arrow" class="h-4 w-4 rotate-180" /> Back</a>
     </x-app.page-header>
@@ -30,7 +30,7 @@
                 </div>
                 <div class="form-full" id="description-field" @if(old('property_id', $preLead?->property_id)) style="display:none" @endif>
                     <label for="description" class="field-label">What was sold <span class="text-flag-500" data-desc-required>*</span></label>
-                    <input id="description" name="description" value="{{ old('description') }}" placeholder="e.g. Caterpillar hire – Awka, Block supply – 1000 units, Title verification" class="field">
+                    <input id="description" name="description" value="{{ old('description', $preDesc) }}" placeholder="e.g. Caterpillar hire – Awka, Block supply – 1000 units, Title verification" class="field">
                     <p class="hint">Required when no property is selected. Describe the service or item sold.</p>
                     @error('description')<p class="err">{{ $message }}</p>@enderror
                 </div>

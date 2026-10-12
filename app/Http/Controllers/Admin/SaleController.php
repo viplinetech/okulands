@@ -48,8 +48,18 @@ class SaleController extends Controller
     {
         $lead = $request->filled('lead') ? Lead::with('property')->find($request->query('lead')) : null;
 
+        // Pre-fill description from the interest label stored at the start of the message,
+        // e.g. "[Caterpillar Services] I need a quote" → "Caterpillar Services".
+        $leadDescription = null;
+        if ($lead && ! $lead->property_id) {
+            if (preg_match('/^\[([^\]]+)\]/', $lead->message ?? '', $m)) {
+                $leadDescription = $m[1];
+            }
+        }
+
         return view('admin.sales.create', [
             'lead' => $lead,
+            'leadDescription' => $leadDescription,
             'properties' => Property::orderBy('title')->get(['id', 'title', 'price', 'status', 'units_total']),
             'realtors' => User::affiliates()->where('status', 'active')->orderBy('name')->get(['id', 'name']),
         ]);
