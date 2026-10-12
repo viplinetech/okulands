@@ -14,7 +14,8 @@ use Tests\TestCase;
 
 /**
  * Someone arrives through a realtor's link and books an inspection:
- * the ADMIN gets every detail, the REALTOR is told it happened and for which property, but never who.
+ * the ADMIN gets every detail; the REALTOR sees the person's name and which property,
+ * but never their phone, email or message.
  */
 class RealtorPrivacyTest extends TestCase
 {
@@ -81,35 +82,41 @@ class RealtorPrivacyTest extends TestCase
         $this->visitorBooks($realtor, $property);
         $lead = Lead::firstOrFail();
 
-        // Their notification: what and which property, nothing about the person.
+        // Their notification: person's name + which property — never phone, email or message.
         $data = $realtor->notifications()->firstOrFail()->data;
-        $this->assertSame('Inspection booked through your link', $data['title']);
+        $this->assertSame('Chidi Okonkwo booked an inspection through your link', $data['title']);
+        $this->assertStringContainsString('Chidi Okonkwo', $data['body']);
         $this->assertStringContainsString('Amansea Residential Plots', $data['body']);
-        foreach (['Chidi', 'Okonkwo', '0803', '1234567', 'chidi@example.com', 'Saturday'] as $secret) {
+        foreach (['1234567', 'chidi@example.com', 'Saturday'] as $secret) {
             $this->assertStringNotContainsString($secret, json_encode($data));
         }
 
-        // Their Booked inspections page and dashboard.
+        // Their Booked inspections page: shows name + property, never phone/email/message.
         $this->actingAs($realtor);
-        foreach (['/realtor/leads', '/realtor/leads?kind=inspections', '/realtor'] as $url) {
-            $page = $this->get($url)->assertOk()->assertSee('Inspection booked')->assertSee('Amansea Residential Plots');
-            foreach (['Chidi', 'Okonkwo', '8031234567', '1234567', 'chidi@example.com', 'Saturday morning', 'tel:', 'wa.me'] as $secret) {
+        foreach (['/realtor/leads', '/realtor/leads?kind=inspections'] as $url) {
+            $page = $this->get($url)->assertOk()->assertSee('Chidi Okonkwo')->assertSee('Amansea Residential Plots');
+            foreach (['8031234567', 'chidi@example.com', 'Saturday morning', 'tel:', 'wa.me'] as $secret) {
                 $page->assertDontSee($secret, false);
             }
         }
+        // Dashboard shows bookings summary (no name, just type + property).
+        $this->get('/realtor')->assertOk()->assertSee('Inspection booked')->assertSee('Amansea Residential Plots');
+        foreach (['8031234567', 'chidi@example.com', 'Saturday morning'] as $secret) {
+            $this->get('/realtor')->assertDontSee($secret, false);
+        }
         $this->get('/realtor/leads')->assertSee('Ref #'.$lead->id);
-        $this->get('/realtor/alerts')->assertOk()->assertSee('Inspection booked through your link')->assertDontSee('Chidi');
+        $this->get('/realtor/alerts')->assertOk()->assertSee('Chidi Okonkwo booked an inspection through your link');
     }
 
-    public function test_the_realtor_query_cannot_load_the_persons_details_at_all(): void
+    public function test_the_realtor_query_exposes_name_only_never_contact_details(): void
     {
         $realtor = User::factory()->create();
         Lead::create(['name' => 'Secret Person', 'phone' => '08099999999', 'email' => 's@example.com', 'message' => 'private', 'type' => 'inspection', 'referrer_id' => $realtor->id]);
 
         $booking = $realtor->referredBookings()->firstOrFail();
 
-        // Even if a screen asked for them, the columns are simply not there.
-        $this->assertNull($booking->name);
+        // Name is intentionally visible to the realtor; contact details are not loaded at all.
+        $this->assertSame('Secret Person', $booking->name);
         $this->assertNull($booking->phone);
         $this->assertNull($booking->email);
         $this->assertNull($booking->message);
@@ -123,16 +130,17 @@ class RealtorPrivacyTest extends TestCase
         $other = User::factory()->create();
         $property = $this->property($admin);
 
-        Lead::create(['name' => 'A', 'phone' => '1', 'type' => 'inspection', 'property_id' => $property->id, 'referrer_id' => $mine->id]);
-        Lead::create(['name' => 'B', 'phone' => '2', 'type' => 'general', 'referrer_id' => $mine->id]);
-        Lead::create(['name' => 'C', 'phone' => '3', 'type' => 'inspection', 'property_id' => $property->id, 'referrer_id' => $other->id]);
+        Lead::create(['name' => 'Ada Okafor', 'phone' => '1', 'type' => 'inspection', 'property_id' => $property->id, 'referrer_id' => $mine->id]);
+        Lead::create(['name' => 'Bode Salami', 'phone' => '2', 'type' => 'general', 'referrer_id' => $mine->id]);
+        Lead::create(['name' => 'Caro Eze', 'phone' => '3', 'type' => 'inspection', 'property_id' => $property->id, 'referrer_id' => $other->id]);
 
-        $this->actingAs($mine)->get('/realtor/leads?kind=inspections')->assertSee('Inspection booked')->assertDontSee('New enquiry');
-        $this->get('/realtor/leads?kind=enquiries')->assertSee('New enquiry')->assertDontSee('Inspection booked');
+        // Inspections tab shows Ada's name; enquiry tab shows Bode's name; each is separate.
+        $this->actingAs($mine)->get('/realtor/leads?kind=inspections')->assertSee('Ada Okafor')->assertDontSee('Bode Salami');
+        $this->get('/realtor/leads?kind=enquiries')->assertSee('Bode Salami')->assertDontSee('Ada Okafor');
         $this->get('/realtor/leads')->assertSee('Ref #'.Lead::where('referrer_id', $mine->id)->min('id'));
 
-        // The other realtor only ever sees their own single booking.
-        $this->actingAs($other)->get('/realtor/leads')->assertSee('Inspection booked')->assertDontSee('New enquiry');
+        // The other realtor only ever sees their own single booking (Caro), not mine.
+        $this->actingAs($other)->get('/realtor/leads')->assertSee('Caro Eze')->assertDontSee('Ada Okafor')->assertDontSee('Bode Salami');
     }
 
     public function test_a_booking_without_a_referral_link_alerts_only_the_admin(): void

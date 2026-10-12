@@ -11,7 +11,7 @@ use Illuminate\Notifications\Messages\MailMessage;
 
 /**
  * Someone who came through this realtor's link booked an inspection or sent an enquiry.
- * PRIVACY: it says what happened and for which property, never who the person is.
+ * PRIVACY: shows the person's name only — no phone, email or message is shared with the realtor.
  * Delivered both to the realtor's dashboard notification centre and to their email.
  */
 class NewReferralLead extends AppNotification
@@ -31,13 +31,14 @@ class NewReferralLead extends AppNotification
     protected function payload(): array
     {
         $inspection = $this->isInspection();
+        $name = $this->lead->name;
         $property = $this->lead->property?->title;
 
         return [
-            'title' => $inspection ? 'Inspection booked through your link' : 'New enquiry through your link',
+            'title' => $inspection ? $name.' booked an inspection through your link' : $name.' sent an enquiry through your link',
             'body' => $inspection
-                ? 'Someone from your link booked an inspection'.($property ? ' for “'.$property.'”' : '').'. Oku Lands will follow up with them.'
-                : 'Someone from your link sent an enquiry'.($property ? ' about “'.$property.'”' : '').'. Oku Lands will follow up with them.',
+                ? $name.' booked a site inspection'.($property ? ' for “'.$property.'”' : '').'. Oku Lands will follow up with them.'
+                : $name.' sent an enquiry'.($property ? ' about “'.$property.'”' : '').'. Oku Lands will follow up with them.',
             'url' => route('realtor.leads'),
             'icon' => $inspection ? 'key' : 'mail',
         ];
@@ -46,6 +47,7 @@ class NewReferralLead extends AppNotification
     public function toMail(object $notifiable): MailMessage
     {
         $payload = $this->payload();
+        $name = $this->lead->name;
         $property = $this->lead->property?->title;
 
         $mail = (new MailMessage)
@@ -58,6 +60,6 @@ class NewReferralLead extends AppNotification
         }
 
         return $mail->action('View in my dashboard', route('realtor.leads'))
-            ->line('Keep an eye on your leads page so you can follow up as soon as Oku Lands reaches out to them.');
+            ->line($name.' is being handled by the Oku Lands team. You will be credited once a sale is recorded.');
     }
 }

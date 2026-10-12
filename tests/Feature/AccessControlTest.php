@@ -133,11 +133,10 @@ class AccessControlTest extends TestCase
         Lead::create(['name' => 'Someone Elses Lead', 'phone' => '0802', 'referrer_id' => $other->id]);
         Lead::create(['name' => 'Direct Enquiry Person', 'phone' => '0803']);
 
-        // A realtor sees only their own bookings, and never who the people are (see RealtorPrivacyTest).
+        // A realtor sees their own lead's name but never contact details, and never other realtors' leads.
         $this->actingAs($mine)->get('/realtor/leads')
             ->assertOk()
-            ->assertSee('Someone from your link')
-            ->assertDontSee('My Lead Person')
+            ->assertSee('My Lead Person')
             ->assertDontSee('Someone Elses Lead')
             ->assertDontSee('Direct Enquiry Person')
             ->assertDontSee('0801');

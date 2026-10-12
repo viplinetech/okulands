@@ -164,7 +164,7 @@ class RealtorAppTest extends TestCase
         $realtor->notify(new NewReferralLead(Lead::create(['name' => 'X', 'phone' => '08000000000', 'referrer_id' => $realtor->id])));
         $this->assertSame(1, $realtor->unreadNotifications()->count());
 
-        $this->actingAs($realtor)->get('/realtor/alerts')->assertOk()->assertSee('New enquiry through your link');
+        $this->actingAs($realtor)->get('/realtor/alerts')->assertOk()->assertSee('sent an enquiry through your link');
 
         $this->assertSame(0, $realtor->fresh()->unreadNotifications()->count());
     }

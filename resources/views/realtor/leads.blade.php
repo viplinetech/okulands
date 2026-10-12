@@ -3,7 +3,7 @@
 
     <div class="mb-5 flex items-start gap-3 rounded-2xl border border-brand/25 bg-brand/10 px-4 py-3.5 text-sm leading-relaxed text-ink">
         <x-icon name="shield" class="mt-0.5 h-5 w-5 shrink-0 text-brand" />
-        <span><strong>Client privacy:</strong> for their protection, the client&rsquo;s name and contact details are kept by Oku Lands. You can always see that a booking came from your link, which property it is for, and how it is progressing.</span>
+        <span><strong>Client privacy:</strong> you can see the client&rsquo;s name, what they are interested in and the status of their enquiry. Their phone number and email are handled by Oku Lands directly.</span>
     </div>
 
     {{-- Kind filter --}}
@@ -26,8 +26,8 @@
                             <div class="flex items-center gap-3 text-left">
                                 <span class="stat-icon !h-10 !w-10"><x-icon :name="$inspection ? 'key' : 'mail'" class="h-4 w-4" /></span>
                                 <div class="min-w-0">
-                                    <p class="font-bold text-ink">{{ $inspection ? 'Inspection booked' : 'New enquiry' }}</p>
-                                    <p class="text-xs font-normal text-mute">Someone from your link &middot; Ref #{{ $booking->id }}</p>
+                                    <p class="font-bold text-ink">{{ $booking->name }}</p>
+                                    <p class="text-xs font-normal text-mute">{{ $inspection ? 'Inspection booked' : 'Enquiry' }} &middot; Ref #{{ $booking->id }}</p>
                                 </div>
                             </div>
                         </td>

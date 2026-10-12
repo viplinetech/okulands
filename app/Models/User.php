@@ -198,7 +198,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function referredBookings(): HasMany
     {
-        return $this->hasMany(Lead::class, 'referrer_id')->select(['id', 'referrer_id', 'property_id', 'type', 'status', 'created_at']);
+        return $this->hasMany(Lead::class, 'referrer_id')->select(['id', 'name', 'referrer_id', 'property_id', 'type', 'status', 'created_at']);
     }
 
     /** Sales this user closed as the primary realtor. */
